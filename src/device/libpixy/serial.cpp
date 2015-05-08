@@ -61,7 +61,7 @@ void ser_loadParams()
 	g_i2c0->setSlaveAddr(addr);
 
 	prm_get("UART baudrate", &baudrate, END);
-	g_uart0->setBaudrate(baudrate);
+	g_uart0->setBaudrate(921600);
 }
 
 int ser_setInterface(uint8_t interface)

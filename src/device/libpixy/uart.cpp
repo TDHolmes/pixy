@@ -19,6 +19,7 @@
 #include "uart.h"
 
 Uart *g_uart0;
+uint8_t UART_DATA_AVAILABLE;
 
 extern "C" void UART0_IRQHandler(void);
 
@@ -38,8 +39,10 @@ void Uart::irqHandler()
 	/* Determine the interrupt source */
 	status = m_uart->IIR & UART_IIR_INTID_MASK;
 
-	if (status==UART_IIR_INTID_RDA) // Receive Data Available 
+	if (status==UART_IIR_INTID_RDA) { /* Receive Data Available */
+		UART_DATA_AVAILABLE = m_uart->RBR&UART_RBR_MASKBIT;
 		m_rq.write(m_uart->RBR&UART_RBR_MASKBIT);
+	}
 	else if (status==UART_IIR_INTID_CTI)
 		v = m_uart->RBR; // toss...
 	else if (status==UART_IIR_INTID_THRE) // Transmit Holding Empty

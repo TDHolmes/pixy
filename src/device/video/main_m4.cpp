@@ -30,6 +30,7 @@
 #include "progchase.h"
 #include "param.h"
 #include "serial.h"
+#include "edgedetect.h"
 
 // M0 code 
 const // so m0 program goes into RO memory
@@ -87,7 +88,12 @@ int main(void)
    	// check version
 	prm_add("fwver", PRM_FLAG_INTERNAL, "", UINT16(FW_MAJOR_VER), UINT16(FW_MINOR_VER), UINT16(FW_BUILD_VER), END);
 
-	exec_loop();
+	ser_setInterface(SER_INTERFACE_UART);
+	
+	while(1) {
+		edgeDetect_run();	// run the main edgeDetect function
+		//exec_loop();	// Debug through pixymon
+	}
 
 #if 0
 	#define DELAY 1000000

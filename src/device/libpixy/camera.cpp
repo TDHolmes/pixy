@@ -317,18 +317,18 @@ int32_t cam_setAWB(const uint8_t &awb)
 {
 	if (awb!=g_awb)
 	{
-		if (awb==0)
-		{
+	//	if (awb==0)
+	//	{
 			g_sccb->Write(0x38, 0x00);
 			g_sccb->Write(0x96, 0xe1);
 			g_awb = 0;
-		}
-		else
-		{
-			g_sccb->Write(0x38, 0x10);
-			g_sccb->Write(0x96, 0xf1);
-			g_awb = 1;
-		}
+	//	}
+	//	else
+	//	{
+	//		g_sccb->Write(0x38, 0x10);
+	//		g_sccb->Write(0x96, 0xf1);
+	//		g_awb = 1;
+	//	}
    	}
 	return 0;
 }
@@ -368,16 +368,16 @@ int32_t cam_setAEC(const uint8_t &aec)
 {
 	if (aec!=g_aec)
 	{
-		if (aec==0)
-		{
+		//if (aec==0)
+		//{
 			g_sccb->Write(0x13, 0xa0); // turn off AEC, AGC
 			g_aec = 0;
-		}
-		else
-		{
-			g_sccb->Write(0x13, 0xa5); // enable AEC, AGC
-			g_aec = 1;
-		}
+	//	}
+		//else
+	//	{
+	//		g_sccb->Write(0x13, 0xa5); // enable AEC, AGC
+	//		g_aec = 1;
+	//	}
    	}
 	return 0;
 }
@@ -601,7 +601,7 @@ void cam_loadParams()
 	prm_setShadowCallback("Camera Brightness", (ShadowCallback)cam_shadowCallback);
 
 	prm_add("Auto Exposure Correction", PRM_FLAG_ADVANCED | PRM_FLAG_CHECKBOX, 
-		"@c Camera Enables/disables Auto Exposure Correction. (default enabled)", UINT8(1), END);
+		"@c Camera Enables/disables Auto Exposure Correction. (default dis enabled)", UINT8(0), END);
 	prm_setShadowCallback("Auto Exposure Correction", (ShadowCallback)cam_shadowCallback);
 
 	prm_add("AEC Value", PRM_FLAG_INTERNAL, 

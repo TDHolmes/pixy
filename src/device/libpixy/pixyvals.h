@@ -21,6 +21,12 @@
 #define CLKFREQ_MS               (CLKFREQ/1000)
 #define CLKFREQ_US               (CLKFREQ/1000000)
 
+#define THREASHOLD	150
+#define BRIGHTNESS  100
+
+#define OFFSET 2
+#define POS_OFFSET 4.0
+
 // SRAM banks
 #define SRAM0_LOC                0x10000000
 #define SRAM0_SIZE               0x20000

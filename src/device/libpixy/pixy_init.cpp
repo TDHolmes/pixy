@@ -147,7 +147,7 @@ void handleAWB()
 		return;
 
 	prm_get("Auto White Balance on power-up", &awbp, END);
-	if (!awbp)
+	if (/*!awbp*/ 1) // Disableing auto white balance
 		return; // exit if auto white balance on power-up is disabled
 
 	else if (state==0)
