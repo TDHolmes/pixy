@@ -18,7 +18,10 @@
 // of the University of Saint Thomas, adding the functionality of edge detection
 // for the purposes of object avoidance on an autonomous vehicle. The function
 // gets a frame, processes it using a simple edge detection formula, and returns
-// a processed array
+// a processed array.
+//
+// This specific implementation is designed for a maze navigating robot
+// 
 
 
 #include <stdio.h>
@@ -34,55 +37,82 @@
 #include <math.h>
 
 
-
+// Resolution setting
 #define RES_WIDTH (320)
 #define RES_HEIGHT (200)
 
+// tangent calculations used in triangulation calculations
 #define TAN_FOVH_DIV_2 0.435
 #define TAN_FOVW_DIV_2 0.767
 
 // NOT DEFINED TO THE RIGHT VALUES YET
 // units in cm
-#define H_C 4.0
-#define H_B 0.0
+#define H_C 3.6
+#define H_B 4.1
 
-extern uint8_t UART_DATA_AVAILABLE;
+extern uint8_t UART_DATA_AVAILABLE;			// global interrupt that gets the byte from the PIC
 
 
 void edgeDetect_run()
 {
-	cam_setBrightness(BRIGHTNESS); 				// 0 to 255
+	
+	cam_setBrightness(BRIGHTNESS); 				// 0 to 255. Camera brightness setting
+	
+	int8_t retVal = 0;
+	retVal += rcs_enable(1, 1);
+	
+	if(retVal != 0) {		// enabling error
+		
+		uint8_t retStr[] = "Error: Servo init";
+		UART_Send(LPC_USART0, retStr, 18, BLOCKING);
+	}
+	
 	uint8_t *frame = (uint8_t *)SRAM1_LOC;
-	uint8_t *frameloc = (uint8_t *)(SRAM1_LOC + 2);
-	uint8_t *sendPositions = (uint8_t*)(SRAM1_LOC);
+	uint8_t *frameloc = (uint8_t *)(SRAM1_LOC + 0);
+	uint8_t *sendPositions = (uint8_t *)SRAM1_LOC;
 	float theta;
+	uint16_t count = 0;
+	
 	// recieve the command to get a frame
 	while(1) {
+		
+		// red LED: Stopped waiting for data
 		led_setRGB(255, 0, 0);
 		
 		while(1) {
-			if(UART_DATA_AVAILABLE) {
-				//rxbuf = UART_ReceiveByte(LPC_USART0);
+			if(UART_DATA_AVAILABLE) {		// Data has come!
 				theta = (float)UART_DATA_AVAILABLE;
 				UART_DATA_AVAILABLE = 0;
 				break;
 			}
 		}
 		
-		theta = (float)(theta*(3.14159/180.0));
-		
-		led_setRGB(0, 255, 0);
-		
+		if(theta > 42) {
+			count = 0;
+			// make sure that theta is casted as a float
+			theta = (float)(theta*(3.14159/180.0));
+			
+			// green LED, lets go!
+			led_setRGB(255, 255, 255);
+			
+		// grab frame
 			cam_getFrame(frameloc, SRAM1_SIZE, CAM_GRAB_M1R2, 0, 0, RES_WIDTH, RES_HEIGHT);
-			// second time through gets a frame fine
-			frameloc = frame;
+		
+			frameloc = frame;			
+		
+		// double for loop for calculating edges
 			for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
 				uint16_t ypo = y + 1;
 				uint16_t ymo = y - 1;
 				for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
 					uint16_t xpo = x + 1;
 					uint16_t xmo = x - 1;
-					uint16_t grad; 
+					
+				// Gradient/intensity calculation
+					
+					// intensity calculation for the pixel groups. each "pixel" we use is actually the intensity
+					// calculated based off of a group of four pixels. This is for speed, accuracy, and clean
+					// edges.
 					
 					uint16_t intense_XPO_Y = frameloc[y*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpo+1] + 
 							(frameloc[ypo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpo+1])/2;
@@ -115,127 +145,154 @@ void edgeDetect_run()
 					uint16_t grad2 = abs(intense_X_YPO -	intense_X_YMO
 						+ intense_XPO_YPO -	intense_XPO_YMO
 						+ intense_XMO_YPO - intense_XMO_YMO);
-					
-					grad = grad1 + grad2;
-					
-
-					// when it loops a second time through, it cannot make it passed the next line
-					// Deleted if statement, hopefully that'll do 'er. Really inefficient though
-
-					if(grad > THREASHOLD) {
-						frameloc[ymo*RES_WIDTH + xmo] = 255;
-						frameloc[y*RES_WIDTH + xmo] = 255;
-						frameloc[ymo*RES_WIDTH + x] = 255;
-						frameloc[y*RES_WIDTH + x] = 255;
-					}
-					else {
-						frameloc[ymo*RES_WIDTH + xmo] = 0;
-						frameloc[y*RES_WIDTH + xmo] = 0;
-						frameloc[ymo*RES_WIDTH + x] = 0;
-						frameloc[y*RES_WIDTH + x] = 0;
-					}
-					
-					
-					/*				TEST DIAGONAL LINE
-					if( y == x) {
+				
+				// End Gradient/intensity calculation
+				
+								// Threashold detection
+					if( (grad1 + grad2) > THREASHOLD ) {
+						// EDGE
+						// frameloc[ymo*RES_WIDTH + xmo] = 255;
+						// frameloc[y*RES_WIDTH + xmo] = 255;
+						// frameloc[ymo*RES_WIDTH + x] = 255;
 						
-						frameloc[ymo*RES_WIDTH + xmo] = 255;
-						frameloc[y*RES_WIDTH + xmo] = 255;
-						frameloc[ymo*RES_WIDTH + x] = 255;
 						frameloc[y*RES_WIDTH + x] = 255;
 					}
 					else {
-						frameloc[ymo*RES_WIDTH + xmo] = 0;
-						frameloc[y*RES_WIDTH + xmo] = 0;
-						frameloc[ymo*RES_WIDTH + x] = 0;
+						// NO EDGE
+						// frameloc[ymo*RES_WIDTH + xmo] = 0;
+						// frameloc[y*RES_WIDTH + xmo] = 0;
+						// frameloc[ymo*RES_WIDTH + x] = 0;
+						
 						frameloc[y*RES_WIDTH + x] = 0;
 					}
-					*/
-			}
-		}
-			
-			led_setRGB(255, 0, 255);
-		
-			// floor detection & 
-		uint16_t count = 0;
-		for(float x = (POS_OFFSET); x < (RES_WIDTH - POS_OFFSET); x += 2.0) {
-			
-			float xPos;
-			for(float y = (RES_HEIGHT - POS_OFFSET); y > POS_OFFSET; y -= 2.0) {
-				
-				if(frameloc[((uint8_t)y)*RES_WIDTH + (uint16_t)x] != 0) {
-					float yPos;
-					
-					double theta_ph = atan(((2.0*y-200.0)/200.0)*TAN_FOVH_DIV_2);		// This works
-					double cos_theta_ph = cos(theta_ph);
-					//sendPositions[count] = cos_theta_ph*128;
-					double cos_theta_minus_ph = cos(theta - theta_ph);
-					//sendPositions[count] = cos_theta_minus_ph*128;
-					//sendPositions[count] = (int8_t)(theta_ph * (180.0/3.142));				// these two lines send x,y pairs
-					//sendPositions[count] = (cos_theta_ph)/(cos_theta_minus_ph);
-					yPos = ((double)((3.9)*((cos_theta_ph))))/(cos_theta_minus_ph) + 
-										(2.1)*tan(theta - theta_ph);
-					
-					xPos = (yPos*(2.0*x - 320.0))/417.0;	// hopefully the x cord. won't be super inaccurate. Not crucial though.
-
-			  	
-					//sendPositions[2*count + 1] = yPos;	  //(int8_t)yPos;
-					
-					//sendPositions[2*count] = x;				// these two lines send x,y pairs
-					sendPositions[count] = yPos;	  //(int8_t)yPos;
-					
-					count++;
-					break;
 				}
-				else {
-					// color the floor a different color. Not used in this scenario
+			} // end nested for loop
+			
+			
+			// begin filtering. Looks at each pixel, looks around that pixel (if it is on), and if it is 
+			// surounded by mostly off pixels, it also turns that pixel off. Filters out non-lines from our
+			// detection.
+
+			for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
+				uint16_t ypt = y + 2;
+				uint16_t ymt = y - 2;
+			
+				for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
+					
+					if(frameloc[y*RES_WIDTH + x] != 0) {		// if current pix. == on, check if it should be off
+						uint16_t xpt = x + 2;
+						uint16_t xmt = x - 2;
+						
+						uint8_t numOfPxOff = 0;
+						
+						if(frameloc[y*RES_WIDTH + xpt] == 0) 
+							numOfPxOff++;
+						
+						if(frameloc[y*RES_WIDTH + xmt] == 0) 
+							numOfPxOff++;
+						
+						if(frameloc[(ypt)*RES_WIDTH + x] == 0) 
+							numOfPxOff++;
+						
+						if(frameloc[(ymt)*RES_WIDTH + x] == 0) 
+							numOfPxOff++;
+						
+						if(numOfPxOff > 2) {
+							// frameloc[(y-1)*RES_WIDTH + x-1] = 0;
+							// frameloc[y*RES_WIDTH + x-1] = 0;
+							// frameloc[(y-1)*RES_WIDTH + x] = 0;
+							frameloc[y*RES_WIDTH + x] = 0; 				// we only ever look at this pixel
+						}
+						
+					} //end if(edge detected)
+				} // end x for
+			} // end y for
+			
+			
+			// floor detection & distance extrapolation.
+			
+			for(float x = (POS_OFFSET); x < (RES_WIDTH - POS_OFFSET); x += 2.0) {	// start on the left
+				
+				float xPos;
+				
+				for(float y = (RES_HEIGHT - POS_OFFSET); y > POS_OFFSET; y -= 2.0) {	// start from the bottom
+					
+					if(frameloc[((uint8_t)y)*RES_WIDTH + (uint16_t)x] != 0) {
+						float yPos;
+						
+						double theta_ph = atan(((2.0*y-200.0)/200.0)*TAN_FOVH_DIV_2);		// angle of the pixel
+						double cos_theta_ph = cos(theta_ph);											// used in the computations
+						double cos_theta_minus_ph = cos(theta - theta_ph);				// used in the computations
+						
+						yPos = ((double)((3.9)*((cos_theta_ph))))/(cos_theta_minus_ph) + 
+											(2.1)*tan(theta - theta_ph);		// y distance from the bot
+						xPos = ((yPos*(2.0*x - 320.0))/320.0)*TAN_FOVW_DIV_2;			// x distance from the bot
+						
+						sendPositions[2*count] = (uint8_t)(xPos + 128);						// these two lines put x,y pairs
+						sendPositions[2*count + 1] = (uint8_t)yPos;								// into the send array
+						
+						count += 1;		// count of the number of edges of obsticles detected
+						break;			// stop looking for the edge, break to the next x co-ordinate
+					} // end if
+					
+				} //end yfor 
+			} // end xfor
+			
+			if(count == 0) {					// we have not detected any edges. Oh no!
+				uint8_t noEdges = 42;
+				UART_Send(LPC_USART0, &noEdges, 1, BLOCKING); 
+			}
+			
+			UART_Send(LPC_USART0, sendPositions, 2*count, BLOCKING);	// sends x,y pairs!!!!
+			
+			led_setRGB(255, 0, 255);	// Purple LED
+			
+			// Byte packing for processing script
+/*
+			for(uint16_t y = 0; y < RES_HEIGHT/2; y += 1) {
+				for (uint16_t x = 0; x < RES_WIDTH/2; x += 8) {
+
+						frameloc[y*(RES_WIDTH/16) + x/8] = (frameloc[(y*2+1)*RES_WIDTH + (2*(x+0)+1)] & 0x80) | 
+																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+1)+1)] & 0x40) |
+																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+2)+1)] & 0x20) |
+																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+3)+1)] & 0x10) |
+																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+4)+1)] & 0x08) |
+																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+5)+1)] & 0x04) |
+																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+6)+1)] & 0x02) |
+																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+7)+1)] & 0x01); 
+
 				}
 			}
-		}
-		
-		UART_Send(LPC_USART0, sendPositions, count, BLOCKING);	// sends x,y pairs
-		//UART_Send(LPC_USART0, sendPositions, count, BLOCKING);	// sends only the y distance
-		count = 0;
-		
-		// Byte packing for processing script
-		/*
-		for(uint16_t y = 0; y < RES_HEIGHT/2; y += 1) {
-			for (uint16_t x = 0; x < RES_WIDTH/2; x += 8) {
-		*/
-		
-	/*		// Checkerboard for configuring things
-				if(y&1) 
-					frameloc[y*20 + x/8] = 0x55;
-				else
-					frameloc[y*20 + x/8] = 0xAA;
-	*/
-	/*
-					frameloc[y*(RES_WIDTH/16) + x/8] = (frameloc[(y*2+1)*RES_WIDTH + (2*(x+0)+1)] & 0x80) | 
-																					(frameloc[(y*2+1)*RES_WIDTH + (2*(x+1)+1)] & 0x40) |
-																					(frameloc[(y*2+1)*RES_WIDTH + (2*(x+2)+1)] & 0x20) |
-																					(frameloc[(y*2+1)*RES_WIDTH + (2*(x+3)+1)] & 0x10) |
-																					(frameloc[(y*2+1)*RES_WIDTH + (2*(x+4)+1)] & 0x08) |
-																					(frameloc[(y*2+1)*RES_WIDTH + (2*(x+5)+1)] & 0x04) |
-																					(frameloc[(y*2+1)*RES_WIDTH + (2*(x+6)+1)] & 0x02) |
-																					(frameloc[(y*2+1)*RES_WIDTH + (2*(x+7)+1)] & 0x01); 
-
+			// frame[0] = 'A';																		 // key byte
+			// UART_Send(LPC_USART0, frameloc, 2001, BLOCKING);		 // Send the frame byte packed to see it in processing
+*/
+			
+			// clear array
+			for(uint16_t x = 0; x < 320; x++) {
+				sendPositions[x] = 255;
 			}
+			
+		} // end edge detecting
+		
+		
+		
+		else if(theta > 1 ) {	// Servo move routine
+			uint16_t position;
+			int8_t retVal;
+			// Move the servo based on the input from the PIC
+			// theta == 2 corrisponds to a 45 degree angle,
+			// theta == 42 corrisponds to a 135 degree angle.
+			position = theta;
+			position = (position - 2)*(25);
+			retVal = rcs_setPos(1, position);
 		}
-		*/
-				
-		// UART_Send(LPC_USART0, frameloc, 16000, BLOCKING);   // Send the frame to see it in tera term. NO BYTE PACK
-		// frame[0] = 'A';																		 // key byte
-		// UART_Send(LPC_USART0, frameloc, 2001, BLOCKING);		 // Send the frame byte packed to see it in processing
 		
-		//UART_Send(LPC_USART0, sendPositions, (RES_WIDTH - 2*POS_OFFSET)>>1, BLOCKING);
-		
-		// clear array
-		for(uint8_t x = 0; x < 240; x++) {
-			sendPositions[x] = 255;
+		else {		// theta == 1, they are asking for my ID
+			
+			// tell the processing script/pic/whatever that I am the pixy
+			uint8_t ID[] = "I am the Pixy!\n\r";
+			UART_Send(LPC_USART0, ID, 17, BLOCKING);
 		}
-		
-		toggleLED();
-		
 	}
 }
 

@@ -31,6 +31,8 @@
 #include "param.h"
 #include "serial.h"
 #include "edgedetect.h"
+#include "pixyvals.h"
+#include "edgeDetect_highres.h"
 
 // M0 code 
 const // so m0 program goes into RO memory
@@ -90,7 +92,9 @@ int main(void)
 
 	ser_setInterface(SER_INTERFACE_UART);
 	
+	
 	while(1) {
+		//edgeDetect_highres_run();
 		edgeDetect_run();	// run the main edgeDetect function
 		//exec_loop();	// Debug through pixymon
 	}

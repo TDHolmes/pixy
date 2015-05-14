@@ -39,6 +39,25 @@ N#define CLKFREQ                  204000000
 N#define CLKFREQ_MS               (CLKFREQ/1000)
 N#define CLKFREQ_US               (CLKFREQ/1000000)
 N
+N#define THREASHOLD	50
+N#define BRIGHTNESS  100
+N
+N
+N#define RES_WIDTH (320)
+N#define RES_HEIGHT (200)
+N
+N// tangent calculations used in triangulation calculations
+N#define TAN_FOVH_DIV_2 0.435
+N#define TAN_FOVW_DIV_2 0.767
+N
+N// NOT DEFINED TO THE RIGHT VALUES YET
+N// units in cm
+N#define H_C 3.6
+N#define H_B 4.1
+N
+N#define OFFSET 2
+N#define POS_OFFSET 4.0
+N
 N// SRAM banks
 N#define SRAM0_LOC                0x10000000
 N#define SRAM0_SIZE               0x20000

@@ -39,7 +39,7 @@
 // In general with an RGB LED, you can only communicate 2 things--- brightness and hue, so you have 2 dof to play with....   
 void scaleLED(uint32_t r, uint32_t g, uint32_t b, uint32_t n)
 {
-	uint32_t max, min, current, sat, t; 
+	uint32_t max, min, current, sat/*, t*/; 
 
 #if 0  // it seems that green is a little attenuated on this sensor
 	t = (uint32_t)(G_GAIN*g);

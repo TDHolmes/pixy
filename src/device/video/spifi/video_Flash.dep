@@ -1,5 +1,5 @@
 Dependencies for Project 'video', Target 'Flash': (DO NOT MODIFY !)
-F (.\main_m4.cpp)(0x5545C29D)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M4 -DIPC_MASTER -DPIXY-o .\spifi\main_m4.o --list_dir ".\\" --list --omf_browse .\spifi\main_m4.crf --depend .\spifi\main_m4.d)
+F (.\main_m4.cpp)(0x5553A655)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M4 -DIPC_MASTER -DPIXY-o .\spifi\main_m4.o --list_dir ".\\" --list --omf_browse .\spifi\main_m4.crf --depend .\spifi\main_m4.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5476B7E0)
 I (..\libpixy\debug.h)(0x5541C995)
 I (..\libpixy\debug_frmwrk.h)(0x5541C995)
@@ -30,7 +30,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5476B7E0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x5476B7DA)
 I (..\..\common\link.h)(0x5541C98A)
 I (..\libpixy\smlink.hpp)(0x5541C996)
-I (..\libpixy\pixyvals.h)(0x5545D272)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
 I (..\libpixy\chirpusb.h)(0x5541C995)
 I (..\libpixy\usblink.h)(0x5541C998)
 I (..\libpixy\misc.h)(0x5541C996)
@@ -60,8 +60,9 @@ I (..\libpixy\param.h)(0x5541C996)
 I (..\libpixy\serial.h)(0x5541C996)
 I (..\libpixy\iserial.h)(0x5541C995)
 I (edgedetect.h)(0x554474AA)
-I (m0_image.c)(0x5545947F)
-F (..\libpixy\libpixy_m4.lib)(0x554593AB)()
+I (edgeDetect_highres.h)(0x5546BE0E)
+I (m0_image.c)(0x5553A57D)
+F (..\libpixy\libpixy_m4.lib)(0x5553A56B)()
 F (.\conncomp.cpp)(0x5541C998)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M4 -DIPC_MASTER -DPIXY-o .\spifi\conncomp.o --list_dir ".\\" --list --omf_browse .\spifi\conncomp.crf --depend .\spifi\conncomp.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5476B7E0)
 I (..\libpixy\debug.h)(0x5541C995)
@@ -95,7 +96,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5476B7E0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x5476B7DA)
 I (..\..\common\link.h)(0x5541C98A)
 I (..\libpixy\smlink.hpp)(0x5541C996)
-I (..\libpixy\pixyvals.h)(0x5545D272)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
 I (..\libpixy\chirpusb.h)(0x5541C995)
 I (..\libpixy\usblink.h)(0x5541C998)
 I (..\libpixy\camera.h)(0x5541C995)
@@ -149,7 +150,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5476B7E0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x5476B7DA)
 I (..\..\common\link.h)(0x5541C98A)
 I (..\libpixy\smlink.hpp)(0x5541C996)
-I (..\libpixy\pixyvals.h)(0x5545D272)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
 I (..\libpixy\chirpusb.h)(0x5541C995)
 I (..\libpixy\usblink.h)(0x5541C998)
 I (..\libpixy\misc.h)(0x5541C996)
@@ -211,7 +212,7 @@ I (..\libpixy\master_mbx_callbacks.h)(0x5541C996)
 I (..\libpixy\slave_mbx_callbacks.h)(0x5541C996)
 I (..\libpixy\chirpm0.h)(0x5541C995)
 I (..\libpixy\smlink.hpp)(0x5541C996)
-I (..\libpixy\pixyvals.h)(0x5545D272)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
 I (..\libpixy\chirpusb.h)(0x5541C995)
 I (..\libpixy\usblink.h)(0x5541C998)
 I (..\libpixy\camera.h)(0x5541C995)
@@ -234,7 +235,7 @@ I (..\..\common\qqueue.h)(0x5541C98A)
 I (..\libpixy\serial.h)(0x5541C996)
 I (..\libpixy\iserial.h)(0x5541C995)
 I (..\libpixy\rcservo.h)(0x5541C996)
-F (.\progvideo.cpp)(0x5545C22A)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M4 -DIPC_MASTER -DPIXY-o .\spifi\progvideo.o --list_dir ".\\" --list --omf_browse .\spifi\progvideo.crf --depend .\spifi\progvideo.d)
+F (.\progvideo.cpp)(0x5552D1EE)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M4 -DIPC_MASTER -DPIXY-o .\spifi\progvideo.o --list_dir ".\\" --list --omf_browse .\spifi\progvideo.crf --depend .\spifi\progvideo.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5476B7E0)
 I (progvideo.h)(0x5541C999)
 I (exec.h)(0x5541C998)
@@ -267,7 +268,7 @@ I (..\libpixy\master_mbx_callbacks.h)(0x5541C996)
 I (..\libpixy\slave_mbx_callbacks.h)(0x5541C996)
 I (..\libpixy\chirpm0.h)(0x5541C995)
 I (..\libpixy\smlink.hpp)(0x5541C996)
-I (..\libpixy\pixyvals.h)(0x5545D272)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
 I (..\libpixy\chirpusb.h)(0x5541C995)
 I (..\libpixy\usblink.h)(0x5541C998)
 I (..\libpixy\camera.h)(0x5541C995)
@@ -288,6 +289,7 @@ I (..\..\common\qqueue.h)(0x5541C98A)
 I (conncomp.h)(0x5541C998)
 I (..\libpixy\param.h)(0x5541C996)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5476B7E0)
+I (edgedetect_highres.h)(0x5546BE0E)
 F (.\progpt.cpp)(0x5541C999)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M4 -DIPC_MASTER -DPIXY-o .\spifi\progpt.o --list_dir ".\\" --list --omf_browse .\spifi\progpt.crf --depend .\spifi\progpt.d)
 I (progpt.h)(0x5541C999)
 I (exec.h)(0x5541C998)
@@ -320,7 +322,7 @@ I (..\libpixy\master_mbx_callbacks.h)(0x5541C996)
 I (..\libpixy\slave_mbx_callbacks.h)(0x5541C996)
 I (..\libpixy\chirpm0.h)(0x5541C995)
 I (..\libpixy\smlink.hpp)(0x5541C996)
-I (..\libpixy\pixyvals.h)(0x5545D272)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
 I (..\libpixy\chirpusb.h)(0x5541C995)
 I (..\libpixy\usblink.h)(0x5541C998)
 I (..\libpixy\camera.h)(0x5541C995)
@@ -344,7 +346,7 @@ I (..\libpixy\iserial.h)(0x5541C995)
 I (..\libpixy\rcservo.h)(0x5541C996)
 I (conncomp.h)(0x5541C998)
 I (..\libpixy\param.h)(0x5541C996)
-F (.\button.cpp)(0x5541C998)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M4 -DIPC_MASTER -DPIXY-o .\spifi\button.o --list_dir ".\\" --list --omf_browse .\spifi\button.crf --depend .\spifi\button.d)
+F (.\button.cpp)(0x5546B7A5)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M4 -DIPC_MASTER -DPIXY-o .\spifi\button.o --list_dir ".\\" --list --omf_browse .\spifi\button.crf --depend .\spifi\button.d)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x5476B7DE)
 I (..\libpixy\pixy_init.h)(0x5541C996)
 I (..\libpixy\lpc_types.h)(0x5541C996)
@@ -375,7 +377,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5476B7E0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x5476B7DA)
 I (..\..\common\link.h)(0x5541C98A)
 I (..\libpixy\smlink.hpp)(0x5541C996)
-I (..\libpixy\pixyvals.h)(0x5545D272)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
 I (..\libpixy\chirpusb.h)(0x5541C995)
 I (..\libpixy\usblink.h)(0x5541C998)
 I (button.h)(0x5541C998)
@@ -431,7 +433,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5476B7E0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x5476B7DA)
 I (..\..\common\link.h)(0x5541C98A)
 I (..\libpixy\smlink.hpp)(0x5541C996)
-I (..\libpixy\pixyvals.h)(0x5545D272)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
 I (..\libpixy\chirpusb.h)(0x5541C995)
 I (..\libpixy\usblink.h)(0x5541C998)
 I (.\exec.h)(0x5541C998)
@@ -468,7 +470,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5476B7E0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x5476B7DA)
 I (..\..\common\link.h)(0x5541C98A)
 I (..\libpixy\smlink.hpp)(0x5541C996)
-I (..\libpixy\pixyvals.h)(0x5545D272)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
 I (..\libpixy\chirpusb.h)(0x5541C995)
 I (..\libpixy\usblink.h)(0x5541C998)
 I (..\..\common\blobs.h)(0x5541C98A)
@@ -501,7 +503,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5476B7E0)
 I (..\..\common\qqueue.h)(0x5541C98A)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x5476B7DA)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5476B7E0)
-I (..\libpixy\pixyvals.h)(0x5545D272)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
 F (..\libpixy\lpc43xx_i2c.c)(0x5541C995)(-c --cpu Cortex-M4 --li -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M4 -DIPC_MASTER -DPIXY-o .\spifi\lpc43xx_i2c.o --list_dir ".\\" --list --omf_browse .\spifi\lpc43xx_i2c.crf --depend .\spifi\lpc43xx_i2c.d)
 I (..\libpixy\lpc43xx_i2c.h)(0x5541C995)
 I (..\libpixy\lpc43xx.h)(0x5541C995)
@@ -529,7 +531,7 @@ I (..\libpixy\core_cmFunc.h)(0x5541C995)
 I (C:\Keil_v5\ARM\CMSIS\Include\core_cm4_simd.h)(0x5346F044)
 I (..\libpixy\system_LPC43xx.h)(0x5541C996)
 I (..\libpixy\lpc_types.h)(0x5541C996)
-F (..\libpixy\serial.cpp)(0x55447177)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M4 -DIPC_MASTER -DPIXY-o .\spifi\serial.o --list_dir ".\\" --list --omf_browse .\spifi\serial.crf --depend .\spifi\serial.d)
+F (..\libpixy\serial.cpp)(0x55522447)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M4 -DIPC_MASTER -DPIXY-o .\spifi\serial.o --list_dir ".\\" --list --omf_browse .\spifi\serial.crf --depend .\spifi\serial.d)
 I (..\libpixy\serial.h)(0x5541C996)
 I (..\libpixy\iserial.h)(0x5541C995)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x5476B7DA)
@@ -625,7 +627,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5476B7E0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x5476B7DA)
 I (..\..\common\link.h)(0x5541C98A)
 I (..\libpixy\smlink.hpp)(0x5541C996)
-I (..\libpixy\pixyvals.h)(0x5545D272)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
 I (..\libpixy\chirpusb.h)(0x5541C995)
 I (..\libpixy\usblink.h)(0x5541C998)
 I (..\libpixy\misc.h)(0x5541C996)
@@ -638,7 +640,7 @@ F (..\libpixy\uart.cpp)(0x55452B98)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apcs=
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x5476B7DA)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5476B7E0)
 I (..\libpixy\lpc43xx_scu.h)(0x5541C995)
-I (..\libpixy\pixyvals.h)(0x5545D272)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
 I (..\libpixy\uart.h)(0x5541C996)
 I (..\libpixy\iserial.h)(0x5541C995)
 I (..\libpixy\lpc43xx_uart.h)(0x5541C995)
@@ -681,7 +683,7 @@ I (..\libpixy\master_mbx_callbacks.h)(0x5541C996)
 I (..\libpixy\slave_mbx_callbacks.h)(0x5541C996)
 I (..\libpixy\chirpm0.h)(0x5541C995)
 I (..\libpixy\smlink.hpp)(0x5541C996)
-I (..\libpixy\pixyvals.h)(0x5545D272)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
 I (..\libpixy\chirpusb.h)(0x5541C995)
 I (..\libpixy\usblink.h)(0x5541C998)
 I (..\libpixy\camera.h)(0x5541C995)
@@ -709,7 +711,7 @@ F (..\..\common\calc.cpp)(0x5541C98A)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apc
 I (..\..\common\calc.h)(0x5541C98A)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x5476B7DA)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5476B7E0)
-F (.\edgedetect.cpp)(0x5545E337)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M4 -DIPC_MASTER -DPIXY-o .\spifi\edgedetect.o --list_dir ".\\" --list --omf_browse .\spifi\edgedetect.crf --depend .\spifi\edgedetect.d)
+F (.\edgedetect.cpp)(0x5553A9D7)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M4 -DIPC_MASTER -DPIXY-o .\spifi\edgedetect.o --list_dir ".\\" --list --omf_browse .\spifi\edgedetect.crf --depend .\spifi\edgedetect.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5476B7E0)
 I (progvideo.h)(0x5541C999)
 I (exec.h)(0x5541C998)
@@ -742,7 +744,7 @@ I (..\libpixy\master_mbx_callbacks.h)(0x5541C996)
 I (..\libpixy\slave_mbx_callbacks.h)(0x5541C996)
 I (..\libpixy\chirpm0.h)(0x5541C995)
 I (..\libpixy\smlink.hpp)(0x5541C996)
-I (..\libpixy\pixyvals.h)(0x5545D272)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
 I (..\libpixy\chirpusb.h)(0x5541C995)
 I (..\libpixy\usblink.h)(0x5541C998)
 I (..\libpixy\camera.h)(0x5541C995)
@@ -764,4 +766,61 @@ I (..\..\common\qqueue.h)(0x5541C98A)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5476B7E0)
 I (edgedetect.h)(0x554474AA)
 I (..\libpixy\rcservo.h)(0x5541C996)
+I (..\libpixy\led.h)(0x5541C995)
+F (.\edgedetect_highres.cpp)(0x55477A04)(--cpp -c --cpu Cortex-M4 --li -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M4 -DIPC_MASTER -DPIXY-o .\spifi\edgedetect_highres.o --list_dir ".\\" --list --omf_browse .\spifi\edgedetect_highres.crf --depend .\spifi\edgedetect_highres.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5476B7E0)
+I (progvideo.h)(0x5541C999)
+I (exec.h)(0x5541C998)
+I (..\..\common\chirp.hpp)(0x5541C98A)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5476B7E0)
+I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5476B7E0)
+I (C:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x5476B7DA)
+I (..\..\common\link.h)(0x5541C98A)
+I (..\libpixy\debug_frmwrk.h)(0x5541C995)
+I (..\libpixy\lpc43xx_uart.h)(0x5541C995)
+I (..\libpixy\lpc43xx.h)(0x5541C995)
+I (..\libpixy\core_cm4.h)(0x5541C995)
+I (..\libpixy\core_cmInstr.h)(0x5541C995)
+I (..\libpixy\core_cmFunc.h)(0x5541C995)
+I (C:\Keil_v5\ARM\CMSIS\Include\core_cm4_simd.h)(0x5346F044)
+I (..\libpixy\system_LPC43xx.h)(0x5541C996)
+I (..\libpixy\lpc_types.h)(0x5541C996)
+I (..\libpixy\pixy_init.h)(0x5541C996)
+I (..\libpixy\debug.h)(0x5541C995)
+I (..\libpixy\lpc43xx_adc.h)(0x5541C995)
+I (..\libpixy\usb.h)(0x5541C996)
+I (..\libpixy\usbcfg.h)(0x5541C996)
+I (..\libpixy\usbcore.h)(0x5541C996)
+I (..\libpixy\usbuser.h)(0x5541C998)
+I (..\libpixy\ipc_mbx.h)(0x5541C995)
+I (..\libpixy\platform_config.h)(0x5541C996)
+I (..\libpixy\master_ipc_msg.h)(0x5541C996)
+I (..\libpixy\slave_ipc_msg.h)(0x5541C996)
+I (..\libpixy\master_mbx_callbacks.h)(0x5541C996)
+I (..\libpixy\slave_mbx_callbacks.h)(0x5541C996)
+I (..\libpixy\chirpm0.h)(0x5541C995)
+I (..\libpixy\smlink.hpp)(0x5541C996)
+I (..\libpixy\pixyvals.h)(0x5552D2D7)
+I (..\libpixy\chirpusb.h)(0x5541C995)
+I (..\libpixy\usblink.h)(0x5541C998)
+I (..\libpixy\camera.h)(0x5541C995)
+I (..\libpixy\sccb.h)(0x5541C996)
+I (..\..\common\pixytypes.h)(0x5541C98A)
+I (..\libpixy\cameravals.h)(0x5541C995)
+I (conncomp.h)(0x5541C998)
+I (..\..\common\blob.h)(0x5541C98A)
+I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x5476B7E0)
+I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x5476B7DE)
+I (..\..\common\blobs.h)(0x5541C98A)
+I (..\..\common\colorlut.h)(0x5541C98A)
+I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x5476B7DA)
+I (..\..\common\simplevector.h)(0x5541C98A)
+I (C:\Keil_v5\ARM\ARMCC\include\new)(0x5476B7DE)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5476B7E0)
+I (C:\Keil_v5\ARM\ARMCC\include\exception)(0x5476B7E0)
+I (..\..\common\qqueue.h)(0x5541C98A)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5476B7E0)
+I (edgedetect.h)(0x554474AA)
+I (..\libpixy\rcservo.h)(0x5541C996)
+I (edgedetect_highres.h)(0x5546BE0E)
 I (..\libpixy\led.h)(0x5541C995)

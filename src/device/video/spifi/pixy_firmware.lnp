@@ -20,6 +20,7 @@
 ".\spifi\progchase.o"
 ".\spifi\calc.o"
 ".\spifi\edgedetect.o"
+".\spifi\edgedetect_highres.o"
 --strict --scatter ".\spifi.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

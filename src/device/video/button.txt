@@ -11,7 +11,7 @@
 ;;;41     {
 000004  b085              SUB      sp,sp,#0x14
 000006  461e              MOV      r6,r3
-;;;42     	uint32_t max, min, current, sat, t; 
+;;;42     	uint32_t max, min, current, sat/*, t*/; 
 ;;;43     
 ;;;44     #if 0  // it seems that green is a little attenuated on this sensor
 ;;;45     	t = (uint32_t)(G_GAIN*g);

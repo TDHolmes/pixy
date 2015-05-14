@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\spifi\pixy_firmware.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\spifi\pixy_firmware.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Sun May 03 03:58:32 2015
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Wed May 13 14:45:27 2015
 <BR><P>
 <H3>Maximum Stack Usage =       1048 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -996,11 +996,10 @@ Global Symbols
 <P><STRONG><a name="[14]"></a>videoSetup()</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, progvideo.o(.text))
 <BR>[Address Reference Count : 1]<UL><LI> progvideo.o(.data)
 </UL>
-<P><STRONG><a name="[16e]"></a>sendCustom(unsigned char)</STRONG> (Thumb, 1270 bytes, Stack size 88 bytes, progvideo.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 616<LI>Call Chain = sendCustom(unsigned char) &rArr; cam_getFrameChirp(const unsigned char&, const unsigned short&, const unsigned short&, const unsigned short&, const unsigned short&, Chirp*) &rArr; cam_getFrameChirpFlags(const unsigned char&, const unsigned short&, const unsigned short&, const unsigned short&, const unsigned short&, Chirp*, unsigned char) &rArr; cam_getFrame(unsigned char*, unsigned, unsigned char, unsigned short, unsigned short, unsigned short, unsigned short) &rArr; Chirp::call(unsigned char, short, ...) &rArr; Chirp::call(unsigned char, short, std::__va_list) &rArr; Chirp::vassemble(std::__va_list*) &rArr; Chirp::vserialize(Chirp*, unsigned char*, unsigned, std::__va_list*) &rArr; Chirp::realloc(unsigned) &rArr; operator new[] (unsigned, const std::nothrow_t&) &rArr; operator new(unsigned, const std::nothrow_t&) &rArr; __new_nothrow(unsigned) &rArr; malloc &rArr; __Heap_Full &rArr; __Heap_ProvideMemory &rArr; free
+<P><STRONG><a name="[16e]"></a>sendCustom(unsigned char)</STRONG> (Thumb, 980 bytes, Stack size 88 bytes, progvideo.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 496<LI>Call Chain = sendCustom(unsigned char) &rArr; cam_getFrame(unsigned char*, unsigned, unsigned char, unsigned short, unsigned short, unsigned short, unsigned short) &rArr; Chirp::call(unsigned char, short, ...) &rArr; Chirp::call(unsigned char, short, std::__va_list) &rArr; Chirp::vassemble(std::__va_list*) &rArr; Chirp::vserialize(Chirp*, unsigned char*, unsigned, std::__va_list*) &rArr; Chirp::realloc(unsigned) &rArr; operator new[] (unsigned, const std::nothrow_t&) &rArr; operator new(unsigned, const std::nothrow_t&) &rArr; __new_nothrow(unsigned) &rArr; malloc &rArr; __Heap_Full &rArr; __Heap_ProvideMemory &rArr; free
 </UL>
-<BR>[Calls]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cam_getFrameChirp(const unsigned char&, const unsigned short&, const unsigned short&, const unsigned short&, const unsigned short&, Chirp*)
-<LI><a href="#[16f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cam_getFrame(unsigned char*, unsigned, unsigned char, unsigned short, unsigned short, unsigned short, unsigned short)
+<BR>[Calls]<UL><LI><a href="#[16f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cam_getFrame(unsigned char*, unsigned, unsigned char, unsigned short, unsigned short, unsigned short, unsigned short)
 <LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cam_setBrightness(const unsigned char&)
 <LI><a href="#[143]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chirp::useBuffer(unsigned char*, unsigned)
 <LI><a href="#[141]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chirp::serialize(Chirp*, unsigned char*, unsigned, ...)
@@ -1008,8 +1007,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[15]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;videoLoop()
 </UL>
 
-<P><STRONG><a name="[15]"></a>videoLoop()</STRONG> (Thumb, 66 bytes, Stack size 32 bytes, progvideo.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 648<LI>Call Chain = videoLoop() &rArr; sendCustom(unsigned char) &rArr; cam_getFrameChirp(const unsigned char&, const unsigned short&, const unsigned short&, const unsigned short&, const unsigned short&, Chirp*) &rArr; cam_getFrameChirpFlags(const unsigned char&, const unsigned short&, const unsigned short&, const unsigned short&, const unsigned short&, Chirp*, unsigned char) &rArr; cam_getFrame(unsigned char*, unsigned, unsigned char, unsigned short, unsigned short, unsigned short, unsigned short) &rArr; Chirp::call(unsigned char, short, ...) &rArr; Chirp::call(unsigned char, short, std::__va_list) &rArr; Chirp::vassemble(std::__va_list*) &rArr; Chirp::vserialize(Chirp*, unsigned char*, unsigned, std::__va_list*) &rArr; Chirp::realloc(unsigned) &rArr; operator new[] (unsigned, const std::nothrow_t&) &rArr; operator new(unsigned, const std::nothrow_t&) &rArr; __new_nothrow(unsigned) &rArr; malloc &rArr; __Heap_Full &rArr; __Heap_ProvideMemory &rArr; free
+<P><STRONG><a name="[15]"></a>videoLoop()</STRONG> (Thumb, 86 bytes, Stack size 32 bytes, progvideo.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 560<LI>Call Chain = videoLoop() &rArr; cam_getFrameChirp(const unsigned char&, const unsigned short&, const unsigned short&, const unsigned short&, const unsigned short&, Chirp*) &rArr; cam_getFrameChirpFlags(const unsigned char&, const unsigned short&, const unsigned short&, const unsigned short&, const unsigned short&, Chirp*, unsigned char) &rArr; cam_getFrame(unsigned char*, unsigned, unsigned char, unsigned short, unsigned short, unsigned short, unsigned short) &rArr; Chirp::call(unsigned char, short, ...) &rArr; Chirp::call(unsigned char, short, std::__va_list) &rArr; Chirp::vassemble(std::__va_list*) &rArr; Chirp::vserialize(Chirp*, unsigned char*, unsigned, std::__va_list*) &rArr; Chirp::realloc(unsigned) &rArr; operator new[] (unsigned, const std::nothrow_t&) &rArr; operator new(unsigned, const std::nothrow_t&) &rArr; __new_nothrow(unsigned) &rArr; malloc &rArr; __Heap_Full &rArr; __Heap_ProvideMemory &rArr; free
 </UL>
 <BR>[Calls]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cam_getFrameChirp(const unsigned char&, const unsigned short&, const unsigned short&, const unsigned short&, const unsigned short&, Chirp*)
 <LI><a href="#[16e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sendCustom(unsigned char)
@@ -1044,12 +1043,12 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 700 + Unknown Stack Size
 <LI>Call Chain = ptSetup() &rArr; ptLoadParams() &rArr; prm_add(const char*, unsigned, const char*, ...) &rArr; flash_program(unsigned, const unsigned char*, unsigned) &rArr; spifi_program &rArr; setProt &rArr; set_mem_mode &rArr; wren_send04 &rArr; send04 &rArr; cmd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[170]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ServoLoop::reset()
-<LI><a href="#[15b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exec_runM0(unsigned char)
+<BR>[Calls]<UL><LI><a href="#[15b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exec_runM0(unsigned char)
 <LI><a href="#[127]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Qqueue::flush()
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cam_setMode(const unsigned char&)
 <LI><a href="#[124]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cc_loadLut()
 <LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ptLoadParams()
+<LI><a href="#[170]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ServoLoop::reset()
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> progpt.o(.data)
 </UL>
@@ -2380,27 +2379,22 @@ Global Symbols
 <LI><a href="#[174]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;scaleLED(unsigned, unsigned, unsigned, unsigned)
 </UL>
 
-<P><STRONG><a name="[20b]"></a>toggleLED()</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, edgedetect.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = toggleLED() &rArr; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&) &rArr; led_set(unsigned char, unsigned char, bool) &rArr; __aeabi_dmul
-</UL>
-<BR>[Calls]<UL><LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
-</UL>
-<BR>[Called By]<UL><LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;edgeDetect_run()
-</UL>
-
-<P><STRONG><a name="[123]"></a>edgeDetect_run()</STRONG> (Thumb, 1534 bytes, Stack size 96 bytes, edgedetect.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 504<LI>Call Chain = edgeDetect_run() &rArr; cam_getFrame(unsigned char*, unsigned, unsigned char, unsigned short, unsigned short, unsigned short, unsigned short) &rArr; Chirp::call(unsigned char, short, ...) &rArr; Chirp::call(unsigned char, short, std::__va_list) &rArr; Chirp::vassemble(std::__va_list*) &rArr; Chirp::vserialize(Chirp*, unsigned char*, unsigned, std::__va_list*) &rArr; Chirp::realloc(unsigned) &rArr; operator new[] (unsigned, const std::nothrow_t&) &rArr; operator new(unsigned, const std::nothrow_t&) &rArr; __new_nothrow(unsigned) &rArr; malloc &rArr; __Heap_Full &rArr; __Heap_ProvideMemory &rArr; free
+<P><STRONG><a name="[123]"></a>edgeDetect_run()</STRONG> (Thumb, 1972 bytes, Stack size 120 bytes, edgedetect.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 528<LI>Call Chain = edgeDetect_run() &rArr; cam_getFrame(unsigned char*, unsigned, unsigned char, unsigned short, unsigned short, unsigned short, unsigned short) &rArr; Chirp::call(unsigned char, short, ...) &rArr; Chirp::call(unsigned char, short, std::__va_list) &rArr; Chirp::vassemble(std::__va_list*) &rArr; Chirp::vserialize(Chirp*, unsigned char*, unsigned, std::__va_list*) &rArr; Chirp::realloc(unsigned) &rArr; operator new[] (unsigned, const std::nothrow_t&) &rArr; operator new(unsigned, const std::nothrow_t&) &rArr; __new_nothrow(unsigned) &rArr; malloc &rArr; __Heap_Full &rArr; __Heap_ProvideMemory &rArr; free
 </UL>
 <BR>[Calls]<UL><LI><a href="#[16f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cam_getFrame(unsigned char*, unsigned, unsigned char, unsigned short, unsigned short, unsigned short, unsigned short)
 <LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cam_setBrightness(const unsigned char&)
+<LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rcs_setPos(const unsigned char&, const unsigned short&)
 <LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
-<LI><a href="#[217]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Send
-<LI><a href="#[20b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;toggleLED()
+<LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rcs_enable(const unsigned char&, const unsigned char&)
+<LI><a href="#[20b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Send
 <LI><a href="#[213]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tan
 <LI><a href="#[212]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cos
 <LI><a href="#[211]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;atan
+<LI><a href="#[1c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cfrcmple
 <LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ui2f
 <LI><a href="#[155]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2uiz
+<LI><a href="#[1bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fadd
 <LI><a href="#[20c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
 <LI><a href="#[215]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdrcmple
 <LI><a href="#[20d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
@@ -2409,8 +2403,13 @@ Global Symbols
 <LI><a href="#[20f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
 <LI><a href="#[214]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
 <LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
+<LI><a href="#[1cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
 </UL>
 <BR>[Called By]<UL><LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+</UL>
+
+<P><STRONG><a name="[217]"></a>toggleLED()</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, edgedetect.o(.text), UNUSED)
+<BR><BR>[Calls]<UL><LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
 </UL>
 
 <P><STRONG><a name="[22d]"></a>memcpy_spifi_lib</STRONG> (Thumb, 42 bytes, Stack size 8 bytes, spifi_rom_api.o(.text))
@@ -3075,6 +3074,7 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = __aeabi_memcpy4
 </UL>
 <BR>[Called By]<UL><LI><a href="#[125]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ColorLUT::setSignature(unsigned char, const ColorSignature&)
+<LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;edgeDetect_run()
 <LI><a href="#[29f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_Init
 <LI><a href="#[2f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chirp::reallocTable()
 <LI><a href="#[234]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;spifi_program
@@ -3149,9 +3149,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[240]"></a>__rt_heap_descriptor</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, rt_heap_descriptor_intlibspace.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[242]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;free
+<BR><BR>[Called By]<UL><LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_init_alloc
+<LI><a href="#[242]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;free
 <LI><a href="#[23f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;malloc
-<LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_init_alloc
 </UL>
 
 <P><STRONG><a name="[307]"></a>__rt_new_handler_addr</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, rt_new_handler_addr_intlibspace.o(.text))
@@ -3220,21 +3220,21 @@ Global Symbols
 <P><STRONG><a name="[25a]"></a>_printf_pre_padding</STRONG> (Thumb, 44 bytes, Stack size 16 bytes, _printf_pad.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = _printf_pre_padding
 </UL>
-<BR>[Called By]<UL><LI><a href="#[249]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_common
-<LI><a href="#[259]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_str
-<LI><a href="#[26e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_fp_infnan
+<BR>[Called By]<UL><LI><a href="#[26e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_fp_infnan
 <LI><a href="#[26c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_fp_dec_real
 <LI><a href="#[25c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_wctomb
+<LI><a href="#[249]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_common
+<LI><a href="#[259]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_str
 </UL>
 
 <P><STRONG><a name="[25b]"></a>_printf_post_padding</STRONG> (Thumb, 34 bytes, Stack size 16 bytes, _printf_pad.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = _printf_post_padding
 </UL>
-<BR>[Called By]<UL><LI><a href="#[249]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_common
-<LI><a href="#[259]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_str
-<LI><a href="#[26e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_fp_infnan
+<BR>[Called By]<UL><LI><a href="#[26e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_fp_infnan
 <LI><a href="#[26c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_fp_dec_real
 <LI><a href="#[25c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_wctomb
+<LI><a href="#[249]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_common
+<LI><a href="#[259]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_str
 </UL>
 
 <P><STRONG><a name="[247]"></a>_printf_truncate_signed</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, _printf_truncate.o(.text))
@@ -3292,9 +3292,9 @@ Global Symbols
 <P><STRONG><a name="[25c]"></a>_printf_wctomb</STRONG> (Thumb, 182 bytes, Stack size 56 bytes, _printf_wctomb.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = _printf_wctomb &rArr; _wcrtomb &rArr; __rt_ctype_table
 </UL>
-<BR>[Calls]<UL><LI><a href="#[25b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_post_padding
+<BR>[Calls]<UL><LI><a href="#[25d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_wcrtomb
+<LI><a href="#[25b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_post_padding
 <LI><a href="#[25a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_pre_padding
-<LI><a href="#[25d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_wcrtomb
 </UL>
 <BR>[Called By]<UL><LI><a href="#[270]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_lcs_common
 </UL>
@@ -3302,8 +3302,8 @@ Global Symbols
 <P><STRONG><a name="[f1]"></a>_printf_longlong_dec</STRONG> (Thumb, 108 bytes, Stack size 24 bytes, _printf_longlong_dec.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = _printf_longlong_dec &rArr; _printf_int_common &rArr; _printf_post_padding
 </UL>
-<BR>[Calls]<UL><LI><a href="#[249]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_common
-<LI><a href="#[25e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ll_udiv10
+<BR>[Calls]<UL><LI><a href="#[25e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ll_udiv10
+<LI><a href="#[249]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_common
 </UL>
 <BR>[Called By]<UL><LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_llu
 <LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_lld
@@ -3322,8 +3322,8 @@ Global Symbols
 <P><STRONG><a name="[ed]"></a>_printf_int_oct</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, _printf_oct_int_ll.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = _printf_int_oct &rArr; _printf_longlong_oct &rArr; _printf_int_common &rArr; _printf_post_padding
 </UL>
-<BR>[Calls]<UL><LI><a href="#[248]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_truncate_unsigned
-<LI><a href="#[25f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_longlong_oct
+<BR>[Calls]<UL><LI><a href="#[25f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_longlong_oct
+<LI><a href="#[248]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_truncate_unsigned
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_o
 </UL>
@@ -3349,8 +3349,8 @@ Global Symbols
 <P><STRONG><a name="[ef]"></a>_printf_int_hex</STRONG> (Thumb, 28 bytes, Stack size 16 bytes, _printf_hex_int_ll_ptr.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = _printf_int_hex &rArr; _printf_longlong_hex &rArr; _printf_int_common &rArr; _printf_post_padding
 </UL>
-<BR>[Calls]<UL><LI><a href="#[248]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_truncate_unsigned
-<LI><a href="#[260]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_longlong_hex
+<BR>[Calls]<UL><LI><a href="#[260]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_longlong_hex
+<LI><a href="#[248]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_truncate_unsigned
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_x
 </UL>
@@ -3472,12 +3472,12 @@ Global Symbols
 <P><STRONG><a name="[26c]"></a>_printf_fp_dec_real</STRONG> (Thumb, 620 bytes, Stack size 104 bytes, _printf_fp_dec.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 320<LI>Call Chain = _printf_fp_dec_real &rArr; _fp_digits &rArr; _btod_etento &rArr; _btod_emul &rArr; _e2e
 </UL>
-<BR>[Calls]<UL><LI><a href="#[25b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_post_padding
-<LI><a href="#[25a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_pre_padding
-<LI><a href="#[26e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_fp_infnan
+<BR>[Calls]<UL><LI><a href="#[26e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_fp_infnan
 <LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_locale
 <LI><a href="#[267]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_fp_digits
 <LI><a href="#[26d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ARM_fpclassify
+<LI><a href="#[25b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_post_padding
+<LI><a href="#[25a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_pre_padding
 </UL>
 <BR>[Called By]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_fp_dec
 </UL>
@@ -3781,9 +3781,9 @@ Global Symbols
 
 <P><STRONG><a name="[1cf]"></a>CGU_GetPCLKFrequency</STRONG> (Thumb, 230 bytes, Stack size 0 bytes, lpc43xx_cgu.o(i.CGU_GetPCLKFrequency))
 <BR><BR>[Called By]<UL><LI><a href="#[1cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Init
-<LI><a href="#[27d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_Init
 <LI><a href="#[200]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_setBaudRate
 <LI><a href="#[1f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SSP_Init
+<LI><a href="#[27d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_Init
 <LI><a href="#[329]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;clockInit
 </UL>
 
@@ -3897,7 +3897,7 @@ Global Symbols
 <P><STRONG><a name="[73]"></a>UARTPutChar</STRONG> (Thumb, 18 bytes, Stack size 16 bytes, debug_frmwrk.o(i.UARTPutChar))
 <BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = UARTPutChar &rArr; UART_Send
 </UL>
-<BR>[Calls]<UL><LI><a href="#[217]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Send
+<BR>[Calls]<UL><LI><a href="#[20b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Send
 </UL>
 <BR>[Called By]<UL><LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UARTPuts
 <LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UARTPutHex32
@@ -4009,7 +4009,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[285]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Receive
 </UL>
 
-<P><STRONG><a name="[217]"></a>UART_Send</STRONG> (Thumb, 148 bytes, Stack size 36 bytes, lpc43xx_uart.o(i.UART_Send))
+<P><STRONG><a name="[20b]"></a>UART_Send</STRONG> (Thumb, 148 bytes, Stack size 36 bytes, lpc43xx_uart.o(i.UART_Send))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = UART_Send
 </UL>
 <BR>[Calls]<UL><LI><a href="#[287]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SendByte
@@ -4019,7 +4019,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[287]"></a>UART_SendByte</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, lpc43xx_uart.o(i.UART_SendByte))
-<BR><BR>[Called By]<UL><LI><a href="#[217]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Send
+<BR><BR>[Called By]<UL><LI><a href="#[20b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Send
 </UL>
 
 <P><STRONG><a name="[1fe]"></a>UART_TxCmd</STRONG> (Thumb, 52 bytes, Stack size 0 bytes, lpc43xx_uart.o(i.UART_TxCmd))
@@ -4442,12 +4442,12 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 672 + Unknown Stack Size
 <LI>Call Chain = commonInit() &rArr; lpc_printf &rArr; __c89vsprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[2b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timerInit()
-<LI><a href="#[2b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIOInit()
-<LI><a href="#[2b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;platformInit
+<BR>[Calls]<UL><LI><a href="#[2b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;platformInit
 <LI><a href="#[2b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lpc_printf
 <LI><a href="#[2b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_frmwrk_init_clk
 <LI><a href="#[2ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UserInit
+<LI><a href="#[2b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timerInit()
+<LI><a href="#[2b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIOInit()
 </UL>
 <BR>[Called By]<UL><LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pixyInit(unsigned, const unsigned char*, unsigned)
 </UL>
@@ -4467,7 +4467,7 @@ Global Symbols
 <LI><a href="#[119]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;showError
 <LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;edgeDetect_run()
 <LI><a href="#[174]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;scaleLED(unsigned, unsigned, unsigned, unsigned)
-<LI><a href="#[20b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;toggleLED()
+<LI><a href="#[217]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;toggleLED()
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> led.o(.constdata)
 </UL>
@@ -4507,6 +4507,7 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = rcs_enable(const unsigned char&, const unsigned char&)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pixyInit(unsigned, const unsigned char*, unsigned)
+<LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;edgeDetect_run()
 <LI><a href="#[2e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rcs_init()
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> rcservo.o(.constdata)
@@ -4517,9 +4518,10 @@ Global Symbols
 <P><STRONG><a name="[9f]"></a>rcs_setPos(const unsigned char&, const unsigned short&)</STRONG> (Thumb, 132 bytes, Stack size 12 bytes, rcservo.o(i._Z10rcs_setPosRKhRKt))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = rcs_setPos(const unsigned char&, const unsigned short&)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[170]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ServoLoop::reset()
-<LI><a href="#[16b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;handleRecv()
+<BR>[Called By]<UL><LI><a href="#[16b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;handleRecv()
+<LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;edgeDetect_run()
 <LI><a href="#[172]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ServoLoop::update(int)
+<LI><a href="#[170]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ServoLoop::reset()
 <LI><a href="#[208]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chaseLoop()
 <LI><a href="#[207]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chaseSetup()
 <LI><a href="#[201]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;combine(unsigned, unsigned)
@@ -4618,10 +4620,10 @@ Global Symbols
 <LI><a href="#[2c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prm_find(const char*, unsigned char*)
 <LI><a href="#[2c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prm_crc(const ParamRecord*)
 <LI><a href="#[2bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prm_getDataOffset(const ParamRecord*)
-<LI><a href="#[242]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;free
-<LI><a href="#[23f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;malloc
 <LI><a href="#[142]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
 <LI><a href="#[2c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;memcmp
+<LI><a href="#[242]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;free
+<LI><a href="#[23f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;malloc
 </UL>
 <BR>[Called By]<UL><LI><a href="#[13e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prm_set(const char*, ...)
 </UL>
@@ -4754,7 +4756,6 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[182]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cam_getFrameChirpFlags(const unsigned char&, const unsigned short&, const unsigned short&, const unsigned short&, const unsigned short&, Chirp*, unsigned char)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[15]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;videoLoop()
-<LI><a href="#[16e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sendCustom(unsigned char)
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> camera.o(.constdata)
 </UL>
@@ -4819,8 +4820,8 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chirp::deserializeParse(unsigned char*, unsigned, void**)
 <LI><a href="#[2bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prm_findShadow(const char*)
-<LI><a href="#[23f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;malloc
 <LI><a href="#[142]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
+<LI><a href="#[23f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;malloc
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> param.o(.constdata)
 </UL>
@@ -4830,9 +4831,9 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[2cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SimpleVector&lang;Shadow&rang;::resize(int)
 <LI><a href="#[2c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prm_find(const char*, unsigned char*)
 <LI><a href="#[2bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prm_findShadow(const char*)
-<LI><a href="#[23f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;malloc
 <LI><a href="#[2c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
 <LI><a href="#[2cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strcpy
+<LI><a href="#[23f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;malloc
 </UL>
 <BR>[Called By]<UL><LI><a href="#[160]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cam_loadParams()
 <LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cc_loadParams()
@@ -4962,8 +4963,8 @@ Global Symbols
 <LI><a href="#[124]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cc_loadLut()
 <LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ptLoadParams()
 <LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[2da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;handleAWB()
 <LI><a href="#[205]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chaseLoadParams()
+<LI><a href="#[2da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;handleAWB()
 </UL>
 
 <P><STRONG><a name="[13e]"></a>prm_set(const char*, ...)</STRONG> (Thumb, 60 bytes, Stack size 288 bytes, param.o(i._Z7prm_setPKcz))
@@ -5025,12 +5026,7 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 788 + Unknown Stack Size
 <LI>Call Chain = pixyInit(unsigned, const unsigned char*, unsigned) &rArr; cam_init() &rArr; cam_loadParams() &rArr; prm_set(const char*, ...) &rArr; prm_setChirp(const char*, const unsigned&, const unsigned char*) &rArr; flash_program(unsigned, const unsigned char*, unsigned) &rArr; spifi_program &rArr; setProt &rArr; set_mem_mode &rArr; wren_send04 &rArr; send04 &rArr; cmd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[280]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IPC_haltSlave
-<LI><a href="#[27f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IPC_downloadSlaveImage
-<LI><a href="#[2db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SCTInit()
-<LI><a href="#[2ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADCInit()
-<LI><a href="#[2b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commonInit()
-<LI><a href="#[2dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CameraInit()
+<BR>[Calls]<UL><LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rcs_enable(const unsigned char&, const unsigned char&)
 <LI><a href="#[2de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBLink::USBLink()
 <LI><a href="#[2e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SMLink::SMLink()
 <LI><a href="#[2df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chirp::Chirp(bool, bool, Link*)
@@ -5040,8 +5036,13 @@ Global Symbols
 <LI><a href="#[2e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prm_init(Chirp*)
 <LI><a href="#[2d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_init()
 <LI><a href="#[2d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cam_init()
-<LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rcs_enable(const unsigned char&, const unsigned char&)
 <LI><a href="#[2dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IPC_startSlave
+<LI><a href="#[280]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IPC_haltSlave
+<LI><a href="#[27f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IPC_downloadSlaveImage
+<LI><a href="#[2db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SCTInit()
+<LI><a href="#[2ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADCInit()
+<LI><a href="#[2b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commonInit()
+<LI><a href="#[2dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CameraInit()
 <LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;operator new(unsigned)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
@@ -5863,8 +5864,8 @@ Global Symbols
 <P><STRONG><a name="[134]"></a>operator new(unsigned)</STRONG> (Thumb, 34 bytes, Stack size 8 bytes, new.o(i._Znwj))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = operator new(unsigned) &rArr; malloc &rArr; __Heap_Full &rArr; __Heap_ProvideMemory &rArr; free
 </UL>
-<BR>[Calls]<UL><LI><a href="#[23f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;malloc
-<LI><a href="#[307]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_new_handler_addr
+<BR>[Calls]<UL><LI><a href="#[307]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_new_handler_addr
+<LI><a href="#[23f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;malloc
 </UL>
 <BR>[Called By]<UL><LI><a href="#[11d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exec_init(Chirp*)
 <LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pixyInit(unsigned, const unsigned char*, unsigned)
@@ -5916,8 +5917,8 @@ Global Symbols
 <P><STRONG><a name="[30b]"></a>__aeabi_atexit</STRONG> (Thumb, 50 bytes, Stack size 24 bytes, aeabi_atexit.o(i.__aeabi_atexit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = __aeabi_atexit &rArr; malloc &rArr; __Heap_Full &rArr; __Heap_ProvideMemory &rArr; free
 </UL>
-<BR>[Calls]<UL><LI><a href="#[23f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;malloc
-<LI><a href="#[30c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_ddtor_pointer_addr
+<BR>[Calls]<UL><LI><a href="#[30c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_ddtor_pointer_addr
+<LI><a href="#[23f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;malloc
 </UL>
 <BR>[Called By]<UL><LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__sti___9_param_cpp_55d340e8
 </UL>
@@ -5943,8 +5944,8 @@ Global Symbols
 <P><STRONG><a name="[10b]"></a>__cxa_finalize</STRONG> (Thumb, 66 bytes, Stack size 24 bytes, cxa_finalize.o(i.__cxa_finalize))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = __cxa_finalize &rArr; free
 </UL>
-<BR>[Calls]<UL><LI><a href="#[242]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;free
-<LI><a href="#[30c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_ddtor_pointer_addr
+<BR>[Calls]<UL><LI><a href="#[30c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_ddtor_pointer_addr
+<LI><a href="#[242]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;free
 </UL>
 <BR>[Called By]<UL><LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_lib_shutdown_cpp_1
 </UL>
@@ -6692,7 +6693,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1bf]"></a>__aeabi_fadd</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, faddsub_clz.o(x$fpl$fadd))
-<BR><BR>[Called By]<UL><LI><a href="#[1be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ColorLUT::updateSignature(unsigned char)
+<BR><BR>[Called By]<UL><LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;edgeDetect_run()
+<LI><a href="#[1be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ColorLUT::updateSignature(unsigned char)
 </UL>
 
 <P><STRONG><a name="[3bb]"></a>_fadd</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, faddsub_clz.o(x$fpl$fadd), UNUSED)
@@ -6792,7 +6794,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1c4]"></a>__aeabi_cfrcmple</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, frleqf.o(x$fpl$frleqf))
-<BR><BR>[Called By]<UL><LI><a href="#[1c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ColorLUT::iterate(IterPixel*, ColorSignature*)
+<BR><BR>[Called By]<UL><LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;edgeDetect_run()
+<LI><a href="#[1c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ColorLUT::iterate(IterPixel*, ColorSignature*)
 </UL>
 
 <P><STRONG><a name="[347]"></a>_frcmple</STRONG> (Thumb, 40 bytes, Stack size 0 bytes, frleqf.o(x$fpl$frleqf), UNUSED)

@@ -23,6 +23,7 @@
 #include "conncomp.h"
 #include "param.h"
 #include <string.h>
+#include "edgedetect_highres.h"
 
 
 #define RES_WIDTH 320
@@ -48,8 +49,8 @@ void sendCustom(uint8_t renderFlags=RENDER_FLAG_FLUSH)
 	uint32_t fcc;
 	cam_setBrightness(BRIGHTNESS);
 
-	if (g_execArg==1)
-	{
+//if (g_execArg==1)
+	//{
 		// fill buffer contents manually for return data 
 		len = Chirp::serialize(g_chirpUsb, frame, SRAM1_SIZE, HTYPE(FOURCC('C','M','V','2')), HINT8(renderFlags), UINT16(CAM_RES2_WIDTH), UINT16(CAM_RES2_HEIGHT), UINTS8_NO_COPY(CAM_RES2_WIDTH*CAM_RES2_HEIGHT), END);
 		// write frame after chirp args
@@ -57,93 +58,71 @@ void sendCustom(uint8_t renderFlags=RENDER_FLAG_FLUSH)
 
 		uint8_t *frameloc = (uint8_t *)(SRAM1_LOC + len);
 		
-		for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
-			uint16_t ypo = y + 1;
-			uint16_t ymo = y - 1;
-			for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
-				uint16_t xpo = x + 1;
-				uint16_t xmo = x - 1;
-				uint16_t grad = 0; 
-				
-				uint16_t intense_XPO_Y = frameloc[y*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpo+1] + 
-						(frameloc[ypo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpo+1])/2;
-				
-				uint16_t intense_XMO_Y = frameloc[y*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x] + 
-						(frameloc[ypo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x])/2;
-				
-				uint16_t intense_X_YPO = frameloc[ypo*RES_WIDTH + x] + frameloc[(ypo+1)*RES_WIDTH + xpo] + 
-						(frameloc[(ypo+1)*RES_WIDTH + x] + frameloc[ypo*RES_WIDTH + xpo])/2;
-				
-				uint16_t intense_XPO_YPO = frameloc[ypo*RES_WIDTH + xpo] + frameloc[(ypo+1)*RES_WIDTH + xpo+1] + 
-						(frameloc[(ypo+1)*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpo+1])/2;
-				
-				uint16_t intense_XMO_YPO = frameloc[(ypo)*RES_WIDTH + xmo] + frameloc[(ypo+1)*RES_WIDTH + x] + 
-						(frameloc[(ypo+1)*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x])/2;
-				
-				uint16_t intense_X_YMO = frameloc[ymo*RES_WIDTH + x] + frameloc[y*RES_WIDTH + xpo] + 
-						(frameloc[y*RES_WIDTH + x] + frameloc[ymo*RES_WIDTH + xpo])/2;
-						
-				uint16_t intense_XPO_YMO = frameloc[ymo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpo+1] + 
-						(frameloc[y*RES_WIDTH + xpo] + frameloc[ymo*RES_WIDTH + xpo+1])/2;
-						
-				uint16_t intense_XMO_YMO = frameloc[ymo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x] + 
-						(frameloc[y*RES_WIDTH + xmo] + frameloc[ymo*RES_WIDTH + x])/2;
-				
-				uint16_t grad1 = abs(intense_XPO_Y - intense_XMO_Y
-					+ intense_XPO_YPO - intense_XMO_YPO
-					+ intense_XPO_YMO - intense_XMO_YMO);
+		// double for loop for calculating edges
+			for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
+				uint16_t ypo = y + 1;
+				uint16_t ymo = y - 1;
+				for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
+					uint16_t xpo = x + 1;
+					uint16_t xmo = x - 1;
 					
-				uint16_t grad2 = abs(intense_X_YPO -	intense_X_YMO
-					+ intense_XPO_YPO -	intense_XPO_YMO
-					+ intense_XMO_YPO - intense_XMO_YMO);
-				
-				grad = grad1 + grad2;
-								/*
-				if(grad > THREASHOLD) {
-
-					frameloc[ymo*RES_WIDTH + xmo] = 255;
-					frameloc[y*RES_WIDTH + xmo] = 255;
-					frameloc[ymo*RES_WIDTH + x] = 255;
-					frameloc[y*RES_WIDTH + x] = 255; */
-
-/*
-					frameloc[ymo*RES_WIDTH + xmo] = '1';
-					frameloc[y*RES_WIDTH + xmo] = '1';
-					frameloc[ymo*RES_WIDTH + x] = '1';
-					frameloc[y*RES_WIDTH + x] = '1'; 
-*/
-/*
-				}
-				else {
-
-					frameloc[ymo*RES_WIDTH + xmo] = 0;
-					frameloc[y*RES_WIDTH + xmo] = 0;
-					frameloc[ymo*RES_WIDTH + x] = 0;
-					frameloc[y*RES_WIDTH + x] = 0;
-*/
-					/*
-					frameloc[ymo*RES_WIDTH + xmo] = '0';
-					frameloc[y*RES_WIDTH + xmo] = '0';
-					frameloc[ymo*RES_WIDTH + x] = '0';
-					frameloc[y*RES_WIDTH + x] = '0'; 
-*/
-			 //} 
-			 if( y == x) {
+				// Gradient calculation
+					
+					// intensity calculation for the pixel groups around each pixel
+					uint16_t intense_XPO_Y = frameloc[y*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpo+1] + 
+							(frameloc[ypo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpo+1])/2;
+					
+					uint16_t intense_XMO_Y = frameloc[y*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x] + 
+							(frameloc[ypo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x])/2;
+					
+					uint16_t intense_X_YPO = frameloc[ypo*RES_WIDTH + x] + frameloc[(ypo+1)*RES_WIDTH + xpo] + 
+							(frameloc[(ypo+1)*RES_WIDTH + x] + frameloc[ypo*RES_WIDTH + xpo])/2;
+					
+					uint16_t intense_XPO_YPO = frameloc[ypo*RES_WIDTH + xpo] + frameloc[(ypo+1)*RES_WIDTH + xpo+1] + 
+							(frameloc[(ypo+1)*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpo+1])/2;
+					
+					uint16_t intense_XMO_YPO = frameloc[(ypo)*RES_WIDTH + xmo] + frameloc[(ypo+1)*RES_WIDTH + x] + 
+							(frameloc[(ypo+1)*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x])/2;
+					
+					uint16_t intense_X_YMO = frameloc[ymo*RES_WIDTH + x] + frameloc[y*RES_WIDTH + xpo] + 
+							(frameloc[y*RES_WIDTH + x] + frameloc[ymo*RES_WIDTH + xpo])/2;
+							
+					uint16_t intense_XPO_YMO = frameloc[ymo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpo+1] + 
+							(frameloc[y*RES_WIDTH + xpo] + frameloc[ymo*RES_WIDTH + xpo+1])/2;
+							
+					uint16_t intense_XMO_YMO = frameloc[ymo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x] + 
+							(frameloc[y*RES_WIDTH + xmo] + frameloc[ymo*RES_WIDTH + x])/2;
+					
+					uint16_t grad1 = abs(intense_XPO_Y - intense_XMO_Y
+						+ intense_XPO_YPO - intense_XMO_YPO
+						+ intense_XPO_YMO - intense_XMO_YMO);
 						
+					uint16_t grad2 = abs(intense_X_YPO -	intense_X_YMO
+						+ intense_XPO_YPO -	intense_XPO_YMO
+						+ intense_XMO_YPO - intense_XMO_YMO);
+				
+								// Threashold detection
+					if( (grad1 + grad2) > THREASHOLD ) {
+						// EDGE
 						frameloc[ymo*RES_WIDTH + xmo] = 255;
 						frameloc[y*RES_WIDTH + xmo] = 255;
 						frameloc[ymo*RES_WIDTH + x] = 255;
 						frameloc[y*RES_WIDTH + x] = 255;
 					}
 					else {
+						// NO EDGE
 						frameloc[ymo*RES_WIDTH + xmo] = 0;
 						frameloc[y*RES_WIDTH + xmo] = 0;
 						frameloc[ymo*RES_WIDTH + x] = 0;
 						frameloc[y*RES_WIDTH + x] = 0;
 					}
-		}	
-	} /*
+				}
+			} // end nested for loop
 		
+	// noise pixel filtering
+			
+			/*
+	
 	for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
 			
 				for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
@@ -167,27 +146,27 @@ void sendCustom(uint8_t renderFlags=RENDER_FLAG_FLUSH)
 						frameloc[y*RES_WIDTH + x] = 0;
 					}
 				}
-		}*/
+		} */
 		
 		
 		// tell chirp to use this buffer
 		g_chirpUsb->useBuffer(frame, len+CAM_RES2_WIDTH*CAM_RES2_HEIGHT); 
-	}
-	else if (100<=g_execArg && g_execArg<200)
-	{
-		fcc =  FOURCC('E','X',(g_execArg%100)/10 + '0', (g_execArg%10) + '0');
-		len = Chirp::serialize(g_chirpUsb, frame, SRAM1_SIZE, HTYPE(fcc), HINT8(renderFlags), UINT16(CAM_RES2_WIDTH), UINT16(CAM_RES2_HEIGHT), UINTS8_NO_COPY(CAM_RES2_WIDTH*CAM_RES2_HEIGHT), END);
+//	}
+//	else if (100<=g_execArg && g_execArg<200)
+//	{
+//		fcc =  FOURCC('E','X',(g_execArg%100)/10 + '0', (g_execArg%10) + '0');
+//		len = Chirp::serialize(g_chirpUsb, frame, SRAM1_SIZE, HTYPE(fcc), HINT8(renderFlags), UINT16(CAM_RES2_WIDTH), UINT16(CAM_RES2_HEIGHT), UINTS8_NO_COPY(CAM_RES2_WIDTH*CAM_RES2_HEIGHT), END);
 		// write frame after chirp args
-		cam_getFrame(frame+len, SRAM1_SIZE-len, CAM_GRAB_M1R2, 0, 0, CAM_RES2_WIDTH, CAM_RES2_HEIGHT);
+//		cam_getFrame(frame+len, SRAM1_SIZE-len, CAM_GRAB_M1R2, 0, 0, CAM_RES2_WIDTH, CAM_RES2_HEIGHT);
 
 		
 		
 		
 		// tell chirp to use this buffer
-		g_chirpUsb->useBuffer(frame, len+CAM_RES2_WIDTH*CAM_RES2_HEIGHT); 
-	}
-	else
-		cam_getFrameChirp(CAM_GRAB_M1R2, 0, 0, CAM_RES2_WIDTH, CAM_RES2_HEIGHT, g_chirpUsb);
+//		g_chirpUsb->useBuffer(frame, len+CAM_RES2_WIDTH*CAM_RES2_HEIGHT); 
+//	}
+//	else
+//		cam_getFrameChirp(CAM_GRAB_M1R2, 0, 0, CAM_RES2_WIDTH, CAM_RES2_HEIGHT, g_chirpUsb);
 
 }
 

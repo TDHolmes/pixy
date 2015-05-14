@@ -511,6 +511,11 @@
               <FileType>8</FileType>
               <FilePath>.\edgedetect.cpp</FilePath>
             </File>
+            <File>
+              <FileName>edgedetect_highres.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\edgedetect_highres.cpp</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -1019,6 +1024,11 @@
               <FileName>edgedetect.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\edgedetect.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>edgedetect_highres.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\edgedetect_highres.cpp</FilePath>
             </File>
           </Files>
         </Group>

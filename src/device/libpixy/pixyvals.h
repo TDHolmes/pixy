@@ -24,6 +24,19 @@
 #define THREASHOLD	150
 #define BRIGHTNESS  100
 
+
+#define RES_WIDTH (320)
+#define RES_HEIGHT (200)
+
+// tangent calculations used in triangulation calculations
+#define TAN_FOVH_DIV_2 0.435
+#define TAN_FOVW_DIV_2 0.767
+
+
+// units in cm
+#define H_C 3.6
+#define H_B 4.1
+
 #define OFFSET 2
 #define POS_OFFSET 4.0
 
