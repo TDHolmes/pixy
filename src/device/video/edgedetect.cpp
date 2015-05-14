@@ -34,12 +34,9 @@
 #include "rcservo.h"
 #include "edgedetect.h"
 #include "led.h"
+#include "pixyvals.h"
 #include <math.h>
 
-
-// Resolution setting
-#define RES_WIDTH (320)
-#define RES_HEIGHT (200)
 
 // tangent calculations used in triangulation calculations
 #define TAN_FOVH_DIV_2 0.435
@@ -55,8 +52,8 @@ extern uint8_t UART_DATA_AVAILABLE;			// global interrupt that gets the byte fro
 
 void edgeDetect_run()
 {
-	
-	cam_setBrightness(BRIGHTNESS); 				// 0 to 255. Camera brightness setting
+	uint8_t brightness = 100;
+	cam_setBrightness(brightness); 				// 0 to 255. Camera brightness setting
 	
 	int8_t retVal = 0;
 	retVal += rcs_enable(1, 1);
@@ -70,11 +67,29 @@ void edgeDetect_run()
 	uint8_t *frame = (uint8_t *)SRAM1_LOC;
 	uint8_t *frameloc = (uint8_t *)(SRAM1_LOC + 0);
 	uint8_t *sendPositions = (uint8_t *)SRAM1_LOC;
+	
+	uint8_t floorArray[80][13];
+	
 	float theta;
 	uint16_t count = 0;
 	
 	// recieve the command to get a frame
 	while(1) {
+		
+		// clear array (front edge)
+		for(uint16_t x = 0; x < 320; x++) {
+			sendPositions[x] = 255;
+		}
+		
+		// clear array (floor array)
+		
+		for(uint16_t y = 0; y < 13; y++) {
+			for(uint16_t x = 0; x < 72; x++) {
+				floorArray[x][y] = 0;
+			}
+		}
+		
+		
 		
 		// red LED: Stopped waiting for data
 		led_setRGB(255, 0, 0);
@@ -137,19 +152,45 @@ void edgeDetect_run()
 							
 					uint16_t intense_XMO_YMO = frameloc[ymo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x] + 
 							(frameloc[y*RES_WIDTH + xmo] + frameloc[ymo*RES_WIDTH + x])/2;
-					
-					uint16_t grad1 = abs(intense_XPO_Y - intense_XMO_Y
+					/*   ORIGINAL
+					float gradx = abs(intense_XPO_Y - intense_XMO_Y
 						+ intense_XPO_YPO - intense_XMO_YPO
 						+ intense_XPO_YMO - intense_XMO_YMO);
 						
-					uint16_t grad2 = abs(intense_X_YPO -	intense_X_YMO
+					float grady = abs(intense_X_YPO -	intense_X_YMO
 						+ intense_XPO_YPO -	intense_XPO_YMO
 						+ intense_XMO_YPO - intense_XMO_YMO);
+				*/
+#ifdef THREASHOLD_NORMAL
+
+				float grady = (1*(intense_XPO_YPO + GRAD_CO*intense_XPO_Y 
+					+ intense_XPO_YMO - intense_XMO_YPO 
+					- GRAD_CO*intense_XMO_Y - intense_XMO_YMO));
+						
+				float gradx = (3*(intense_XMO_YMO + GRAD_CO*intense_X_YMO
+					+ intense_XPO_YMO - intense_XMO_YPO 
+					- GRAD_CO*intense_X_YPO - intense_XPO_YPO));
 				
-				// End Gradient/intensity calculation
+#else
 				
+				float grady = (3*(-intense_XPO_YPO - GRAD_CO*intense_XPO_Y 
+					- intense_XPO_YMO + intense_XMO_YPO 
+					+ GRAD_CO*intense_XMO_Y + intense_XMO_YMO))/GRAD_THREASHOLD;
+						
+				float gradx = (3*(intense_XMO_YMO + GRAD_CO*intense_X_YMO
+					+ intense_XPO_YMO - intense_XMO_YPO 
+					- GRAD_CO*intense_X_YPO - intense_XPO_YPO))/GRAD_THREASHOLD;
+#endif
+					
 								// Threashold detection
-					if( (grad1 + grad2) > THREASHOLD ) {
+				float grad = gradx+grady;
+								// Threashold detection
+					
+#ifdef THREASHOLD_NORMAL
+					if( (grad > THREASHOLD_LOW) && (grad < THREASHOLD_HIGH) ) {
+#else
+					if(gradx*gradx + grady*grady > 1) {
+#endif
 						// EDGE
 						// frameloc[ymo*RES_WIDTH + xmo] = 255;
 						// frameloc[y*RES_WIDTH + xmo] = 255;
@@ -231,6 +272,11 @@ void edgeDetect_run()
 						sendPositions[2*count] = (uint8_t)(xPos + 128);						// these two lines put x,y pairs
 						sendPositions[2*count + 1] = (uint8_t)yPos;								// into the send array
 						
+						
+						// floor array is a 76 cm wide by 104 cm long grid of where the robot can and cannot drive. 
+						// It is byte packed in the y direction
+						floorArray[(int8_t)(xPos + 36)] [((int8_t)yPos)/8] |= 1 << (((int8_t)yPos) % 8);
+						
 						count += 1;		// count of the number of edges of obsticles detected
 						break;			// stop looking for the edge, break to the next x co-ordinate
 					} // end if
@@ -267,24 +313,18 @@ void edgeDetect_run()
 			// UART_Send(LPC_USART0, frameloc, 2001, BLOCKING);		 // Send the frame byte packed to see it in processing
 */
 			
-			// clear array
-			for(uint16_t x = 0; x < 320; x++) {
-				sendPositions[x] = 255;
-			}
-			
 		} // end edge detecting
 		
 		
 		
 		else if(theta > 1 ) {	// Servo move routine
 			uint16_t position;
-			int8_t retVal;
 			// Move the servo based on the input from the PIC
 			// theta == 2 corrisponds to a 45 degree angle,
 			// theta == 42 corrisponds to a 135 degree angle.
 			position = theta;
 			position = (position - 2)*(25);
-			retVal = rcs_setPos(1, position);
+			rcs_setPos(1, position);
 		}
 		
 		else {		// theta == 1, they are asking for my ID

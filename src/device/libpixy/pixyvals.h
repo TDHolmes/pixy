@@ -21,8 +21,14 @@
 #define CLKFREQ_MS               (CLKFREQ/1000)
 #define CLKFREQ_US               (CLKFREQ/1000000)
 
-#define THREASHOLD	150
-#define BRIGHTNESS  100
+
+#define THREASHOLD_LOW	160
+
+#define THREASHOLD_HIGH 90000
+#define GRAD_CO 2
+#define GRAD_THREASHOLD 200
+
+#define THREASHOLD_NORMAL
 
 
 #define RES_WIDTH (320)
@@ -37,8 +43,8 @@
 #define H_C 3.6
 #define H_B 4.1
 
-#define OFFSET 2
-#define POS_OFFSET 4.0
+#define OFFSET 4.0
+#define POS_OFFSET 2.0
 
 // SRAM banks
 #define SRAM0_LOC                0x10000000

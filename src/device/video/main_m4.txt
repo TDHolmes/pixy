@@ -146,11 +146,11 @@
 0000c6  e001              B        |L1.204|
                   |L1.200|
 ;;;97     		//edgeDetect_highres_run();
-;;;98     		edgeDetect_run();	// run the main edgeDetect function
-0000c8  f7fffffe          BL       _Z14edgeDetect_runv ; edgeDetect_run()
+;;;98     		//edgeDetect_run();	// run the main edgeDetect function
+;;;99     		exec_loop();	// Debug through pixymon
+0000c8  f7fffffe          BL       _Z9exec_loopv ; exec_loop()
                   |L1.204|
 0000cc  e7fc              B        |L1.200|
-;;;99     		//exec_loop();	// Debug through pixymon
 ;;;100    	}
 ;;;101    
 ;;;102    #if 0

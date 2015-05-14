@@ -95,8 +95,8 @@ int main(void)
 	
 	while(1) {
 		//edgeDetect_highres_run();
-		edgeDetect_run();	// run the main edgeDetect function
-		//exec_loop();	// Debug through pixymon
+		//edgeDetect_run();	// run the main edgeDetect function
+		exec_loop();	// Debug through pixymon
 	}
 
 #if 0

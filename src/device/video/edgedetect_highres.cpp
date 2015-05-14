@@ -37,10 +37,6 @@
 #include <math.h>
 
 
-// Resolution setting
-#define RES_WIDTH (320)
-#define RES_HEIGHT (200)
-
 // tangent calculations used in triangulation calculations
 #define TAN_FOVH_DIV_2 0.435
 #define TAN_FOVW_DIV_2 0.767
@@ -55,7 +51,8 @@ extern uint8_t UART_DATA_AVAILABLE;			// global interrupt that gets the byte fro
 
 void edgeDetect_highres_run()
 {
-	cam_setBrightness(BRIGHTNESS); 				// 0 to 255. Camera brightness setting
+	uint8_t brightness = 100;
+	cam_setBrightness(brightness); 				// 0 to 255. Camera brightness setting
 	
 	uint8_t *frame = (uint8_t *)SRAM1_LOC;
 	uint8_t *frameloc = (uint8_t *)(SRAM1_LOC + 0);
@@ -146,16 +143,16 @@ void edgeDetect_highres_run()
 						
 					}
 					
-					uint16_t grad1 = abs(intense_XPO_Y - intense_XMO_Y
+					float grad1 = abs(intense_XPO_Y - intense_XMO_Y
 						+ intense_XPO_YPO - intense_XMO_YPO
 						+ intense_XPO_YMO - intense_XMO_YMO);
 						
-					uint16_t grad2 = abs(intense_X_YPO -	intense_X_YMO
+					float grad2 = abs(intense_X_YPO -	intense_X_YMO
 						+ intense_XPO_YPO -	intense_XPO_YMO
 						+ intense_XMO_YPO - intense_XMO_YMO);
 				
 								// Threashold detection
-					if( (grad1 + grad2) > THREASHOLD ) {
+					if( (grad1 + grad2) > THREASHOLD_LOW ) {
 						// EDGE
 						frameloc[y*RES_WIDTH + x] = 255;
 					}

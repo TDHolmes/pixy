@@ -15,21 +15,21 @@ I (..\libpixy\chirp.h)(0x5541C995)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5476B7E0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x5476B7DA)
 I (..\libpixy\cycletimer.h)(0x5541C995)
-I (..\libpixy\pixyvals.h)(0x5552D2D7)
+I (..\libpixy\pixyvals.h)(0x5554C738)
 I (..\libpixy\exec_m0.h)(0x5541C995)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x5476B7DA)
 I (..\libpixy\frame_m0.h)(0x5541C995)
 I (..\libpixy\cameravals.h)(0x5541C995)
 I (..\libpixy\rls_m0.h)(0x5541C996)
-F (..\libpixy\libpixy_m0.lib)(0x5553A575)()
+F (..\libpixy\libpixy_m0.lib)(0x5554EC41)()
 F (.\startup_LPC43xx_m0.s)(0x5541C999)(--cpu Cortex-M0 --li -g --16 --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include--pd "__UVISION_VERSION SETA 514" --pd "NO_CRP SETA 1" --pd "IPC_SLAVE SETA 1"--list .\startup_lpc43xx_m0.lst --xref -o .\m0\startup_lpc43xx_m0.o --depend .\m0\startup_lpc43xx_m0.d)
 F (..\libpixy\qqueue.c)(0x5541C996)(-c --cpu Cortex-M0 -D__MICROLIB --li -g -O0 --apcs=interwork --split_sections --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M0 -DIPC_SLAVE -DPIXY-o .\m0\qqueue.o --list_dir ".\\" --list --omf_browse .\m0\qqueue.crf --depend .\m0\qqueue.d)
 I (..\..\common\qqueue.h)(0x5541C98A)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x5476B7DA)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5476B7E0)
-I (..\libpixy\pixyvals.h)(0x5552D2D7)
+I (..\libpixy\pixyvals.h)(0x5554C738)
 F (..\libpixy\exec_m0.c)(0x5541C995)(-c --cpu Cortex-M0 -D__MICROLIB --li -g -O0 --apcs=interwork --split_sections --asm --interleave --asm_dir ".\\" -I. -I..\libpixy -I..\..\common-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DCORE_M0 -DIPC_SLAVE -DPIXY-o .\m0\exec_m0.o --list_dir ".\\" --list --omf_browse .\m0\exec_m0.crf --depend .\m0\exec_m0.d)
-I (..\libpixy\pixyvals.h)(0x5552D2D7)
+I (..\libpixy\pixyvals.h)(0x5554C738)
 I (..\libpixy\chirp.h)(0x5541C995)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5476B7E0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5476B7E0)
@@ -69,4 +69,4 @@ I (..\libpixy\chirp.h)(0x5541C995)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5476B7E0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x5476B7DA)
 I (..\..\common\qqueue.h)(0x5541C98A)
-I (..\libpixy\pixyvals.h)(0x5552D2D7)
+I (..\libpixy\pixyvals.h)(0x5554C738)
