@@ -119,16 +119,21 @@ void edgeDetect_run()
 			for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
 				uint16_t ypo = y + 1;
 				uint16_t ymo = y - 1;
+//				uint16_t ymt = y - 2;
+//				uint16_t ypt = y + 2;
+				
 				for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
 					uint16_t xpo = x + 1;
 					uint16_t xmo = x - 1;
+//					uint16_t xpt = x + 2; 
+//					uint16_t xmt = x - 2;
 					
 				// Gradient/intensity calculation
 					
 					// intensity calculation for the pixel groups. each "pixel" we use is actually the intensity
 					// calculated based off of a group of four pixels. This is for speed, accuracy, and clean
 					// edges.
-					
+
 					uint16_t intense_XPO_Y = frameloc[y*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpo+1] + 
 							(frameloc[ypo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpo+1])/2;
 					
@@ -152,6 +157,8 @@ void edgeDetect_run()
 							
 					uint16_t intense_XMO_YMO = frameloc[ymo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x] + 
 							(frameloc[y*RES_WIDTH + xmo] + frameloc[ymo*RES_WIDTH + x])/2;
+
+							
 					/*   ORIGINAL
 					float gradx = abs(intense_XPO_Y - intense_XMO_Y
 						+ intense_XPO_YPO - intense_XMO_YPO

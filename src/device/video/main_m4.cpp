@@ -33,6 +33,7 @@
 #include "edgedetect.h"
 #include "pixyvals.h"
 #include "edgeDetect_highres.h"
+#include "rcservo.h"
 
 // M0 code 
 const // so m0 program goes into RO memory
@@ -92,11 +93,19 @@ int main(void)
 
 	ser_setInterface(SER_INTERFACE_UART);
 	
+	rcs_setLimits(1, -250, 250);							// extends servo range to maximum//0x__BBRRGG
+	//28 == full back, 12 == full angle down, 22 == parallel
+	
+	uint8_t WBV_sub = 0x06;
+	uint32_t WBV = WBV_sub | WBV_sub << 8 | WBV_sub << 16;
+	cam_setWBV(WBV);					// sets the white balance manually
+	cam_setAEC(0);						// turns off auto exposure correction
+	cam_setBrightness(35);		// sets the brightness
 	
 	while(1) {
 		//edgeDetect_highres_run();
-		//edgeDetect_run();	// run the main edgeDetect function
-		exec_loop();	// Debug through pixymon
+		edgeDetect_run();	// run the main edgeDetect function
+		//exec_loop();	// Debug through pixymon
 	}
 
 #if 0

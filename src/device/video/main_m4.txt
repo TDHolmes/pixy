@@ -8,122 +8,122 @@
                           REQUIRE _printf_d
                           REQUIRE _printf_int_dec
                   __default_signal_handler PROC
-;;;47     // it may be called for other reasons too... 
-;;;48     void __default_signal_handler(int signal, int type)
+;;;48     // it may be called for other reasons too... 
+;;;49     void __default_signal_handler(int signal, int type)
 000000  b530              PUSH     {r4,r5,lr}
-;;;49     {										   
+;;;50     {										   
 000002  b08d              SUB      sp,sp,#0x34
 000004  4604              MOV      r4,r0
 000006  460d              MOV      r5,r1
-;;;50     	char message[48];
-;;;51     
-;;;52     	sprintf(message, "received signal: %d %d\n", signal, type);
+;;;51     	char message[48];
+;;;52     
+;;;53     	sprintf(message, "received signal: %d %d\n", signal, type);
 000008  462b              MOV      r3,r5
 00000a  4622              MOV      r2,r4
-00000c  a130              ADR      r1,|L1.208|
+00000c  a13f              ADR      r1,|L1.268|
 00000e  a801              ADD      r0,sp,#4
 000010  f7fffffe          BL       __2sprintf
-;;;53     	showError(signal, 0xff0000, message);
+;;;54     	showError(signal, 0xff0000, message);
 000014  b2e0              UXTB     r0,r4
 000016  aa01              ADD      r2,sp,#4
 000018  f44f017f          MOV      r1,#0xff0000
 00001c  f7fffffe          BL       showError
-;;;54     }
+;;;55     }
 000020  b00d              ADD      sp,sp,#0x34
 000022  bd30              POP      {r4,r5,pc}
-;;;55     }
+;;;56     }
                           ENDP
 
                   main PROC
-;;;56     
-;;;57     int main(void) 
-000024  b08a              SUB      sp,sp,#0x28
-;;;58     {
-;;;59     	uint16_t major, minor, build;
-;;;60     	int i, res, count;
-;;;61     
-;;;62     	// main init of hardware plus a version-dependent number for the parameters that will
-;;;63     	// force a format of parameter between version numbers.  
-;;;64      	pixyInit(SRAM3_LOC, &LR0[0], sizeof(LR0));
+;;;57     
+;;;58     int main(void) 
+000024  b08e              SUB      sp,sp,#0x38
+;;;59     {
+;;;60     	uint16_t major, minor, build;
+;;;61     	int i, res, count;
+;;;62     
+;;;63     	// main init of hardware plus a version-dependent number for the parameters that will
+;;;64     	// force a format of parameter between version numbers.  
+;;;65      	pixyInit(SRAM3_LOC, &LR0[0], sizeof(LR0));
 000026  f241627c          MOV      r2,#0x167c
-00002a  492f              LDR      r1,|L1.232|
-00002c  482f              LDR      r0,|L1.236|
+00002a  493e              LDR      r1,|L1.292|
+00002c  483e              LDR      r0,|L1.296|
 00002e  f7fffffe          BL       _Z8pixyInitjPKhj ; pixyInit(unsigned, const unsigned char*, unsigned)
-;;;65     
-;;;66     	cc_init(g_chirpUsb);
-000032  482f              LDR      r0,|L1.240|
+;;;66     
+;;;67     	cc_init(g_chirpUsb);
+000032  483e              LDR      r0,|L1.300|
 000034  6800              LDR      r0,[r0,#0]  ; g_chirpUsb
 000036  f7fffffe          BL       _Z7cc_initP5Chirp ; cc_init(Chirp*)
-;;;67     	ser_init();
+;;;68     	ser_init();
 00003a  f7fffffe          BL       _Z8ser_initv ; ser_init()
-;;;68     	exec_init(g_chirpUsb);
-00003e  482c              LDR      r0,|L1.240|
+;;;69     	exec_init(g_chirpUsb);
+00003e  483b              LDR      r0,|L1.300|
 000040  6800              LDR      r0,[r0,#0]  ; g_chirpUsb
 000042  f7fffffe          BL       _Z9exec_initP5Chirp ; exec_init(Chirp*)
-;;;69     
-;;;70     	// load programs
-;;;71     	exec_addProg(&g_progBlobs);
+;;;70     
+;;;71     	// load programs
+;;;72     	exec_addProg(&g_progBlobs);
 000046  2100              MOVS     r1,#0
-000048  482a              LDR      r0,|L1.244|
+000048  4839              LDR      r0,|L1.304|
 00004a  f7fffffe          BL       _Z12exec_addProgP7Programb ; exec_addProg(Program*, bool)
-;;;72     	ptLoadParams();
+;;;73     	ptLoadParams();
 00004e  f7fffffe          BL       _Z12ptLoadParamsv ; ptLoadParams()
-;;;73     	exec_addProg(&g_progPt);
+;;;74     	exec_addProg(&g_progPt);
 000052  2100              MOVS     r1,#0
-000054  4828              LDR      r0,|L1.248|
+000054  4837              LDR      r0,|L1.308|
 000056  f7fffffe          BL       _Z12exec_addProgP7Programb ; exec_addProg(Program*, bool)
-;;;74     #if 0
-;;;75     	chaseLoadParams();
-;;;76     	exec_addProg(&g_progChase);
-;;;77     #endif
-;;;78     	exec_addProg(&g_progVideo, true);
+;;;75     #if 0
+;;;76     	chaseLoadParams();
+;;;77     	exec_addProg(&g_progChase);
+;;;78     #endif
+;;;79     	exec_addProg(&g_progVideo, true);
 00005a  2101              MOVS     r1,#1
-00005c  4827              LDR      r0,|L1.252|
+00005c  4836              LDR      r0,|L1.312|
 00005e  f7fffffe          BL       _Z12exec_addProgP7Programb ; exec_addProg(Program*, bool)
-;;;79     
-;;;80     	// this code formats if the version has changed
-;;;81     	for (i=0, count=0; i<25; i++)
-000062  2500              MOVS     r5,#0
-000064  2600              MOVS     r6,#0
+;;;80     
+;;;81     	// this code formats if the version has changed
+;;;82     	for (i=0, count=0; i<25; i++)
+000062  2600              MOVS     r6,#0
+000064  2700              MOVS     r7,#0
 000066  e017              B        |L1.152|
                   |L1.104|
-;;;82     	{
-;;;83     		res = prm_get("fwver", &major, &minor, &build, END);
+;;;83     	{
+;;;84     		res = prm_get("fwver", &major, &minor, &build, END);
 000068  2000              MOVS     r0,#0
-00006a  ab07              ADD      r3,sp,#0x1c
-00006c  aa08              ADD      r2,sp,#0x20
-00006e  a909              ADD      r1,sp,#0x24
+00006a  ab08              ADD      r3,sp,#0x20
+00006c  aa09              ADD      r2,sp,#0x24
+00006e  a90a              ADD      r1,sp,#0x28
 000070  9000              STR      r0,[sp,#0]
-000072  a023              ADR      r0,|L1.256|
+000072  a032              ADR      r0,|L1.316|
 000074  f7fffffe          BL       _Z7prm_getPKcz ; prm_get(const char*, ...)
 000078  4604              MOV      r4,r0
-;;;84     		if (res>=0 && major==FW_MAJOR_VER && minor==FW_MINOR_VER && build==FW_BUILD_VER)
+;;;85     		if (res>=0 && major==FW_MAJOR_VER && minor==FW_MINOR_VER && build==FW_BUILD_VER)
 00007a  2c00              CMP      r4,#0
 00007c  db0b              BLT      |L1.150|
-00007e  f8bd0024          LDRH     r0,[sp,#0x24]
+00007e  f8bd0028          LDRH     r0,[sp,#0x28]
 000082  2802              CMP      r0,#2
 000084  d107              BNE      |L1.150|
-000086  f8bd0020          LDRH     r0,[sp,#0x20]
+000086  f8bd0024          LDRH     r0,[sp,#0x24]
 00008a  b920              CBNZ     r0,|L1.150|
-00008c  f8bd001c          LDRH     r0,[sp,#0x1c]
+00008c  f8bd0020          LDRH     r0,[sp,#0x20]
 000090  2809              CMP      r0,#9
 000092  d100              BNE      |L1.150|
-;;;85     			count++;
-000094  1c76              ADDS     r6,r6,#1
+;;;86     			count++;
+000094  1c7f              ADDS     r7,r7,#1
                   |L1.150|
-000096  1c6d              ADDS     r5,r5,#1              ;81
+000096  1c76              ADDS     r6,r6,#1              ;82
                   |L1.152|
-000098  2d19              CMP      r5,#0x19              ;81
+000098  2e19              CMP      r6,#0x19              ;82
 00009a  dbe5              BLT      |L1.104|
-;;;86     	}
-;;;87     	if (count==0)
-00009c  b90e              CBNZ     r6,|L1.162|
-;;;88     		prm_format();
+;;;87     	}
+;;;88     	if (count==0)
+00009c  b90f              CBNZ     r7,|L1.162|
+;;;89     		prm_format();
 00009e  f7fffffe          BL       _Z10prm_formatv ; prm_format()
                   |L1.162|
-;;;89     
-;;;90        	// check version
-;;;91     	prm_add("fwver", PRM_FLAG_INTERNAL, "", UINT16(FW_MAJOR_VER), UINT16(FW_MINOR_VER), UINT16(FW_BUILD_VER), END);
+;;;90     
+;;;91        	// check version
+;;;92     	prm_add("fwver", PRM_FLAG_INTERNAL, "", UINT16(FW_MAJOR_VER), UINT16(FW_MINOR_VER), UINT16(FW_BUILD_VER), END);
 0000a2  2000              MOVS     r0,#0
 0000a4  2109              MOVS     r1,#9
 0000a6  2202              MOVS     r2,#2
@@ -132,90 +132,120 @@
 0000ae  4613              MOV      r3,r2
 0000b0  9201              STR      r2,[sp,#4]
 0000b2  e9cd1004          STRD     r1,r0,[sp,#0x10]
-0000b6  a214              ADR      r2,|L1.264|
+0000b6  a223              ADR      r2,|L1.324|
 0000b8  2101              MOVS     r1,#1
-0000ba  a011              ADR      r0,|L1.256|
+0000ba  a020              ADR      r0,|L1.316|
 0000bc  f7fffffe          BL       _Z7prm_addPKcjS0_z ; prm_add(const char*, unsigned, const char*, ...)
-;;;92     
-;;;93     	ser_setInterface(SER_INTERFACE_UART);
+;;;93     
+;;;94     	ser_setInterface(SER_INTERFACE_UART);
 0000c0  2003              MOVS     r0,#3
 0000c2  f7fffffe          BL       _Z16ser_setInterfaceh ; ser_setInterface(unsigned char)
-;;;94     	
 ;;;95     	
-;;;96     	while(1) {
-0000c6  e001              B        |L1.204|
-                  |L1.200|
-;;;97     		//edgeDetect_highres_run();
-;;;98     		//edgeDetect_run();	// run the main edgeDetect function
-;;;99     		exec_loop();	// Debug through pixymon
-0000c8  f7fffffe          BL       _Z9exec_loopv ; exec_loop()
-                  |L1.204|
-0000cc  e7fc              B        |L1.200|
-;;;100    	}
-;;;101    
-;;;102    #if 0
-;;;103    	#define DELAY 1000000
-;;;104    	rcs_setFreq(100);
-;;;105    	rcs_setLimits(0, -200, 200);
-;;;106    	rcs_setLimits(1, -200, 200);
-;;;107    	while(1)
-;;;108    	{
-;;;109    		rcs_setPos(0, 0);
-;;;110    		delayus(DELAY);
-;;;111    		rcs_setPos(0, 500);
-;;;112    		delayus(DELAY);
-;;;113    		rcs_setPos(0, 1000);
-;;;114    		delayus(DELAY);
-;;;115    		rcs_setPos(1, 0);
-;;;116    		delayus(DELAY);
-;;;117    		rcs_setPos(1, 500);
+;;;96     	rcs_setLimits(1, -250, 250);							// extends servo range to maximum//0x__BBRRGG
+0000c6  2001              MOVS     r0,#1
+0000c8  900d              STR      r0,[sp,#0x34]
+0000ca  f06f00f9          MVN      r0,#0xf9
+0000ce  900c              STR      r0,[sp,#0x30]
+0000d0  20fa              MOVS     r0,#0xfa
+0000d2  aa0b              ADD      r2,sp,#0x2c
+0000d4  a90c              ADD      r1,sp,#0x30
+0000d6  900b              STR      r0,[sp,#0x2c]
+0000d8  a80d              ADD      r0,sp,#0x34
+0000da  f7fffffe          BL       _Z13rcs_setLimitsRKhRKsS2_ ; rcs_setLimits(const unsigned char&, const short&, const short&)
+;;;97     	
+;;;98     	uint8_t WBV_sub = 0x06;
+0000de  2506              MOVS     r5,#6
+;;;99     	uint32_t WBV = WBV_sub | WBV_sub << 8 | WBV_sub << 16;
+0000e0  ea452005          ORR      r0,r5,r5,LSL #8
+0000e4  ea404005          ORR      r0,r0,r5,LSL #16
+0000e8  9007              STR      r0,[sp,#0x1c]
+;;;100    	cam_setWBV(WBV);					// sets the white balance manually
+0000ea  a807              ADD      r0,sp,#0x1c
+0000ec  f7fffffe          BL       _Z10cam_setWBVRKj ; cam_setWBV(const unsigned&)
+;;;101    	cam_setAEC(0);						// turns off auto exposure correction
+0000f0  2000              MOVS     r0,#0
+0000f2  900d              STR      r0,[sp,#0x34]
+0000f4  a80d              ADD      r0,sp,#0x34
+0000f6  f7fffffe          BL       _Z10cam_setAECRKh ; cam_setAEC(const unsigned char&)
+;;;102    	cam_setBrightness(35);		// sets the brightness
+0000fa  2023              MOVS     r0,#0x23
+0000fc  900d              STR      r0,[sp,#0x34]
+0000fe  a80d              ADD      r0,sp,#0x34
+000100  f7fffffe          BL       _Z17cam_setBrightnessRKh ; cam_setBrightness(const unsigned char&)
+;;;103    	
+;;;104    	while(1) {
+000104  e001              B        |L1.266|
+                  |L1.262|
+;;;105    		//edgeDetect_highres_run();
+;;;106    		edgeDetect_run();	// run the main edgeDetect function
+000106  f7fffffe          BL       _Z14edgeDetect_runv ; edgeDetect_run()
+                  |L1.266|
+00010a  e7fc              B        |L1.262|
+;;;107    		//exec_loop();	// Debug through pixymon
+;;;108    	}
+;;;109    
+;;;110    #if 0
+;;;111    	#define DELAY 1000000
+;;;112    	rcs_setFreq(100);
+;;;113    	rcs_setLimits(0, -200, 200);
+;;;114    	rcs_setLimits(1, -200, 200);
+;;;115    	while(1)
+;;;116    	{
+;;;117    		rcs_setPos(0, 0);
 ;;;118    		delayus(DELAY);
-;;;119    		rcs_setPos(1, 1000);
+;;;119    		rcs_setPos(0, 500);
 ;;;120    		delayus(DELAY);
-;;;121    	}
-;;;122    
-;;;123    #endif
-;;;124    #if 0
-;;;125    	while(1)
-;;;126    	{
-;;;127    		g_chirpUsb->service();
-;;;128    		handleButton();
+;;;121    		rcs_setPos(0, 1000);
+;;;122    		delayus(DELAY);
+;;;123    		rcs_setPos(1, 0);
+;;;124    		delayus(DELAY);
+;;;125    		rcs_setPos(1, 500);
+;;;126    		delayus(DELAY);
+;;;127    		rcs_setPos(1, 1000);
+;;;128    		delayus(DELAY);
 ;;;129    	}
-;;;130    #endif
-;;;131    }
-;;;132    
+;;;130    
+;;;131    #endif
+;;;132    #if 0
+;;;133    	while(1)
+;;;134    	{
+;;;135    		g_chirpUsb->service();
+;;;136    		handleButton();
+;;;137    	}
+;;;138    #endif
+;;;139    }
+;;;140    
                           ENDP
 
-0000ce  0000              DCW      0x0000
-                  |L1.208|
-0000d0  72656365          DCB      "received signal: %d %d\n",0
-0000d4  69766564
-0000d8  20736967
-0000dc  6e616c3a
-0000e0  20256420
-0000e4  25640a00
-                  |L1.232|
+                  |L1.268|
+00010c  72656365          DCB      "received signal: %d %d\n",0
+000110  69766564
+000114  20736967
+000118  6e616c3a
+00011c  20256420
+000120  25640a00
+                  |L1.292|
                           DCD      LR0
-                  |L1.236|
+                  |L1.296|
                           DCD      0x20008000
-                  |L1.240|
+                  |L1.300|
                           DCD      g_chirpUsb
-                  |L1.244|
+                  |L1.304|
                           DCD      g_progBlobs
-                  |L1.248|
+                  |L1.308|
                           DCD      g_progPt
-                  |L1.252|
+                  |L1.312|
                           DCD      g_progVideo
-                  |L1.256|
-000100  66777665          DCB      "fwver",0
-000104  7200    
-000106  00                DCB      0
-000107  00                DCB      0
-                  |L1.264|
-000108  00                DCB      0
-000109  00                DCB      0
-00010a  00                DCB      0
-00010b  00                DCB      0
+                  |L1.316|
+00013c  66777665          DCB      "fwver",0
+000140  7200    
+000142  00                DCB      0
+000143  00                DCB      0
+                  |L1.324|
+000144  00                DCB      0
+000145  00                DCB      0
+000146  00                DCB      0
+000147  00                DCB      0
 
                           AREA ||.ARM.exidx||, LINKORDER=||.text||, DATA, READONLY, SECTYPE={SHT_ARM_EXIDX}, ALIGN=2
 

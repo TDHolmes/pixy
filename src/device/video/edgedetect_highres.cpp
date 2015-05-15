@@ -51,8 +51,6 @@ extern uint8_t UART_DATA_AVAILABLE;			// global interrupt that gets the byte fro
 
 void edgeDetect_highres_run()
 {
-	uint8_t brightness = 100;
-	cam_setBrightness(brightness); 				// 0 to 255. Camera brightness setting
 	
 	uint8_t *frame = (uint8_t *)SRAM1_LOC;
 	uint8_t *frameloc = (uint8_t *)(SRAM1_LOC + 0);
