@@ -64,7 +64,9 @@ void edgeDetect_run()
 	
 	uint8_t *frame = (uint8_t *)SRAM1_LOC;
 	uint8_t *frameloc = (uint8_t *)(SRAM1_LOC + 0);
-	uint8_t sendPositions[RES_WIDTH];
+	uint8_t sendPositions[160];
+	uint8_t sendPositionsTwo[160];
+	uint8_t sendPositionsThree[160];
 	
 //	uint8_t floorArray[80][13];
 	
@@ -72,20 +74,6 @@ void edgeDetect_run()
 	
 	// recieve the command to get a frame
 	while(1) {
-		
-		// clear array (front edge)
-		for(uint16_t x = 0; x < 320; x++) {
-			sendPositions[x] = 255;
-		}
-		
-		// clear array (floor array)
-		
-//		for(uint16_t y = 0; y < 13; y++) {
-//			for(uint16_t x = 0; x < 72; x++) {
-//				floorArray[x][y] = 0;
-//			}
-//		}
-		
 		
 		
 		// red LED: Stopped waiting for data
@@ -101,10 +89,12 @@ void edgeDetect_run()
 		
 		if(theta > 42) {
 			
-				uint16_t blobLen = 0;
-				uint8_t inBlob = 0;
-				uint16_t blobXPos = 0;
-				uint8_t count = 0;
+			uint16_t blobLen = 0;
+			uint8_t inBlob = 0;
+			uint16_t blobXPos = 0;
+			uint8_t count = 0;
+			uint8_t index = 0;
+			uint8_t foundEdge = 0;
 			
 			// for a set angle of 12, we go to an angle of 62 degrees
 			// make sure that theta is casted as a float
@@ -113,212 +103,205 @@ void edgeDetect_run()
 			// green LED, lets go!
 			led_setRGB(255, 255, 255);
 			
-		// grab frame
-					led_setRGB(0, 0, 0);
+			led_setRGB(0, 0, 0);
 			cam_getFrame(frameloc, SRAM1_SIZE, CAM_GRAB_M1R2, 0, 0, RES_WIDTH, RES_HEIGHT);
-				led_setRGB(255, 255, 255);
+			led_setRGB(255, 255, 255);
 			frameloc = frame;			
-		
-		// double for loop for calculating edges
-			for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
-				uint16_t ypo = y + 1;
-				uint16_t ymo = y - 1;
-//				uint16_t ymt = y - 2;
-//				uint16_t ypt = y + 2;
-				
-				for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
-					uint16_t xpo = x + 1;
-					uint16_t xmo = x - 1;
-//					uint16_t xpt = x + 2; 
-//					uint16_t xmt = x - 2;
+			
+				// double for loop for calculating edges
+				for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
+					uint16_t ypo = y + 1;
+					uint16_t ymo = y - 1;
 					
-				// Gradient/intensity calculation
-					
-					// intensity calculation for the pixel groups. each "pixel" we use is actually the intensity
-					// calculated based off of a group of four pixels. This is for speed, accuracy, and clean
-					// edges.
+					for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
+						uint16_t xpo = x + 1;
+						uint16_t xmo = x - 1;
+						
+						// Gradient/intensity calculation
+						
+						// intensity calculation for the pixel groups. each "pixel" we use is actually the intensity
+						// calculated based off of a group of four pixels. This is for speed, accuracy, and clean
+						// edges.
 
-					uint16_t intense_XPO_Y = frameloc[y*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpo+1] + 
-							(frameloc[ypo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpo+1])/2;
-					
-					uint16_t intense_XMO_Y = frameloc[y*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x] + 
-							(frameloc[ypo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x])/2;
-					
-					uint16_t intense_X_YPO = frameloc[ypo*RES_WIDTH + x] + frameloc[(ypo+1)*RES_WIDTH + xpo] + 
-							(frameloc[(ypo+1)*RES_WIDTH + x] + frameloc[ypo*RES_WIDTH + xpo])/2;
-					
-					uint16_t intense_XPO_YPO = frameloc[ypo*RES_WIDTH + xpo] + frameloc[(ypo+1)*RES_WIDTH + xpo+1] + 
-							(frameloc[(ypo+1)*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpo+1])/2;
-					
-					uint16_t intense_XMO_YPO = frameloc[(ypo)*RES_WIDTH + xmo] + frameloc[(ypo+1)*RES_WIDTH + x] + 
-							(frameloc[(ypo+1)*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x])/2;
-					
-					uint16_t intense_X_YMO = frameloc[ymo*RES_WIDTH + x] + frameloc[y*RES_WIDTH + xpo] + 
-							(frameloc[y*RES_WIDTH + x] + frameloc[ymo*RES_WIDTH + xpo])/2;
-							
-					uint16_t intense_XPO_YMO = frameloc[ymo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpo+1] + 
-							(frameloc[y*RES_WIDTH + xpo] + frameloc[ymo*RES_WIDTH + xpo+1])/2;
-							
-					uint16_t intense_XMO_YMO = frameloc[ymo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x] + 
-							(frameloc[y*RES_WIDTH + xmo] + frameloc[ymo*RES_WIDTH + x])/2;
+						uint16_t intense_XPO_Y = frameloc[y*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpo+1] + 
+								(frameloc[ypo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpo+1])/2;
+						
+						uint16_t intense_XMO_Y = frameloc[y*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x] + 
+								(frameloc[ypo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x])/2;
+						
+						uint16_t intense_X_YPO = frameloc[ypo*RES_WIDTH + x] + frameloc[(ypo+1)*RES_WIDTH + xpo] + 
+								(frameloc[(ypo+1)*RES_WIDTH + x] + frameloc[ypo*RES_WIDTH + xpo])/2;
+						
+						uint16_t intense_XPO_YPO = frameloc[ypo*RES_WIDTH + xpo] + frameloc[(ypo+1)*RES_WIDTH + xpo+1] + 
+								(frameloc[(ypo+1)*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpo+1])/2;
+						
+						uint16_t intense_XMO_YPO = frameloc[(ypo)*RES_WIDTH + xmo] + frameloc[(ypo+1)*RES_WIDTH + x] + 
+								(frameloc[(ypo+1)*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x])/2;
+						
+						uint16_t intense_X_YMO = frameloc[ymo*RES_WIDTH + x] + frameloc[y*RES_WIDTH + xpo] + 
+								(frameloc[y*RES_WIDTH + x] + frameloc[ymo*RES_WIDTH + xpo])/2;
+								
+						uint16_t intense_XPO_YMO = frameloc[ymo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpo+1] + 
+								(frameloc[y*RES_WIDTH + xpo] + frameloc[ymo*RES_WIDTH + xpo+1])/2;
+								
+						uint16_t intense_XMO_YMO = frameloc[ymo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x] + 
+								(frameloc[y*RES_WIDTH + xmo] + frameloc[ymo*RES_WIDTH + x])/2;
 
-										float gradx = (3*(intense_XPO_YPO + GRAD_CO*intense_XPO_Y 
-					+ intense_XPO_YMO - intense_XMO_YPO 
-					- GRAD_CO*intense_XMO_Y - intense_XMO_YMO));
-						
-				float grady = (3*(intense_XMO_YMO + GRAD_CO*intense_X_YMO
-					+ intense_XPO_YMO - intense_XMO_YPO 
-					- GRAD_CO*intense_X_YPO - intense_XPO_YPO));
-					
-								// Threashold detection
-				float grad = abs(gradx) + grady;
-								// Threashold detection
-				
-				
-			
-				if( (grad > THREASHOLD_LOW) && (gradx < THREASHOLD_HIGH) ) {
-					// EDGE
-					frameloc[y*RES_WIDTH + x] = 255;		// sets the red pixel to max
-				}
-				//else if(-grady > THREASHOLD_LOW && -gradx < THREASHOLD_HIGH) {
-				//	frameloc[(y+1)*RES_WIDTH + x] = 255;
-				//}
-				else {
-					// NO EDGE
-					frameloc[y*RES_WIDTH + x] = 0;			// turns off the red 
-				} 
-				
-				// BLOB DETECTION
-				if(gradx > THREASHOLD_LOW) {			// if we've entered a blob (black to white transistion, going left 2 right)
-					inBlob = 1;
-					blobLen++;
-					blobXPos = x;
-				}
-				if(inBlob && (-gradx < THREASHOLD_LOW)) {	// if we're in a blob and haven't reached the outer edge
-					blobLen++;
-				}
-				if(inBlob && (-gradx > THREASHOLD_LOW)) {	// in a blob, but exiting
-					
-					if(blobLen < MAX_BLOB_LEN) {
-						// we've found a blob! DELETEEEEE
-						//for(uint16_t blobX = blobXPos; blobX >= x; blobX += 2) {
-					//		frameloc[y*RES_WIDTH + blobX] = 0;
-					//	}
-						frameloc[y*RES_WIDTH + blobXPos] = 0;
-						frameloc[y*RES_WIDTH + x] = 0;
-//						if( x < RES_WIDTH -OFFSET) {
-//							frameloc[y*RES_WIDTH + x + 2] = 0;
-//						}
-//						if( x > OFFSET) {
-//							frameloc[y*RES_WIDTH + blobXPos - 2] = 0;
-//						}
-						blobLen = inBlob = 0;
-					}
-					else {
-						// clear vals, no blob here
-						blobLen = inBlob = 0;
-					}
-				}
-				
-			}
-		} // end nested for loop
-		
-			
-	// noise pixel filtering
-			
-
-			for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
-				uint16_t ypt = y + 2;
-				uint16_t ymt = y - 2;
-			
-				for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
-					
-					if(frameloc[y*RES_WIDTH + x] == 255) {		// if current pix. == on, check if it should be off
-						uint16_t xpt = x + 2;
-						uint16_t xmt = x - 2;
-						
-						uint8_t numOfPxOff = 0;
-						
-						if(frameloc[y*RES_WIDTH + xpt] == 0) 
-							numOfPxOff++;
-						
-						if(frameloc[y*RES_WIDTH + xmt] == 0) 
-							numOfPxOff++;
-						
-						if(frameloc[(ypt)*RES_WIDTH + x] == 0) 
-							numOfPxOff++;
-						
-						if(frameloc[(ymt)*RES_WIDTH + x] == 0) 
-							numOfPxOff++;
-						
-						if(frameloc[ymt*RES_WIDTH + xpt] == 0) 
-							numOfPxOff++;
-						
-						if(frameloc[ymt*RES_WIDTH + xmt] == 0) 
-							numOfPxOff++;
-						
-						if(frameloc[(ypt)*RES_WIDTH + xpt] == 0) 
-							numOfPxOff++;
-						
-						if(frameloc[(ypt)*RES_WIDTH + xmt] == 0) 
-							numOfPxOff++;
-						
-						if(numOfPxOff > 4) {
+											float gradx = (3*(intense_XPO_YPO + GRAD_CO*intense_XPO_Y 
+						+ intense_XPO_YMO - intense_XMO_YPO 
+						- GRAD_CO*intense_XMO_Y - intense_XMO_YMO));
 							
-							frameloc[y*RES_WIDTH + x] = 0; 				// we only ever look at this pixel
+						float grady = (3*(intense_XMO_YMO + GRAD_CO*intense_X_YMO
+							+ intense_XPO_YMO - intense_XMO_YPO 
+							- GRAD_CO*intense_X_YPO - intense_XPO_YPO));
+						
+									// Threashold detection
+						float grad = abs(gradx) + grady;
+									// Threashold detection
+					
+						if( (grad > THREASHOLD_LOW) && (gradx < THREASHOLD_HIGH) ) {
+							// EDGE
+							frameloc[y*RES_WIDTH + x] = 255;		// sets the red pixel to max
 						}
+						//else if(-grady > THREASHOLD_LOW && -gradx < THREASHOLD_HIGH) {
+						//	frameloc[(y+1)*RES_WIDTH + x] = 255;
+						//}
+						else {
+							// NO EDGE
+							frameloc[y*RES_WIDTH + x] = 0;			// turns off the red 
+						} 
 						
-					} //end if(edge detected)
-				} // end x for
-			} // end y for
-		
-		// END NOISE FILTERING
+						// BLOB DETECTION
+						if(gradx > THREASHOLD_LOW) {			// if we've entered a blob (black to white transistion, going left 2 right)
+							inBlob = 1;
+							blobLen++;
+							blobXPos = x;
+						}
+						if(inBlob && (-gradx < THREASHOLD_LOW)) {	// if we're in a blob and haven't reached the outer edge
+							blobLen++;
+						}
+						if(inBlob && (-gradx > THREASHOLD_LOW)) {	// in a blob, but exiting
+							
+							if(blobLen < MAX_BLOB_LEN) {
+								frameloc[y*RES_WIDTH + blobXPos] = 0;
+								frameloc[y*RES_WIDTH + x] = 0;
+								blobLen = inBlob = 0;
+							}
+							else {
+								// clear vals, no blob here
+								blobLen = inBlob = 0;
+							}
+						}
+					}
+				} // end nested for loop
 			
-	  // front edge detection
-			
-			for( float x = 1 + GND_OFFSET_X; x < (RES_WIDTH - GND_OFFSET_X); x += 2.0) 
-			{																												// start on the left
-				float xPos;
 				
-				for( float y = (RES_HEIGHT - GND_OFFSET_Y - 1); y > GND_OFFSET_Y; y -= 2.0) 
-				{																											// start from the bottom
-					
-						float yPos;
-					
-					if(frameloc[((uint16_t)y)*RES_WIDTH + (uint16_t)x] != 0) {			// if the pixel is on
+				// noise pixel filtering		
 
-										// ACTUAL LOCATION CALCULATION
-						double theta_ph = atan(((2.0*y-200.0)/200.0)*TAN_FOVH_DIV_2);		// angle of the pixel
-						double cos_theta_ph = cos(theta_ph);											// used in the computations
-						double cos_theta_minus_ph = cos(theta - theta_ph);				// used in the computations
+				for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
+					uint16_t ypt = y + 2;
+					uint16_t ymt = y - 2;
+				
+					for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
 						
-						yPos = ((double)((3.9)*((cos_theta_ph))))/(cos_theta_minus_ph) + 
-											(2.1)*tan(theta - theta_ph);		// y distance from the bot
-						xPos = ((yPos*(2.0*x - 320.0))/320.0)*TAN_FOVW_DIV_2;			// x distance from the bot
-						
-						sendPositions[2*count] = (int8_t)(xPos+128);
-						sendPositions[2*count + 1] = (int8_t)yPos;
-						
-						count++;
-						
-					//if(frameloc[((int16_t)y)*RES_WIDTH + (int16_t)x] != 0) {
-						
-						//frameloc[((int16_t)y-2)*RES_WIDTH + (int16_t)x - 1] = 0xFF;
-										
-						break;			// stop looking for the edge, break to the next x co-ordinate
-					} // end if
+						if(frameloc[y*RES_WIDTH + x] == 255) {		// if current pix. == on, check if it should be off
+							uint16_t xpt = x + 2;
+							uint16_t xmt = x - 2;
+							
+							uint8_t numOfPxOff = 0;
+							
+							if(frameloc[y*RES_WIDTH + xpt] == 0) 
+								numOfPxOff++;
+							
+							if(frameloc[y*RES_WIDTH + xmt] == 0) 
+								numOfPxOff++;
+							
+							if(frameloc[(ypt)*RES_WIDTH + x] == 0) 
+								numOfPxOff++;
+							
+							if(frameloc[(ymt)*RES_WIDTH + x] == 0) 
+								numOfPxOff++;
+							
+							if(frameloc[ymt*RES_WIDTH + xpt] == 0) 
+								numOfPxOff++;
+							
+							if(frameloc[ymt*RES_WIDTH + xmt] == 0) 
+								numOfPxOff++;
+							
+							if(frameloc[(ypt)*RES_WIDTH + xpt] == 0) 
+								numOfPxOff++;
+							
+							if(frameloc[(ypt)*RES_WIDTH + xmt] == 0) 
+								numOfPxOff++;
+							
+							if(numOfPxOff > 4) {
+								
+								frameloc[y*RES_WIDTH + x] = 0; 				// we only ever look at this pixel
+							}
+							
+						} //end if(edge detected)
+					} // end x for
+				} // end y for
+			
+				// END NOISE FILTERING
 					
-				} // end yfor 
-			} 	// end xfor
+				// front edge detection
+				
+				for( float x = 1 + GND_OFFSET_X; x < (RES_WIDTH - GND_OFFSET_X); x += 2.0) 
+				{																												// start on the left
+					// float xPos;
+					
+					for( float y = (RES_HEIGHT - GND_OFFSET_Y - 1); y > GND_OFFSET_Y; y -= 2.0) 
+					{																											// start from the bottom
+						
+						// float yPos;
+						
+						if(frameloc[((uint16_t)y)*RES_WIDTH + (uint16_t)x] != 0) {			// if the pixel is on
+							
+											// ACTUAL LOCATION CALCULATION
+						//	double theta_ph = atan(((2.0*y-200.0)/200.0)*TAN_FOVH_DIV_2);		// angle of the pixel
+						//	double cos_theta_ph = cos(theta_ph);											// used in the computations
+						//	double cos_theta_minus_ph = cos(theta - theta_ph);				// used in the computations
+							
+						//	yPos = ((double)((3.9)*((cos_theta_ph))))/(cos_theta_minus_ph) + 
+						//						(2.1)*tan(theta - theta_ph);		// y distance from the bot
+						//	xPos = ((yPos*(2.0*x - 320.0))/320.0)*TAN_FOVW_DIV_2;			// x distance from the bot
+							
+						//	(sendPositions + index)[2*count] = (int8_t)(xPos+128);
+						//	(sendPositions + index)[2*count + 1] = (int8_t)yPos;
+							
+							// Relative locations based on the image only
+							sendPositions[count] = (uint8_t)(200 - y);
+							count++;
+							foundEdge = 1;
+							break;			// stop looking for the edge, break to the next x co-ordinate
+						} // end if
+						
+					} // end yfor 
+					if(foundEdge == 0) {				// if we haven't stored anything in the array, store 200 and increment count.
+						sendPositions[count] = (uint8_t)(200);
+						count++;
+					}
+					foundEdge = 0;
+				} 	// end xfor
+
+				for(uint8_t i = 0; i < 160; i += 4) {
+					
+					uint8_t transmitBuf = 0;
+					transmitBuf = ((sendPositions[i] + sendPositions[i + 1] + sendPositions[i + 2] + 
+										sendPositions[i + 3]) >> 2);	// average 4 pixel y values and send
+					UART_Send(LPC_USART0, &transmitBuf, 1, BLOCKING);
+				}
+		//	UART_Send(LPC_USART0, sendPositions, 160, BLOCKING);	// sends x,y pairs!!!!
 			
-		// end front edge detection
+			// end front edge detection
 			
-			if(count == 0) {					// we have not detected any edges. Oh no!
-				uint8_t noEdges = 42;
-				UART_Send(LPC_USART0, &noEdges, 1, BLOCKING); 
-			}
+			//if(count == 0) {					// we have not detected any edges. Oh no!
+		//		uint8_t noEdges = 42;
+		//		UART_Send(LPC_USART0, &noEdges, 1, BLOCKING); 
+		//`	}
 			
-	//		UART_Send(LPC_USART0, sendPositions, 2*count, BLOCKING);	// sends x,y pairs!!!!
+			// UART_Send(LPC_USART0, sendPositions, 2*count, BLOCKING);	// sends x,y pairs!!!!
 			
 			
 			/////// BEGIN FLOOR PACKING//////////////////
@@ -331,67 +314,83 @@ void edgeDetect_run()
 			//
 			// the floor will be 80cm (in the y direction) by 80 cm (x direction), giving us an array of 40x40 
 			// when uncompressed and 5 by 40 when compressed (byte packed in the y direction).
-			uint8_t uncompressedFloorArray[1600];
+																	//  x   y
+//																	
+//			uint8_t uncompressedFloorArray[40][40];
+//			
+//			for(uint32_t x = 0; x < 40; x++) {
+//				for(uint16_t y = 0; y < 40; y++) {
+//					uncompressedFloorArray[x][y] = 0;
+//				}
+//			}
+//			
+//			// first, put the front edge in the floor array
+//			for(uint16_t i = 0; i < 2*count; i += 2) {
+//				if( ((sendPositions[i] - 128) + 40) < 80 && (sendPositions[i+1] < 80)) {
+//					
+//				  uncompressedFloorArray[((sendPositions[i] - 128) + 40) >> 1][(sendPositions[i+1] >> 1)] = 1;
+//				}
+//			}
+//			uint8_t aboveFrontEdge = 0;
+//			
+//			// a possible interum step: threasholding?
+//			
+//			// next, fill in above the front edge
+//			for(uint16_t x = 0; x < 40; x++) {
+//				for(uint16_t y = 0; y < 40; y++) {
+//					
+//					if(uncompressedFloorArray[x][y] >= 1 && !aboveFrontEdge) {	// if this square is an edge and we aren't
+//						aboveFrontEdge = 1;																	// above a front edge... 
+//					}
+//					else if(aboveFrontEdge) {									// fill the rest in
+//						uncompressedFloorArray[x][y] = 1;
+//					}
+//					
+//				} // Y for
+//				aboveFrontEdge = 0;
+//			}	// X for
 			
-			for(uint32_t i = 0; i < 1600; i++) {
-				uncompressedFloorArray[i] = 0;
-			}
-			
-			// first, put the front edge in the floor array
-			for(uint16_t i = 0; i < 2*count; i += 2) {
-				//if( (sendPositions[i] - 128) + 40) < 40 && (sendPositions[i+1] < 80)) {
-					
-					uncompressedFloorArray[(((sendPositions[i] - 128) + 40) >> 1) + 40*(sendPositions[i+1] >> 1)] = 1;		// increment that floor location
-					//uint8_t rxbuf = (sendPositions[i] - 128 + 40) >> 1;
-					uint8_t rxbuf = sendPositions[i+1] >> 1;
-					//UART_Send(LPC_USART0, &rxbuf, 1, BLOCKING);
-			//	}
-			}
-			uint8_t aboveFrontEdge = 0;
-			
-			// a possible interum step: threasholding?
-			
-			// next, fill in above the front edge
-			for(uint16_t x = 0; x < 40; x++) {
-				for(uint16_t y = 0; y < 40; y++) {
-					
-					if(uncompressedFloorArray[x + y*40] >= 1 && !aboveFrontEdge) {
-						aboveFrontEdge = 1;
-					}
-					else if(aboveFrontEdge) {
-						uncompressedFloorArray[x + y*40] = 1;
-						
-					}
-					
-				} // x for
-				
-				aboveFrontEdge = 0;
-			}	// y for
-			
-			// Now, byte pack into SendArray
-			
-			count = 0;
-			
-		for(uint16_t x = 0; x < 320; x++) {
-			sendPositions[x] = 0;
-		}
-			
+			/*
 			for(uint16_t y = 0; y < 40; y++) {
 				for(uint16_t x = 0; x < 40; x++) {
 					
-					if(uncompressedFloorArray[x + y*40] >= 1) {
-						// can't drive here
-						sendPositions[x + (y/8)*40] &= (!(1 << (y%8)));
+					if(uncompressedFloorArray[x][y] >= 1) {
+						
+						uint8_t rxBuff = 'X';
+						UART_Send(LPC_USART0, &rxBuff, 1, BLOCKING);
 					}
-					else {	// can drive here															         --|----- 1 is bit shifted the mod of y
-						sendPositions[x + (y/8)*40] |= (1 << (y%8));			//byte | 0b00100000
+					else {
+						
+						uint8_t rxBuff = '_';
+						UART_Send(LPC_USART0, &rxBuff, 1, BLOCKING);
 					}
-				}
 			}
+				uint8_t rxBuff[] = "\n\r";
+				UART_Send(LPC_USART0, rxBuff, 2, BLOCKING);
+		}
+			*/
+			
+			// Now, byte pack into SendArray
+//			
+//			count = 0;
+//			
+//		for(uint16_t x = 0; x < 320; x++) {
+//			sendPositions[x] = 0;
+//		}
+//			
+//			for(uint16_t y = 0; y < 40; y++) {
+//				for(uint16_t x = 0; x < 40; x++) {
+//					//uint8_t mod = 1 << (y%8);
+//					//UART_Send(LPC_USART0, &mod, 1, BLOCKING);
+//					if(uncompressedFloorArray[x + y*40] == 0) {		//                  --|----- 1 is bit shifted the mod of y
+//						sendPositions[x + (y >> 3)*40] += (1 << (y%8));			//byte | 0b00100000
+//					}
+//				}
+//			}
 			
 			
-			UART_Send(LPC_USART0, sendPositions, 200, BLOCKING);
-			//UART_Send(LPC_USART0, uncompressedFloorArray, 1600, BLOCKING);
+			//UART_Send(LPC_USART0, sendPositions, 200, BLOCKING);
+		 
 			
 			// Byte packing for processing script
 /*
@@ -436,8 +435,6 @@ void edgeDetect_run()
 	
 		led_setRGB(255, 0, 255);	// Purple LED
 	}
-			led_setRGB(0, 0, 0);	// Purple LED
-
 }
 
 

@@ -75,6 +75,9 @@ void sendCustom(uint8_t renderFlags=RENDER_FLAG_FLUSH)
 		len = Chirp::serialize(g_chirpUsb, frame, SRAM1_SIZE, HTYPE(FOURCC('C','M','V','2')), HINT8(renderFlags), UINT16(CAM_RES2_WIDTH), UINT16(CAM_RES2_HEIGHT), UINTS8_NO_COPY(CAM_RES2_WIDTH*CAM_RES2_HEIGHT), END);
 		// write frame after chirp args
 		cam_getFrame(frame+len, SRAM1_SIZE-len, CAM_GRAB_M1R2, 0, 0, CAM_RES2_WIDTH, CAM_RES2_HEIGHT);
+		
+		
+		
 		led_setRGB(0, 0, 0);
 		uint8_t *frameloc = (uint8_t *)(SRAM1_LOC + len);
 		

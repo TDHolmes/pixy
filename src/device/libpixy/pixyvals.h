@@ -47,7 +47,7 @@
 
 // SRAM banks
 #define SRAM0_LOC                0x10000000
-#define SRAM0_SIZE               0x20000
+#define SRAM0_SIZE               0x20000			// 131,072 in decimal
 #define SRAM1_LOC                0x10080000
 #define SRAM1_SIZE               0x12000
 #define SRAM2_LOC                0x20000000

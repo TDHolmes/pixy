@@ -124,7 +124,10 @@
 0000bc  2300              MOVS     r3,#0
 0000be  2221              MOVS     r2,#0x21
 0000c0  f7fffffe          BL       _Z12cam_getFramePhjhtttt ; cam_getFrame(unsigned char*, unsigned, unsigned char, unsigned short, unsigned short, unsigned short, unsigned short)
-;;;78     		led_setRGB(0, 0, 0);
+;;;78     		
+;;;79     		
+;;;80     		
+;;;81     		led_setRGB(0, 0, 0);
 0000c4  2000              MOVS     r0,#0
 0000c6  9017              STR      r0,[sp,#0x5c]
 0000c8  9016              STR      r0,[sp,#0x58]
@@ -133,61 +136,61 @@
 0000ce  9015              STR      r0,[sp,#0x54]
 0000d0  a817              ADD      r0,sp,#0x5c
 0000d2  f7fffffe          BL       _Z10led_setRGBRKhS0_S0_ ; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
-;;;79     		uint8_t *frameloc = (uint8_t *)(SRAM1_LOC + len);
+;;;82     		uint8_t *frameloc = (uint8_t *)(SRAM1_LOC + len);
 0000d6  49cb              LDR      r1,|L1.1028|
 0000d8  9814              LDR      r0,[sp,#0x50]
 0000da  1844              ADDS     r4,r0,r1
-;;;80     		
-;;;81     		// double for loop for calculating edges
-;;;82     		for(uint16_t y = OFFSET + 1; y < RES_HEIGHT - OFFSET; y += 2) {
+;;;83     		
+;;;84     		// double for loop for calculating edges
+;;;85     		for(uint16_t y = OFFSET + 1; y < RES_HEIGHT - OFFSET; y += 2) {
 0000dc  2505              MOVS     r5,#5
 0000de  e189              B        |L1.1012|
                   |L1.224|
-;;;83     			uint16_t ypo = y + 1;
+;;;86     			uint16_t ypo = y + 1;
 0000e0  1c68              ADDS     r0,r5,#1
 0000e2  b287              UXTH     r7,r0
-;;;84     			uint16_t ymo = y - 1;
+;;;87     			uint16_t ymo = y - 1;
 0000e4  1e68              SUBS     r0,r5,#1
 0000e6  fa1ff980          UXTH     r9,r0
-;;;85     			uint16_t ymt = y - 2;
+;;;88     			uint16_t ymt = y - 2;
 0000ea  1ea8              SUBS     r0,r5,#2
 0000ec  b280              UXTH     r0,r0
 0000ee  900f              STR      r0,[sp,#0x3c]
-;;;86     			uint16_t ypt = y + 2;
+;;;89     			uint16_t ypt = y + 2;
 0000f0  1ca8              ADDS     r0,r5,#2
 0000f2  fa1ffa80          UXTH     r10,r0
-;;;87     		
-;;;88     			blobLen = inBlob = blobXPos = 0;
+;;;90     		
+;;;91     			blobLen = inBlob = blobXPos = 0;
 0000f6  2000              MOVS     r0,#0
 0000f8  9010              STR      r0,[sp,#0x40]
 0000fa  9011              STR      r0,[sp,#0x44]
 0000fc  9012              STR      r0,[sp,#0x48]
-;;;89     			
-;;;90     			for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
+;;;92     			
+;;;93     			for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
 0000fe  2605              MOVS     r6,#5
 000100  e16b              B        |L1.986|
                   |L1.258|
-;;;91     				uint16_t xpo = x + 1;
+;;;94     				uint16_t xpo = x + 1;
 000102  1c70              ADDS     r0,r6,#1
 000104  fa1ff880          UXTH     r8,r0
-;;;92     				uint16_t xmo = x - 1;
+;;;95     				uint16_t xmo = x - 1;
 000108  1e70              SUBS     r0,r6,#1
 00010a  b280              UXTH     r0,r0
 00010c  900e              STR      r0,[sp,#0x38]
-;;;93     				uint16_t xpt = x + 2; 
+;;;96     				uint16_t xpt = x + 2; 
 00010e  1cb0              ADDS     r0,r6,#2
 000110  fa1ffb80          UXTH     r11,r0
-;;;94     				uint16_t xmt = x - 2;
+;;;97     				uint16_t xmt = x - 2;
 000114  1eb0              SUBS     r0,r6,#2
 000116  b280              UXTH     r0,r0
 000118  900d              STR      r0,[sp,#0x34]
-;;;95     					
-;;;96     					
-;;;97     				// Gradient calculation
 ;;;98     					
-;;;99     					// intensity calculation for the pixel groups around each pixel
-;;;100    		
-;;;101    					uint16_t intense_XPO_Y = frameloc[y*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpt] + 
+;;;99     					
+;;;100    				// Gradient calculation
+;;;101    					
+;;;102    					// intensity calculation for the pixel groups around each pixel
+;;;103    		
+;;;104    					uint16_t intense_XPO_Y = frameloc[y*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpt] + 
 00011a  eb050185          ADD      r1,r5,r5,LSL #2
 00011e  eb081181          ADD      r1,r8,r1,LSL #6
 000122  5c61              LDRB     r1,[r4,r1]
@@ -205,9 +208,9 @@
 000146  eb0072d0          ADD      r2,r0,r0,LSR #31
 00014a  eb010162          ADD      r1,r1,r2,ASR #1
 00014e  910c              STR      r1,[sp,#0x30]
-;;;102    							(frameloc[ypo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpt])/2;
-;;;103    					
-;;;104    					uint16_t intense_XMO_Y = frameloc[y*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x] + 
+;;;105    							(frameloc[ypo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpt])/2;
+;;;106    					
+;;;107    					uint16_t intense_XMO_Y = frameloc[y*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x] + 
 000150  eb050285          ADD      r2,r5,r5,LSL #2
 000154  990e              LDR      r1,[sp,#0x38]
 000156  eb011182          ADD      r1,r1,r2,LSL #6
@@ -227,9 +230,9 @@
 000180  eb0071d0          ADD      r1,r0,r0,LSR #31
 000184  eb020161          ADD      r1,r2,r1,ASR #1
 000188  910b              STR      r1,[sp,#0x2c]
-;;;105    							(frameloc[ypo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x])/2;
-;;;106    					
-;;;107    					uint16_t intense_X_YPO = frameloc[ypo*RES_WIDTH + x] + frameloc[(ypt)*RES_WIDTH + xpo] + 
+;;;108    							(frameloc[ypo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x])/2;
+;;;109    					
+;;;110    					uint16_t intense_X_YPO = frameloc[ypo*RES_WIDTH + x] + frameloc[(ypt)*RES_WIDTH + xpo] + 
 00018a  eb070187          ADD      r1,r7,r7,LSL #2
 00018e  eb061181          ADD      r1,r6,r1,LSL #6
 000192  5c61              LDRB     r1,[r4,r1]
@@ -247,9 +250,9 @@
 0001b6  eb0072d0          ADD      r2,r0,r0,LSR #31
 0001ba  eb010162          ADD      r1,r1,r2,ASR #1
 0001be  910a              STR      r1,[sp,#0x28]
-;;;108    							(frameloc[(ypt)*RES_WIDTH + x] + frameloc[ypo*RES_WIDTH + xpo])/2;
-;;;109    					
-;;;110    					uint16_t intense_XPO_YPO = frameloc[ypo*RES_WIDTH + xpo] + frameloc[(ypt)*RES_WIDTH + xpt] + 
+;;;111    							(frameloc[(ypt)*RES_WIDTH + x] + frameloc[ypo*RES_WIDTH + xpo])/2;
+;;;112    					
+;;;113    					uint16_t intense_XPO_YPO = frameloc[ypo*RES_WIDTH + xpo] + frameloc[(ypt)*RES_WIDTH + xpt] + 
 0001c0  eb070187          ADD      r1,r7,r7,LSL #2
 0001c4  eb081181          ADD      r1,r8,r1,LSL #6
 0001c8  5c61              LDRB     r1,[r4,r1]
@@ -267,9 +270,9 @@
 0001ec  eb0072d0          ADD      r2,r0,r0,LSR #31
 0001f0  eb010162          ADD      r1,r1,r2,ASR #1
 0001f4  9109              STR      r1,[sp,#0x24]
-;;;111    							(frameloc[(ypt)*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpt])/2;
-;;;112    					
-;;;113    					uint16_t intense_XMO_YPO = frameloc[(ypo)*RES_WIDTH + xmo] + frameloc[(ypt)*RES_WIDTH + x] + 
+;;;114    							(frameloc[(ypt)*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpt])/2;
+;;;115    					
+;;;116    					uint16_t intense_XMO_YPO = frameloc[(ypo)*RES_WIDTH + xmo] + frameloc[(ypt)*RES_WIDTH + x] + 
 0001f6  eb070287          ADD      r2,r7,r7,LSL #2
 0001fa  990e              LDR      r1,[sp,#0x38]
 0001fc  eb011182          ADD      r1,r1,r2,LSL #6
@@ -289,9 +292,9 @@
 000226  eb0071d0          ADD      r1,r0,r0,LSR #31
 00022a  eb020161          ADD      r1,r2,r1,ASR #1
 00022e  9108              STR      r1,[sp,#0x20]
-;;;114    							(frameloc[(ypt)*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x])/2;
-;;;115    					
-;;;116    					uint16_t intense_X_YMO = frameloc[ymo*RES_WIDTH + x] + frameloc[y*RES_WIDTH + xpo] + 
+;;;117    							(frameloc[(ypt)*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x])/2;
+;;;118    					
+;;;119    					uint16_t intense_X_YMO = frameloc[ymo*RES_WIDTH + x] + frameloc[y*RES_WIDTH + xpo] + 
 000230  eb090189          ADD      r1,r9,r9,LSL #2
 000234  eb061181          ADD      r1,r6,r1,LSL #6
 000238  5c61              LDRB     r1,[r4,r1]
@@ -309,9 +312,9 @@
 00025c  eb0072d0          ADD      r2,r0,r0,LSR #31
 000260  eb010162          ADD      r1,r1,r2,ASR #1
 000264  9107              STR      r1,[sp,#0x1c]
-;;;117    							(frameloc[y*RES_WIDTH + x] + frameloc[ymo*RES_WIDTH + xpo])/2;
-;;;118    							
-;;;119    					uint16_t intense_XPO_YMO = frameloc[ymo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpt] + 
+;;;120    							(frameloc[y*RES_WIDTH + x] + frameloc[ymo*RES_WIDTH + xpo])/2;
+;;;121    							
+;;;122    					uint16_t intense_XPO_YMO = frameloc[ymo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpt] + 
 000266  eb090189          ADD      r1,r9,r9,LSL #2
 00026a  eb081181          ADD      r1,r8,r1,LSL #6
 00026e  5c61              LDRB     r1,[r4,r1]
@@ -329,9 +332,9 @@
 000292  eb0072d0          ADD      r2,r0,r0,LSR #31
 000296  eb010162          ADD      r1,r1,r2,ASR #1
 00029a  9106              STR      r1,[sp,#0x18]
-;;;120    							(frameloc[y*RES_WIDTH + xpo] + frameloc[ymo*RES_WIDTH + xpt])/2;
-;;;121    							
-;;;122    					uint16_t intense_XMO_YMO = frameloc[ymo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x] + 
+;;;123    							(frameloc[y*RES_WIDTH + xpo] + frameloc[ymo*RES_WIDTH + xpt])/2;
+;;;124    							
+;;;125    					uint16_t intense_XMO_YMO = frameloc[ymo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x] + 
 00029c  eb090289          ADD      r2,r9,r9,LSL #2
 0002a0  990e              LDR      r1,[sp,#0x38]
 0002a2  eb011182          ADD      r1,r1,r2,LSL #6
@@ -351,10 +354,10 @@
 0002cc  eb0071d0          ADD      r1,r0,r0,LSR #31
 0002d0  eb020161          ADD      r1,r2,r1,ASR #1
 0002d4  9105              STR      r1,[sp,#0x14]
-;;;123    							(frameloc[y*RES_WIDTH + xmo] + frameloc[ymo*RES_WIDTH + x])/2;
-;;;124    				
-;;;125    
-;;;126    				float gradx = (3*(intense_XPO_YPO + GRAD_CO*intense_XPO_Y 
+;;;126    							(frameloc[y*RES_WIDTH + xmo] + frameloc[ymo*RES_WIDTH + x])/2;
+;;;127    				
+;;;128    
+;;;129    				float gradx = (3*(intense_XPO_YPO + GRAD_CO*intense_XPO_Y 
 0002d6  2302              MOVS     r3,#2
 0002d8  9a0c              LDR      r2,[sp,#0x30]
 0002da  9909              LDR      r1,[sp,#0x24]
@@ -370,10 +373,10 @@
 0002f2  eb010041          ADD      r0,r1,r1,LSL #1
 0002f6  f7fffffe          BL       __aeabi_i2f
 0002fa  9004              STR      r0,[sp,#0x10]
-;;;127    					+ intense_XPO_YMO - intense_XMO_YPO 
-;;;128    					- GRAD_CO*intense_XMO_Y - intense_XMO_YMO));
-;;;129    						
-;;;130    				float grady = (3*(intense_XMO_YMO + GRAD_CO*intense_X_YMO
+;;;130    					+ intense_XPO_YMO - intense_XMO_YPO 
+;;;131    					- GRAD_CO*intense_XMO_Y - intense_XMO_YMO));
+;;;132    						
+;;;133    				float grady = (3*(intense_XMO_YMO + GRAD_CO*intense_X_YMO
 0002fc  2302              MOVS     r3,#2
 0002fe  9a07              LDR      r2,[sp,#0x1c]
 000300  9905              LDR      r1,[sp,#0x14]
@@ -389,11 +392,11 @@
 000318  eb010041          ADD      r0,r1,r1,LSL #1
 00031c  f7fffffe          BL       __aeabi_i2f
 000320  9003              STR      r0,[sp,#0xc]
-;;;131    					+ intense_XPO_YMO - intense_XMO_YPO 
-;;;132    					- GRAD_CO*intense_X_YPO - intense_XPO_YPO));
-;;;133    					
-;;;134    								// Threashold detection
-;;;135    				float grad = abs(gradx) + grady;
+;;;134    					+ intense_XPO_YMO - intense_XMO_YPO 
+;;;135    					- GRAD_CO*intense_X_YPO - intense_XPO_YPO));
+;;;136    					
+;;;137    								// Threashold detection
+;;;138    				float grad = abs(gradx) + grady;
 000322  9804              LDR      r0,[sp,#0x10]
 000324  f0204100          BIC      r1,r0,#0x80000000
 000328  9101              STR      r1,[sp,#4]
@@ -401,11 +404,11 @@
 00032c  9801              LDR      r0,[sp,#4]
 00032e  f7fffffe          BL       __aeabi_fadd
 000332  9002              STR      r0,[sp,#8]
-;;;136    								// Threashold detection
-;;;137    				
-;;;138    				
-;;;139    			
-;;;140    				if( (grad > THREASHOLD_LOW) && (gradx < THREASHOLD_HIGH) ) {
+;;;139    								// Threashold detection
+;;;140    				
+;;;141    				
+;;;142    			
+;;;143    				if( (grad > THREASHOLD_LOW) && (gradx < THREASHOLD_HIGH) ) {
 000334  4938              LDR      r1,|L1.1048|
 000336  9802              LDR      r0,[sp,#8]
 000338  f7fffffe          BL       __aeabi_cfrcmple
@@ -414,47 +417,47 @@
 000340  9804              LDR      r0,[sp,#0x10]
 000342  f7fffffe          BL       __aeabi_cfcmple
 000346  d206              BCS      |L1.854|
-;;;141    					// EDGE
-;;;142    					frameloc[y*RES_WIDTH + x] = 255;		// sets the red pixel to max
+;;;144    					// EDGE
+;;;145    					frameloc[y*RES_WIDTH + x] = 255;		// sets the red pixel to max
 000348  20ff              MOVS     r0,#0xff
 00034a  eb050185          ADD      r1,r5,r5,LSL #2
 00034e  eb061181          ADD      r1,r6,r1,LSL #6
 000352  5460              STRB     r0,[r4,r1]
 000354  e005              B        |L1.866|
                   |L1.854|
-;;;143    				}
-;;;144    				//else if(-grady > THREASHOLD_LOW && -gradx < THREASHOLD_HIGH) {
-;;;145    				//	frameloc[(y+1)*RES_WIDTH + x] = 255;
-;;;146    				//}
-;;;147    				else {
-;;;148    					// NO EDGE
-;;;149    					frameloc[y*RES_WIDTH + x] = 0;			// turns off the red 
+;;;146    				}
+;;;147    				//else if(-grady > THREASHOLD_LOW && -gradx < THREASHOLD_HIGH) {
+;;;148    				//	frameloc[(y+1)*RES_WIDTH + x] = 255;
+;;;149    				//}
+;;;150    				else {
+;;;151    					// NO EDGE
+;;;152    					frameloc[y*RES_WIDTH + x] = 0;			// turns off the red 
 000356  2000              MOVS     r0,#0
 000358  eb050185          ADD      r1,r5,r5,LSL #2
 00035c  eb061181          ADD      r1,r6,r1,LSL #6
 000360  5460              STRB     r0,[r4,r1]
                   |L1.866|
-;;;150    				} 
-;;;151    				
-;;;152    				// BLOB DETECTION
-;;;153    				if(gradx > THREASHOLD_LOW) {			// if we've entered a blob (black to white transistion, going left 2 right)
+;;;153    				} 
+;;;154    				
+;;;155    				// BLOB DETECTION
+;;;156    				if(gradx > THREASHOLD_LOW) {			// if we've entered a blob (black to white transistion, going left 2 right)
 000362  492d              LDR      r1,|L1.1048|
 000364  9804              LDR      r0,[sp,#0x10]
 000366  f7fffffe          BL       __aeabi_cfrcmple
 00036a  d206              BCS      |L1.890|
-;;;154    					inBlob = 1;
+;;;157    					inBlob = 1;
 00036c  2001              MOVS     r0,#1
 00036e  9011              STR      r0,[sp,#0x44]
-;;;155    					blobLen++;
+;;;158    					blobLen++;
 000370  9812              LDR      r0,[sp,#0x48]
 000372  1c40              ADDS     r0,r0,#1
 000374  b280              UXTH     r0,r0
 000376  9012              STR      r0,[sp,#0x48]
-;;;156    					blobXPos = x;
+;;;159    					blobXPos = x;
 000378  9610              STR      r6,[sp,#0x40]
                   |L1.890|
-;;;157    				}
-;;;158    				if(inBlob && (-gradx < THREASHOLD_LOW)) {	// if we're in a blob and haven't reached the outer edge
+;;;160    				}
+;;;161    				if(inBlob && (-gradx < THREASHOLD_LOW)) {	// if we're in a blob and haven't reached the outer edge
 00037a  9811              LDR      r0,[sp,#0x44]
 00037c  b158              CBZ      r0,|L1.918|
 00037e  9804              LDR      r0,[sp,#0x10]
@@ -463,14 +466,14 @@
 000386  9001              STR      r0,[sp,#4]
 000388  f7fffffe          BL       __aeabi_cfcmple
 00038c  d203              BCS      |L1.918|
-;;;159    					blobLen++;
+;;;162    					blobLen++;
 00038e  9812              LDR      r0,[sp,#0x48]
 000390  1c40              ADDS     r0,r0,#1
 000392  b280              UXTH     r0,r0
 000394  9012              STR      r0,[sp,#0x48]
                   |L1.918|
-;;;160    				}
-;;;161    				if(inBlob && (-gradx > THREASHOLD_LOW)) {	// in a blob, but exiting
+;;;163    				}
+;;;164    				if(inBlob && (-gradx > THREASHOLD_LOW)) {	// in a blob, but exiting
 000396  9811              LDR      r0,[sp,#0x44]
 000398  b1e8              CBZ      r0,|L1.982|
 00039a  9804              LDR      r0,[sp,#0x10]
@@ -479,62 +482,62 @@
 0003a2  9001              STR      r0,[sp,#4]
 0003a4  f7fffffe          BL       __aeabi_cfrcmple
 0003a8  d215              BCS      |L1.982|
-;;;162    					
-;;;163    					if(blobLen < MAX_BLOB_LEN) {
+;;;165    					
+;;;166    					if(blobLen < MAX_BLOB_LEN) {
 0003aa  9812              LDR      r0,[sp,#0x48]
 0003ac  2809              CMP      r0,#9
 0003ae  da0f              BGE      |L1.976|
-;;;164    						// we've found a blob! DELETEEEEE
-;;;165    //						for(uint16_t blobX = blobXPos; blobX >= x; blobX += 2) {
-;;;166    //							frameloc[y*RES_WIDTH + blobX] = 0;
-;;;167    //						}
-;;;168    						frameloc[y*RES_WIDTH + blobXPos] = 0;
+;;;167    						// we've found a blob! DELETEEEEE
+;;;168    //						for(uint16_t blobX = blobXPos; blobX >= x; blobX += 2) {
+;;;169    //							frameloc[y*RES_WIDTH + blobX] = 0;
+;;;170    //						}
+;;;171    						frameloc[y*RES_WIDTH + blobXPos] = 0;
 0003b0  2100              MOVS     r1,#0
 0003b2  eb050285          ADD      r2,r5,r5,LSL #2
 0003b6  9810              LDR      r0,[sp,#0x40]
 0003b8  eb001082          ADD      r0,r0,r2,LSL #6
 0003bc  5421              STRB     r1,[r4,r0]
-;;;169    						frameloc[y*RES_WIDTH + x] = 0;
+;;;172    						frameloc[y*RES_WIDTH + x] = 0;
 0003be  2000              MOVS     r0,#0
 0003c0  eb050185          ADD      r1,r5,r5,LSL #2
 0003c4  eb061181          ADD      r1,r6,r1,LSL #6
 0003c8  5460              STRB     r0,[r4,r1]
-;;;170    //						if( x < RES_WIDTH -OFFSET) {
-;;;171    //							frameloc[y*RES_WIDTH + x + 2] = 0;
-;;;172    //						}
-;;;173    //						if( x > OFFSET) {
-;;;174    //							frameloc[y*RES_WIDTH + blobXPos - 2] = 0;
+;;;173    //						if( x < RES_WIDTH -OFFSET) {
+;;;174    //							frameloc[y*RES_WIDTH + x + 2] = 0;
 ;;;175    //						}
-;;;176    						blobLen = inBlob = 0;
+;;;176    //						if( x > OFFSET) {
+;;;177    //							frameloc[y*RES_WIDTH + blobXPos - 2] = 0;
+;;;178    //						}
+;;;179    						blobLen = inBlob = 0;
 0003ca  9011              STR      r0,[sp,#0x44]
 0003cc  9012              STR      r0,[sp,#0x48]
 0003ce  e002              B        |L1.982|
                   |L1.976|
-;;;177    					}
-;;;178    					else {
-;;;179    						// clear vals, no blob here
-;;;180    						blobLen = inBlob = 0;
+;;;180    					}
+;;;181    					else {
+;;;182    						// clear vals, no blob here
+;;;183    						blobLen = inBlob = 0;
 0003d0  2000              MOVS     r0,#0
 0003d2  9011              STR      r0,[sp,#0x44]
 0003d4  9012              STR      r0,[sp,#0x48]
                   |L1.982|
-0003d6  1cb0              ADDS     r0,r6,#2              ;90
-0003d8  b286              UXTH     r6,r0                 ;90
+0003d6  1cb0              ADDS     r0,r6,#2              ;93
+0003d8  b286              UXTH     r6,r0                 ;93
                   |L1.986|
-0003da  4630              MOV      r0,r6                 ;90
+0003da  4630              MOV      r0,r6                 ;93
 0003dc  f7fffffe          BL       __aeabi_ui2d
-0003e0  2200              MOVS     r2,#0                 ;90
+0003e0  2200              MOVS     r2,#0                 ;93
 0003e2  4b0f              LDR      r3,|L1.1056|
-0003e4  e9cd010c          STRD     r0,r1,[sp,#0x30]      ;90
+0003e4  e9cd010c          STRD     r0,r1,[sp,#0x30]      ;93
 0003e8  f7fffffe          BL       __aeabi_cdcmple
 0003ec  f4ffae89          BCC      |L1.258|
-0003f0  1ca8              ADDS     r0,r5,#2              ;82
-0003f2  b285              UXTH     r5,r0                 ;82
+0003f0  1ca8              ADDS     r0,r5,#2              ;85
+0003f2  b285              UXTH     r5,r0                 ;85
                   |L1.1012|
-0003f4  4628              MOV      r0,r5                 ;82
+0003f4  4628              MOV      r0,r5                 ;85
 0003f6  f7fffffe          BL       __aeabi_ui2d
-0003fa  4606              MOV      r6,r0                 ;82
-0003fc  2200              MOVS     r2,#0                 ;82
+0003fa  4606              MOV      r6,r0                 ;85
+0003fc  2200              MOVS     r2,#0                 ;85
 0003fe  4b09              LDR      r3,|L1.1060|
 000400  e012              B        |L1.1064|
 000402  0000              DCW      0x0000
@@ -559,186 +562,186 @@
                   |L1.1064|
 000428  f7fffffe          BL       __aeabi_cdcmple
 00042c  f4ffae58          BCC      |L1.224|
-;;;181    					}
-;;;182    				}
-;;;183    				
-;;;184    			}
-;;;185    		} // end nested for loop
-;;;186    		
-;;;187    			
-;;;188    	// noise pixel filtering
-;;;189    			
-;;;190    
-;;;191    			for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
+;;;184    					}
+;;;185    				}
+;;;186    				
+;;;187    			}
+;;;188    		} // end nested for loop
+;;;189    		
+;;;190    			
+;;;191    	// noise pixel filtering
+;;;192    			
+;;;193    
+;;;194    			for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
 000430  2505              MOVS     r5,#5
 000432  e069              B        |L1.1288|
                   |L1.1076|
-;;;192    				uint16_t ypt = y + 2;
+;;;195    				uint16_t ypt = y + 2;
 000434  1ca8              ADDS     r0,r5,#2
 000436  fa1ff980          UXTH     r9,r0
-;;;193    				uint16_t ymt = y - 2;
+;;;196    				uint16_t ymt = y - 2;
 00043a  1ea8              SUBS     r0,r5,#2
 00043c  fa1ffa80          UXTH     r10,r0
-;;;194    			
-;;;195    				for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
+;;;197    			
+;;;198    				for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
 000440  2605              MOVS     r6,#5
 000442  e056              B        |L1.1266|
                   |L1.1092|
-;;;196    					
-;;;197    					if(frameloc[y*RES_WIDTH + x] == 255) {		// if current pix. == on, check if it should be off
+;;;199    					
+;;;200    					if(frameloc[y*RES_WIDTH + x] == 255) {		// if current pix. == on, check if it should be off
 000444  eb050085          ADD      r0,r5,r5,LSL #2
 000448  eb061080          ADD      r0,r6,r0,LSL #6
 00044c  5c20              LDRB     r0,[r4,r0]
 00044e  28ff              CMP      r0,#0xff
 000450  d14d              BNE      |L1.1262|
-;;;198    						uint16_t xpt = x + 2;
+;;;201    						uint16_t xpt = x + 2;
 000452  1cb3              ADDS     r3,r6,#2
 000454  b299              UXTH     r1,r3
-;;;199    						uint16_t xmt = x - 2;
+;;;202    						uint16_t xmt = x - 2;
 000456  1eb3              SUBS     r3,r6,#2
 000458  b29a              UXTH     r2,r3
-;;;200    						
-;;;201    						uint8_t numOfPxOff = 0;
+;;;203    						
+;;;204    						uint8_t numOfPxOff = 0;
 00045a  2000              MOVS     r0,#0
-;;;202    						
-;;;203    						if(frameloc[y*RES_WIDTH + xpt] == 0) 
+;;;205    						
+;;;206    						if(frameloc[y*RES_WIDTH + xpt] == 0) 
 00045c  eb050385          ADD      r3,r5,r5,LSL #2
 000460  eb011383          ADD      r3,r1,r3,LSL #6
 000464  5ce3              LDRB     r3,[r4,r3]
 000466  b90b              CBNZ     r3,|L1.1132|
-;;;204    							numOfPxOff++;
+;;;207    							numOfPxOff++;
 000468  1c43              ADDS     r3,r0,#1
 00046a  b2d8              UXTB     r0,r3
                   |L1.1132|
-;;;205    						
-;;;206    						if(frameloc[y*RES_WIDTH + xmt] == 0) 
+;;;208    						
+;;;209    						if(frameloc[y*RES_WIDTH + xmt] == 0) 
 00046c  eb050385          ADD      r3,r5,r5,LSL #2
 000470  eb021383          ADD      r3,r2,r3,LSL #6
 000474  5ce3              LDRB     r3,[r4,r3]
 000476  b90b              CBNZ     r3,|L1.1148|
-;;;207    							numOfPxOff++;
+;;;210    							numOfPxOff++;
 000478  1c43              ADDS     r3,r0,#1
 00047a  b2d8              UXTB     r0,r3
                   |L1.1148|
-;;;208    						
-;;;209    						if(frameloc[(ypt)*RES_WIDTH + x] == 0) 
+;;;211    						
+;;;212    						if(frameloc[(ypt)*RES_WIDTH + x] == 0) 
 00047c  eb090389          ADD      r3,r9,r9,LSL #2
 000480  eb061383          ADD      r3,r6,r3,LSL #6
 000484  5ce3              LDRB     r3,[r4,r3]
 000486  b90b              CBNZ     r3,|L1.1164|
-;;;210    							numOfPxOff++;
+;;;213    							numOfPxOff++;
 000488  1c43              ADDS     r3,r0,#1
 00048a  b2d8              UXTB     r0,r3
                   |L1.1164|
-;;;211    						
-;;;212    						if(frameloc[(ymt)*RES_WIDTH + x] == 0) 
+;;;214    						
+;;;215    						if(frameloc[(ymt)*RES_WIDTH + x] == 0) 
 00048c  eb0a038a          ADD      r3,r10,r10,LSL #2
 000490  eb061383          ADD      r3,r6,r3,LSL #6
 000494  5ce3              LDRB     r3,[r4,r3]
 000496  b90b              CBNZ     r3,|L1.1180|
-;;;213    							numOfPxOff++;
+;;;216    							numOfPxOff++;
 000498  1c43              ADDS     r3,r0,#1
 00049a  b2d8              UXTB     r0,r3
                   |L1.1180|
-;;;214    						
-;;;215    						if(frameloc[ymt*RES_WIDTH + xpt] == 0) 
+;;;217    						
+;;;218    						if(frameloc[ymt*RES_WIDTH + xpt] == 0) 
 00049c  eb0a038a          ADD      r3,r10,r10,LSL #2
 0004a0  eb011383          ADD      r3,r1,r3,LSL #6
 0004a4  5ce3              LDRB     r3,[r4,r3]
 0004a6  b90b              CBNZ     r3,|L1.1196|
-;;;216    							numOfPxOff++;
+;;;219    							numOfPxOff++;
 0004a8  1c43              ADDS     r3,r0,#1
 0004aa  b2d8              UXTB     r0,r3
                   |L1.1196|
-;;;217    						
-;;;218    						if(frameloc[ymt*RES_WIDTH + xmt] == 0) 
+;;;220    						
+;;;221    						if(frameloc[ymt*RES_WIDTH + xmt] == 0) 
 0004ac  eb0a038a          ADD      r3,r10,r10,LSL #2
 0004b0  eb021383          ADD      r3,r2,r3,LSL #6
 0004b4  5ce3              LDRB     r3,[r4,r3]
 0004b6  b90b              CBNZ     r3,|L1.1212|
-;;;219    							numOfPxOff++;
+;;;222    							numOfPxOff++;
 0004b8  1c43              ADDS     r3,r0,#1
 0004ba  b2d8              UXTB     r0,r3
                   |L1.1212|
-;;;220    						
-;;;221    						if(frameloc[(ypt)*RES_WIDTH + xpt] == 0) 
+;;;223    						
+;;;224    						if(frameloc[(ypt)*RES_WIDTH + xpt] == 0) 
 0004bc  eb090389          ADD      r3,r9,r9,LSL #2
 0004c0  eb011383          ADD      r3,r1,r3,LSL #6
 0004c4  5ce3              LDRB     r3,[r4,r3]
 0004c6  b90b              CBNZ     r3,|L1.1228|
-;;;222    							numOfPxOff++;
+;;;225    							numOfPxOff++;
 0004c8  1c43              ADDS     r3,r0,#1
 0004ca  b2d8              UXTB     r0,r3
                   |L1.1228|
-;;;223    						
-;;;224    						if(frameloc[(ypt)*RES_WIDTH + xmt] == 0) 
+;;;226    						
+;;;227    						if(frameloc[(ypt)*RES_WIDTH + xmt] == 0) 
 0004cc  eb090389          ADD      r3,r9,r9,LSL #2
 0004d0  eb021383          ADD      r3,r2,r3,LSL #6
 0004d4  5ce3              LDRB     r3,[r4,r3]
 0004d6  b90b              CBNZ     r3,|L1.1244|
-;;;225    							numOfPxOff++;
+;;;228    							numOfPxOff++;
 0004d8  1c43              ADDS     r3,r0,#1
 0004da  b2d8              UXTB     r0,r3
                   |L1.1244|
-;;;226    						
-;;;227    						if(numOfPxOff > 4) {
+;;;229    						
+;;;230    						if(numOfPxOff > 4) {
 0004dc  2804              CMP      r0,#4
 0004de  dd05              BLE      |L1.1260|
-;;;228    							
-;;;229    							frameloc[y*RES_WIDTH + x] = 0; 				// we only ever look at this pixel
+;;;231    							
+;;;232    							frameloc[y*RES_WIDTH + x] = 0; 				// we only ever look at this pixel
 0004e0  2300              MOVS     r3,#0
 0004e2  eb050785          ADD      r7,r5,r5,LSL #2
 0004e6  eb061787          ADD      r7,r6,r7,LSL #6
 0004ea  55e3              STRB     r3,[r4,r7]
                   |L1.1260|
-;;;230    						}
-;;;231    						
-;;;232    					} //end if(edge detected)
+;;;233    						}
+;;;234    						
+;;;235    					} //end if(edge detected)
 0004ec  bf00              NOP      
                   |L1.1262|
-0004ee  1cb0              ADDS     r0,r6,#2              ;195
-0004f0  b286              UXTH     r6,r0                 ;195
+0004ee  1cb0              ADDS     r0,r6,#2              ;198
+0004f0  b286              UXTH     r6,r0                 ;198
                   |L1.1266|
-0004f2  4630              MOV      r0,r6                 ;195
+0004f2  4630              MOV      r0,r6                 ;198
 0004f4  f7fffffe          BL       __aeabi_ui2d
-0004f8  4607              MOV      r7,r0                 ;195
-0004fa  2200              MOVS     r2,#0                 ;195
+0004f8  4607              MOV      r7,r0                 ;198
+0004fa  2200              MOVS     r2,#0                 ;198
 0004fc  4b50              LDR      r3,|L1.1600|
 0004fe  f7fffffe          BL       __aeabi_cdcmple
 000502  d39f              BCC      |L1.1092|
-000504  1ca8              ADDS     r0,r5,#2              ;191
-000506  b285              UXTH     r5,r0                 ;191
+000504  1ca8              ADDS     r0,r5,#2              ;194
+000506  b285              UXTH     r5,r0                 ;194
                   |L1.1288|
-000508  4628              MOV      r0,r5                 ;191
+000508  4628              MOV      r0,r5                 ;194
 00050a  f7fffffe          BL       __aeabi_ui2d
-00050e  4606              MOV      r6,r0                 ;191
-000510  2200              MOVS     r2,#0                 ;191
+00050e  4606              MOV      r6,r0                 ;194
+000510  2200              MOVS     r2,#0                 ;194
 000512  4b4c              LDR      r3,|L1.1604|
 000514  f7fffffe          BL       __aeabi_cdcmple
 000518  d38c              BCC      |L1.1076|
-;;;233    				} // end x for
-;;;234    			} // end y for
-;;;235    		
-;;;236    		// END NOISE FILTERING
-;;;237    			
-;;;238    	  // front edge detection
-;;;239    			
-;;;240    			for( float x = 1 + GND_OFFSET_X; x < (RES_WIDTH - GND_OFFSET_X); x += 2.0) 
+;;;236    				} // end x for
+;;;237    			} // end y for
+;;;238    		
+;;;239    		// END NOISE FILTERING
+;;;240    			
+;;;241    	  // front edge detection
+;;;242    			
+;;;243    			for( float x = 1 + GND_OFFSET_X; x < (RES_WIDTH - GND_OFFSET_X); x += 2.0) 
 00051a  f8df912c          LDR      r9,|L1.1608|
 00051e  e054              B        |L1.1482|
                   |L1.1312|
-;;;241    			{																												// start on the left
-;;;242    				float xPos;
-;;;243    				
-;;;244    				for( float y = (RES_HEIGHT - GND_OFFSET_Y - 1); y > GND_OFFSET_Y; y -= 2.0) 
+;;;244    			{																												// start on the left
+;;;245    				float xPos;
+;;;246    				
+;;;247    				for( float y = (RES_HEIGHT - GND_OFFSET_Y - 1); y > GND_OFFSET_Y; y -= 2.0) 
 000520  f8dfa128          LDR      r10,|L1.1612|
 000524  e03f              B        |L1.1446|
                   |L1.1318|
-;;;245    				{																											// start from the bottom
-;;;246    					
-;;;247    						float yPos;
-;;;248    					
-;;;249    					if(frameloc[((uint8_t)y)*RES_WIDTH + (uint16_t)x] != 0) {			// if the pixel is on
+;;;248    				{																											// start from the bottom
+;;;249    					
+;;;250    						float yPos;
+;;;251    					
+;;;252    					if(frameloc[((uint8_t)y)*RES_WIDTH + (uint16_t)x] != 0) {			// if the pixel is on
 000526  4648              MOV      r0,r9
 000528  f7fffffe          BL       __aeabi_f2uiz
 00052c  b285              UXTH     r5,r0
@@ -749,19 +752,19 @@
 00053a  eb051080          ADD      r0,r5,r0,LSL #6
 00053e  5c20              LDRB     r0,[r4,r0]
 000540  b180              CBZ      r0,|L1.1380|
-;;;250    
-;;;251    						/*				// ACTUAL LOCATION CALCULATION
-;;;252    						double theta_ph = atan(((2.0*y-200.0)/200.0)*TAN_FOVH_DIV_2);		// angle of the pixel
-;;;253    						double cos_theta_ph = cos(theta_ph);											// used in the computations
-;;;254    						double cos_theta_minus_ph = cos(theta - theta_ph);				// used in the computations
-;;;255    						
-;;;256    						yPos = ((double)((3.9)*((cos_theta_ph))))/(cos_theta_minus_ph) + 
-;;;257    											(2.1)*tan(theta - theta_ph);		// y distance from the bot
-;;;258    						xPos = ((yPos*(2.0*x - 320.0))/320.0)*TAN_FOVW_DIV_2;			// x distance from the bot
-;;;259    						
-;;;260    					if(frameloc[((int16_t)y)*RES_WIDTH + (int16_t)x] != 0) {
-;;;261    						*/
-;;;262    						frameloc[((int16_t)y-2)*RES_WIDTH + (int16_t)x - 1] = 0xFF;
+;;;253    
+;;;254    						/*				// ACTUAL LOCATION CALCULATION
+;;;255    						double theta_ph = atan(((2.0*y-200.0)/200.0)*TAN_FOVH_DIV_2);		// angle of the pixel
+;;;256    						double cos_theta_ph = cos(theta_ph);											// used in the computations
+;;;257    						double cos_theta_minus_ph = cos(theta - theta_ph);				// used in the computations
+;;;258    						
+;;;259    						yPos = ((double)((3.9)*((cos_theta_ph))))/(cos_theta_minus_ph) + 
+;;;260    											(2.1)*tan(theta - theta_ph);		// y distance from the bot
+;;;261    						xPos = ((yPos*(2.0*x - 320.0))/320.0)*TAN_FOVW_DIV_2;			// x distance from the bot
+;;;262    						
+;;;263    					if(frameloc[((int16_t)y)*RES_WIDTH + (int16_t)x] != 0) {
+;;;264    						*/
+;;;265    						frameloc[((int16_t)y-2)*RES_WIDTH + (int16_t)x - 1] = 0xFF;
 000542  4648              MOV      r0,r9
 000544  f7fffffe          BL       __aeabi_f2iz
 000548  b205              SXTH     r5,r0
@@ -774,13 +777,13 @@
 00055c  1e40              SUBS     r0,r0,#1
 00055e  21ff              MOVS     r1,#0xff
 000560  5421              STRB     r1,[r4,r0]
-;;;263    										
-;;;264    						break;			// stop looking for the edge, break to the next x co-ordinate
+;;;266    										
+;;;267    						break;			// stop looking for the edge, break to the next x co-ordinate
 000562  e025              B        |L1.1456|
                   |L1.1380|
-;;;265    					} // end if
-;;;266    					else {
-;;;267    						frameloc[(int16_t)(y+1)*RES_WIDTH + (int16_t)x+1] = 0xFF;
+;;;268    					} // end if
+;;;269    					else {
+;;;270    						frameloc[(int16_t)(y+1)*RES_WIDTH + (int16_t)x+1] = 0xFF;
 000564  4648              MOV      r0,r9
 000566  f7fffffe          BL       __aeabi_f2iz
 00056a  b206              SXTH     r6,r0
@@ -795,48 +798,48 @@
 000586  1c40              ADDS     r0,r0,#1
 000588  21ff              MOVS     r1,#0xff
 00058a  5421              STRB     r1,[r4,r0]
-00058c  4650              MOV      r0,r10                ;244
+00058c  4650              MOV      r0,r10                ;247
 00058e  f7fffffe          BL       __aeabi_f2d
-000592  4607              MOV      r7,r0                 ;244
-000594  2200              MOVS     r2,#0                 ;244
-000596  f04f4380          MOV      r3,#0x40000000        ;244
+000592  4607              MOV      r7,r0                 ;247
+000594  2200              MOVS     r2,#0                 ;247
+000596  f04f4380          MOV      r3,#0x40000000        ;247
 00059a  f7fffffe          BL       __aeabi_dsub
-00059e  4605              MOV      r5,r0                 ;244
+00059e  4605              MOV      r5,r0                 ;247
 0005a0  f7fffffe          BL       __aeabi_d2f
-0005a4  4682              MOV      r10,r0                ;244
+0005a4  4682              MOV      r10,r0                ;247
                   |L1.1446|
 0005a6  492a              LDR      r1,|L1.1616|
-0005a8  4650              MOV      r0,r10                ;244
+0005a8  4650              MOV      r0,r10                ;247
 0005aa  f7fffffe          BL       __aeabi_cfrcmple
 0005ae  d3ba              BCC      |L1.1318|
                   |L1.1456|
-0005b0  4648              MOV      r0,r9                 ;240
+0005b0  4648              MOV      r0,r9                 ;243
 0005b2  f7fffffe          BL       __aeabi_f2d
-0005b6  4607              MOV      r7,r0                 ;240
-0005b8  2200              MOVS     r2,#0                 ;240
-0005ba  f04f4380          MOV      r3,#0x40000000        ;240
+0005b6  4607              MOV      r7,r0                 ;243
+0005b8  2200              MOVS     r2,#0                 ;243
+0005ba  f04f4380          MOV      r3,#0x40000000        ;243
 0005be  f7fffffe          BL       __aeabi_dadd
-0005c2  4605              MOV      r5,r0                 ;240
+0005c2  4605              MOV      r5,r0                 ;243
 0005c4  f7fffffe          BL       __aeabi_d2f
-0005c8  4681              MOV      r9,r0                 ;240
+0005c8  4681              MOV      r9,r0                 ;243
                   |L1.1482|
 0005ca  4922              LDR      r1,|L1.1620|
-0005cc  4648              MOV      r0,r9                 ;240
+0005cc  4648              MOV      r0,r9                 ;243
 0005ce  f7fffffe          BL       __aeabi_cfcmple
 0005d2  d3a5              BCC      |L1.1312|
-;;;268    					}
-;;;269    						
-;;;270    		//				frameloc[(int16_t)yPos*RES_WIDTH + (int16_t)x] = 0xFF;
-;;;271    		//			}
-;;;272    					
-;;;273    				} // end yfor 
-;;;274    			} 	// end xfor
-;;;275    			
-;;;276    		// end front edge detection
-;;;277    			
-;;;278    
-;;;279    		// tell chirp to use this buffer
-;;;280    				led_setRGB(0, 255, 255);
+;;;271    					}
+;;;272    						
+;;;273    		//				frameloc[(int16_t)yPos*RES_WIDTH + (int16_t)x] = 0xFF;
+;;;274    		//			}
+;;;275    					
+;;;276    				} // end yfor 
+;;;277    			} 	// end xfor
+;;;278    			
+;;;279    		// end front edge detection
+;;;280    			
+;;;281    
+;;;282    		// tell chirp to use this buffer
+;;;283    				led_setRGB(0, 255, 255);
 0005d4  2000              MOVS     r0,#0
 0005d6  9015              STR      r0,[sp,#0x54]
 0005d8  20ff              MOVS     r0,#0xff
@@ -846,30 +849,30 @@
 0005e0  9017              STR      r0,[sp,#0x5c]
 0005e2  a815              ADD      r0,sp,#0x54
 0005e4  f7fffffe          BL       _Z10led_setRGBRKhS0_S0_ ; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
-;;;281    		g_chirpUsb->useBuffer(frame, len+CAM_RES2_WIDTH*CAM_RES2_HEIGHT); 
+;;;284    		g_chirpUsb->useBuffer(frame, len+CAM_RES2_WIDTH*CAM_RES2_HEIGHT); 
 0005e8  9a14              LDR      r2,[sp,#0x50]
 0005ea  f502427a          ADD      r2,r2,#0xfa00
 0005ee  481a              LDR      r0,|L1.1624|
 0005f0  9913              LDR      r1,[sp,#0x4c]
 0005f2  6800              LDR      r0,[r0,#0]  ; g_chirpUsb
 0005f4  f7fffffe          BL       _ZN5Chirp9useBufferEPhj ; Chirp::useBuffer(unsigned char*, unsigned)
-;;;282    
-;;;283    }
+;;;285    
+;;;286    }
 0005f8  b019              ADD      sp,sp,#0x64
 0005fa  e8bd8ff0          POP      {r4-r11,pc}
-;;;284    
+;;;287    
                           ENDP
 
                   _Z9videoLoopv PROC ; videoLoop()
-;;;285    int videoLoop()
+;;;288    int videoLoop()
 0005fe  b500              PUSH     {lr}
-;;;286    {
+;;;289    {
 000600  b087              SUB      sp,sp,#0x1c
-;;;287    	if (g_execArg==0)
+;;;290    	if (g_execArg==0)
 000602  4816              LDR      r0,|L1.1628|
 000604  6800              LDR      r0,[r0,#0]  ; g_execArg
 000606  b9a8              CBNZ     r0,|L1.1588|
-;;;288    		cam_getFrameChirp(CAM_GRAB_M1R2, 0, 0, CAM_RES2_WIDTH, CAM_RES2_HEIGHT, g_chirpUsb);
+;;;291    		cam_getFrameChirp(CAM_GRAB_M1R2, 0, 0, CAM_RES2_WIDTH, CAM_RES2_HEIGHT, g_chirpUsb);
 000608  2021              MOVS     r0,#0x21
 00060a  9006              STR      r0,[sp,#0x18]
 00060c  2000              MOVS     r0,#0
@@ -888,19 +891,19 @@
 00062a  a905              ADD      r1,sp,#0x14
 00062c  a806              ADD      r0,sp,#0x18
 00062e  f7fffffe          BL       _Z17cam_getFrameChirpRKhRKtS2_S2_S2_P5Chirp ; cam_getFrameChirp(const unsigned char&, const unsigned short&, const unsigned short&, const unsigned short&, const unsigned short&, Chirp*)
-;;;289    	else 
+;;;292    	else 
 000632  e002              B        |L1.1594|
                   |L1.1588|
-;;;290    		sendCustom();
+;;;293    		sendCustom();
 000634  2001              MOVS     r0,#1
 000636  f7fffffe          BL       _Z10sendCustomh ; sendCustom(unsigned char)
                   |L1.1594|
-;;;291    	return 0;
+;;;294    	return 0;
 00063a  2000              MOVS     r0,#0
-;;;292    }
+;;;295    }
 00063c  b007              ADD      sp,sp,#0x1c
 00063e  bd00              POP      {pc}
-;;;293    
+;;;296    
                           ENDP
 
                   |L1.1600|

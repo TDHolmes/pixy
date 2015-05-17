@@ -1328,7 +1328,7 @@ N#define H_B 4.1
 N
 N// SRAM banks
 N#define SRAM0_LOC                0x10000000
-N#define SRAM0_SIZE               0x20000
+N#define SRAM0_SIZE               0x20000			// 131,072 in decimal
 N#define SRAM1_LOC                0x10080000
 N#define SRAM1_SIZE               0x12000
 N#define SRAM2_LOC                0x20000000
