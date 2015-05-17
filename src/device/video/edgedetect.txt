@@ -7,1333 +7,1687 @@
                   _Z14edgeDetect_runv PROC ; edgeDetect_run()
 ;;;52     
 ;;;53     void edgeDetect_run()
-000000  f5ad6d96          SUB      sp,sp,#0x4b0
+000000  f6ad0d28          SUB      sp,sp,#0x828
 ;;;54     {
-;;;55     	uint8_t brightness = 100;
-000004  2064              MOVS     r0,#0x64
-000006  f8cd04a0          STR      r0,[sp,#0x4a0]
-;;;56     	cam_setBrightness(brightness); 				// 0 to 255. Camera brightness setting
-00000a  f50d6094          ADD      r0,sp,#0x4a0
-00000e  f7fffffe          BL       _Z17cam_setBrightnessRKh ; cam_setBrightness(const unsigned char&)
-;;;57     	
-;;;58     	int8_t retVal = 0;
-000012  2000              MOVS     r0,#0
-000014  f8cd049c          STR      r0,[sp,#0x49c]
-;;;59     	retVal += rcs_enable(1, 1);
-000018  2001              MOVS     r0,#1
-00001a  f8cd04a8          STR      r0,[sp,#0x4a8]
-00001e  f20d41a4          ADD      r1,sp,#0x4a4
-000022  f8cd04a4          STR      r0,[sp,#0x4a4]
-000026  1d08              ADDS     r0,r1,#4
-000028  f7fffffe          BL       _Z10rcs_enableRKhS0_ ; rcs_enable(const unsigned char&, const unsigned char&)
-00002c  f8dd149c          LDR      r1,[sp,#0x49c]
-000030  4408              ADD      r0,r0,r1
-000032  b240              SXTB     r0,r0
-000034  f8cd049c          STR      r0,[sp,#0x49c]
-;;;60     	
-;;;61     	if(retVal != 0) {		// enabling error
-000038  f8dd049c          LDR      r0,[sp,#0x49c]
-00003c  b158              CBZ      r0,|L1.86|
-;;;62     		
-;;;63     		uint8_t retStr[] = "Error: Servo init";
-00003e  2214              MOVS     r2,#0x14
-000040  a1fc              ADR      r1,|L1.1076|
-000042  a819              ADD      r0,sp,#0x64
-000044  f7fffffe          BL       __aeabi_memcpy4
-;;;64     		UART_Send(LPC_USART0, retStr, 18, BLOCKING);
-000048  2301              MOVS     r3,#1
-00004a  2212              MOVS     r2,#0x12
-00004c  a919              ADD      r1,sp,#0x64
-00004e  48fe              LDR      r0,|L1.1096|
-000050  f7fffffe          BL       UART_Send
-;;;65     	}
-000054  bf00              NOP      
-                  |L1.86|
-;;;66     	
-;;;67     	uint8_t *frame = (uint8_t *)SRAM1_LOC;
-000056  48fd              LDR      r0,|L1.1100|
-000058  f8cd0498          STR      r0,[sp,#0x498]
-;;;68     	uint8_t *frameloc = (uint8_t *)(SRAM1_LOC + 0);
-00005c  f8cd0494          STR      r0,[sp,#0x494]
-;;;69     	uint8_t *sendPositions = (uint8_t *)SRAM1_LOC;
-000060  f8cd0490          STR      r0,[sp,#0x490]
+;;;55     	
+;;;56     	int8_t retVal = 0;
+000004  2000              MOVS     r0,#0
+000006  f8cd0818          STR      r0,[sp,#0x818]
+;;;57     	retVal += rcs_enable(1, 1);
+00000a  2001              MOVS     r0,#1
+00000c  f8cd0820          STR      r0,[sp,#0x820]
+000010  f60d011c          ADD      r1,sp,#0x81c
+000014  f8cd081c          STR      r0,[sp,#0x81c]
+000018  1d08              ADDS     r0,r1,#4
+00001a  f7fffffe          BL       _Z10rcs_enableRKhS0_ ; rcs_enable(const unsigned char&, const unsigned char&)
+00001e  f8dd1818          LDR      r1,[sp,#0x818]
+000022  4408              ADD      r0,r0,r1
+000024  b240              SXTB     r0,r0
+000026  f8cd0818          STR      r0,[sp,#0x818]
+;;;58     	
+;;;59     	if(retVal != 0) {		// enabling error
+00002a  f8dd0818          LDR      r0,[sp,#0x818]
+00002e  b168              CBZ      r0,|L1.76|
+;;;60     		
+;;;61     		uint8_t retStr[] = "Error: Servo init";
+000030  2214              MOVS     r2,#0x14
+000032  a1fe              ADR      r1,|L1.1068|
+000034  f50d60d7          ADD      r0,sp,#0x6b8
+000038  f7fffffe          BL       __aeabi_memcpy4
+;;;62     		UART_Send(LPC_USART0, retStr, 18, BLOCKING);
+00003c  2301              MOVS     r3,#1
+00003e  2212              MOVS     r2,#0x12
+000040  f50d61d7          ADD      r1,sp,#0x6b8
+000044  48fe              LDR      r0,|L1.1088|
+000046  f7fffffe          BL       UART_Send
+;;;63     	}
+00004a  bf00              NOP      
+                  |L1.76|
+;;;64     	
+;;;65     	uint8_t *frame = (uint8_t *)SRAM1_LOC;
+00004c  48fd              LDR      r0,|L1.1092|
+00004e  f8cd0814          STR      r0,[sp,#0x814]
+;;;66     	uint8_t *frameloc = (uint8_t *)(SRAM1_LOC + 0);
+000052  f8cd0810          STR      r0,[sp,#0x810]
+;;;67     	uint8_t sendPositions[RES_WIDTH];
+;;;68     	
+;;;69     //	uint8_t floorArray[80][13];
 ;;;70     	
-;;;71     	uint8_t floorArray[80][13];
+;;;71     	float theta;
 ;;;72     	
-;;;73     	float theta;
-;;;74     	uint16_t count = 0;
-000064  2000              MOVS     r0,#0
-000066  901e              STR      r0,[sp,#0x78]
-;;;75     	
-;;;76     	// recieve the command to get a frame
-;;;77     	while(1) {
-000068  e3fe              B        |L1.2152|
-                  |L1.106|
-;;;78     		
-;;;79     		// clear array (front edge)
-;;;80     		for(uint16_t x = 0; x < 320; x++) {
-00006a  2000              MOVS     r0,#0
-00006c  901a              STR      r0,[sp,#0x68]
-00006e  e008              B        |L1.130|
-                  |L1.112|
-;;;81     			sendPositions[x] = 255;
-000070  22ff              MOVS     r2,#0xff
-000072  991a              LDR      r1,[sp,#0x68]
-000074  f8dd0490          LDR      r0,[sp,#0x490]
-000078  5442              STRB     r2,[r0,r1]
-00007a  981a              LDR      r0,[sp,#0x68]         ;80
-00007c  1c40              ADDS     r0,r0,#1              ;80
-00007e  b280              UXTH     r0,r0                 ;80
-000080  901a              STR      r0,[sp,#0x68]         ;80
-                  |L1.130|
-000082  981a              LDR      r0,[sp,#0x68]         ;80
-000084  f5b07fa0          CMP      r0,#0x140             ;80
-000088  dbf2              BLT      |L1.112|
-;;;82     		}
-;;;83     		
-;;;84     		// clear array (floor array)
-;;;85     		
-;;;86     		for(uint16_t y = 0; y < 13; y++) {
-00008a  2000              MOVS     r0,#0
-00008c  901a              STR      r0,[sp,#0x68]
-00008e  e017              B        |L1.192|
-                  |L1.144|
-;;;87     			for(uint16_t x = 0; x < 72; x++) {
-000090  2000              MOVS     r0,#0
-000092  9019              STR      r0,[sp,#0x64]
-000094  e00d              B        |L1.178|
-                  |L1.150|
-;;;88     				floorArray[x][y] = 0;
-000096  2100              MOVS     r1,#0
-000098  9819              LDR      r0,[sp,#0x64]
-00009a  eb000280          ADD      r2,r0,r0,LSL #2
-00009e  eb0200c0          ADD      r0,r2,r0,LSL #3
-0000a2  aa20              ADD      r2,sp,#0x80
-0000a4  4402              ADD      r2,r2,r0
-0000a6  981a              LDR      r0,[sp,#0x68]
-0000a8  5411              STRB     r1,[r2,r0]
-0000aa  9819              LDR      r0,[sp,#0x64]         ;87
-0000ac  1c40              ADDS     r0,r0,#1              ;87
-0000ae  b280              UXTH     r0,r0                 ;87
-0000b0  9019              STR      r0,[sp,#0x64]         ;87
-                  |L1.178|
-0000b2  9819              LDR      r0,[sp,#0x64]         ;87
-0000b4  2848              CMP      r0,#0x48              ;87
-0000b6  dbee              BLT      |L1.150|
-0000b8  981a              LDR      r0,[sp,#0x68]         ;86
-0000ba  1c40              ADDS     r0,r0,#1              ;86
-0000bc  b280              UXTH     r0,r0                 ;86
-0000be  901a              STR      r0,[sp,#0x68]         ;86
-                  |L1.192|
-0000c0  981a              LDR      r0,[sp,#0x68]         ;86
-0000c2  280d              CMP      r0,#0xd               ;86
-0000c4  dbe4              BLT      |L1.144|
-;;;89     			}
-;;;90     		}
-;;;91     		
-;;;92     		
+;;;73     	// recieve the command to get a frame
+;;;74     	while(1) {
+000056  e3fd              B        |L1.2132|
+                  |L1.88|
+;;;75     		
+;;;76     		// clear array (front edge)
+;;;77     		for(uint16_t x = 0; x < 320; x++) {
+000058  2000              MOVS     r0,#0
+00005a  f8cd06bc          STR      r0,[sp,#0x6bc]
+00005e  e00b              B        |L1.120|
+                  |L1.96|
+;;;78     			sendPositions[x] = 255;
+000060  21ff              MOVS     r1,#0xff
+000062  f50d62da          ADD      r2,sp,#0x6d0
+000066  f8dd06bc          LDR      r0,[sp,#0x6bc]
+00006a  5411              STRB     r1,[r2,r0]
+00006c  f8dd06bc          LDR      r0,[sp,#0x6bc]        ;77
+000070  1c40              ADDS     r0,r0,#1              ;77
+000072  b280              UXTH     r0,r0                 ;77
+000074  f8cd06bc          STR      r0,[sp,#0x6bc]        ;77
+                  |L1.120|
+000078  f8dd06bc          LDR      r0,[sp,#0x6bc]        ;77
+00007c  f5b07fa0          CMP      r0,#0x140             ;77
+000080  dbee              BLT      |L1.96|
+;;;79     		}
+;;;80     		
+;;;81     		// clear array (floor array)
+;;;82     		
+;;;83     //		for(uint16_t y = 0; y < 13; y++) {
+;;;84     //			for(uint16_t x = 0; x < 72; x++) {
+;;;85     //				floorArray[x][y] = 0;
+;;;86     //			}
+;;;87     //		}
+;;;88     		
+;;;89     		
+;;;90     		
+;;;91     		// red LED: Stopped waiting for data
+;;;92     		led_setRGB(255, 0, 0);
+000082  20ff              MOVS     r0,#0xff
+000084  f8cd06c8          STR      r0,[sp,#0x6c8]
+000088  2000              MOVS     r0,#0
+00008a  f8cd06c4          STR      r0,[sp,#0x6c4]
+00008e  f50d62d8          ADD      r2,sp,#0x6c0
+000092  1d11              ADDS     r1,r2,#4
+000094  f8cd06c0          STR      r0,[sp,#0x6c0]
+000098  1d08              ADDS     r0,r1,#4
+00009a  f7fffffe          BL       _Z10led_setRGBRKhS0_S0_ ; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
 ;;;93     		
-;;;94     		// red LED: Stopped waiting for data
-;;;95     		led_setRGB(255, 0, 0);
-0000c6  20ff              MOVS     r0,#0xff
-0000c8  901d              STR      r0,[sp,#0x74]
+;;;94     		while(1) {
+00009e  e00c              B        |L1.186|
+                  |L1.160|
+;;;95     			if(UART_DATA_AVAILABLE) {		// Data has come!
+0000a0  48e9              LDR      r0,|L1.1096|
+0000a2  7800              LDRB     r0,[r0,#0]  ; UART_DATA_AVAILABLE
+0000a4  b148              CBZ      r0,|L1.186|
+;;;96     				theta = (float)UART_DATA_AVAILABLE;
+0000a6  48e8              LDR      r0,|L1.1096|
+0000a8  7800              LDRB     r0,[r0,#0]  ; UART_DATA_AVAILABLE
+0000aa  f7fffffe          BL       __aeabi_ui2f
+0000ae  f8cd06cc          STR      r0,[sp,#0x6cc]
+;;;97     				UART_DATA_AVAILABLE = 0;
+0000b2  2000              MOVS     r0,#0
+0000b4  49e4              LDR      r1,|L1.1096|
+0000b6  7008              STRB     r0,[r1,#0]
+;;;98     				break;
+0000b8  e000              B        |L1.188|
+                  |L1.186|
+0000ba  e7f1              B        |L1.160|
+                  |L1.188|
+0000bc  bf00              NOP      
+;;;99     			}
+;;;100    		}
+;;;101    		
+;;;102    		if(theta > 42) {
+0000be  49e3              LDR      r1,|L1.1100|
+0000c0  f8dd06cc          LDR      r0,[sp,#0x6cc]
+0000c4  f7fffffe          BL       __aeabi_cfrcmple
+0000c8  d27e              BCS      |L1.456|
+;;;103    			
+;;;104    				uint16_t blobLen = 0;
 0000ca  2000              MOVS     r0,#0
-0000cc  901c              STR      r0,[sp,#0x70]
-0000ce  aa1b              ADD      r2,sp,#0x6c
-0000d0  a91c              ADD      r1,sp,#0x70
-0000d2  901b              STR      r0,[sp,#0x6c]
-0000d4  a81d              ADD      r0,sp,#0x74
-0000d6  f7fffffe          BL       _Z10led_setRGBRKhS0_S0_ ; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
-;;;96     		
-;;;97     		while(1) {
-0000da  e00b              B        |L1.244|
-                  |L1.220|
-;;;98     			if(UART_DATA_AVAILABLE) {		// Data has come!
-0000dc  48dc              LDR      r0,|L1.1104|
-0000de  7800              LDRB     r0,[r0,#0]  ; UART_DATA_AVAILABLE
-0000e0  b140              CBZ      r0,|L1.244|
-;;;99     				theta = (float)UART_DATA_AVAILABLE;
-0000e2  48db              LDR      r0,|L1.1104|
-0000e4  7800              LDRB     r0,[r0,#0]  ; UART_DATA_AVAILABLE
-0000e6  f7fffffe          BL       __aeabi_ui2f
-0000ea  901f              STR      r0,[sp,#0x7c]
-;;;100    				UART_DATA_AVAILABLE = 0;
-0000ec  2000              MOVS     r0,#0
-0000ee  49d8              LDR      r1,|L1.1104|
-0000f0  7008              STRB     r0,[r1,#0]
-;;;101    				break;
-0000f2  e000              B        |L1.246|
-                  |L1.244|
-0000f4  e7f2              B        |L1.220|
-                  |L1.246|
-0000f6  bf00              NOP      
-;;;102    			}
-;;;103    		}
-;;;104    		
-;;;105    		if(theta > 42) {
-0000f8  49d6              LDR      r1,|L1.1108|
-0000fa  981f              LDR      r0,[sp,#0x7c]
-0000fc  f7fffffe          BL       __aeabi_cfrcmple
-000100  d27d              BCS      |L1.510|
-;;;106    			count = 0;
-000102  2000              MOVS     r0,#0
-000104  901e              STR      r0,[sp,#0x78]
-;;;107    			// make sure that theta is casted as a float
-;;;108    			theta = (float)(theta*(3.14159/180.0));
-000106  981f              LDR      r0,[sp,#0x7c]
-000108  f7fffffe          BL       __aeabi_f2d
-00010c  4ad2              LDR      r2,|L1.1112|
-00010e  4bd3              LDR      r3,|L1.1116|
-000110  e9cd0114          STRD     r0,r1,[sp,#0x50]
-000114  f7fffffe          BL       __aeabi_dmul
-000118  e9cd0116          STRD     r0,r1,[sp,#0x58]
-00011c  f7fffffe          BL       __aeabi_d2f
-000120  901f              STR      r0,[sp,#0x7c]
-;;;109    			
-;;;110    			// green LED, lets go!
-;;;111    			led_setRGB(255, 255, 255);
-000122  20ff              MOVS     r0,#0xff
-000124  901a              STR      r0,[sp,#0x68]
-000126  9019              STR      r0,[sp,#0x64]
-000128  aa18              ADD      r2,sp,#0x60
-00012a  a919              ADD      r1,sp,#0x64
-00012c  9018              STR      r0,[sp,#0x60]
-00012e  a81a              ADD      r0,sp,#0x68
-000130  f7fffffe          BL       _Z10led_setRGBRKhS0_S0_ ; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
+0000cc  f8cd06b0          STR      r0,[sp,#0x6b0]
+;;;105    				uint8_t inBlob = 0;
+0000d0  f8cd06ac          STR      r0,[sp,#0x6ac]
+;;;106    				uint16_t blobXPos = 0;
+0000d4  f8cd06a8          STR      r0,[sp,#0x6a8]
+;;;107    				uint8_t count = 0;
+0000d8  f8cd06a4          STR      r0,[sp,#0x6a4]
+;;;108    			
+;;;109    			// for a set angle of 12, we go to an angle of 62 degrees
+;;;110    			// make sure that theta is casted as a float
+;;;111    			theta = (float)(theta*(3.14159/180.0));
+0000dc  f8dd06cc          LDR      r0,[sp,#0x6cc]
+0000e0  f7fffffe          BL       __aeabi_f2d
+0000e4  4ada              LDR      r2,|L1.1104|
+0000e6  4bdb              LDR      r3,|L1.1108|
+0000e8  e9cd0114          STRD     r0,r1,[sp,#0x50]
+0000ec  f7fffffe          BL       __aeabi_dmul
+0000f0  e9cd0116          STRD     r0,r1,[sp,#0x58]
+0000f4  f7fffffe          BL       __aeabi_d2f
+0000f8  f8cd06cc          STR      r0,[sp,#0x6cc]
 ;;;112    			
-;;;113    		// grab frame
-;;;114    			cam_getFrame(frameloc, SRAM1_SIZE, CAM_GRAB_M1R2, 0, 0, RES_WIDTH, RES_HEIGHT);
-000134  20c8              MOVS     r0,#0xc8
-000136  f44f71a0          MOV      r1,#0x140
-00013a  2200              MOVS     r2,#0
-00013c  4613              MOV      r3,r2
-00013e  e9cd2100          STRD     r2,r1,[sp,#0]
-000142  9002              STR      r0,[sp,#8]
-000144  2221              MOVS     r2,#0x21
-000146  f44f3190          MOV      r1,#0x12000
-00014a  f8dd0494          LDR      r0,[sp,#0x494]
-00014e  f7fffffe          BL       _Z12cam_getFramePhjhtttt ; cam_getFrame(unsigned char*, unsigned, unsigned char, unsigned short, unsigned short, unsigned short, unsigned short)
-;;;115    		
-;;;116    			frameloc = frame;			
-000152  f8dd0498          LDR      r0,[sp,#0x498]
-000156  f8cd0494          STR      r0,[sp,#0x494]
-;;;117    		
-;;;118    		// double for loop for calculating edges
-;;;119    			for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
-00015a  2005              MOVS     r0,#5
-00015c  9017              STR      r0,[sp,#0x5c]
-00015e  e1f4              B        |L1.1354|
-                  |L1.352|
-;;;120    				uint16_t ypo = y + 1;
-000160  9817              LDR      r0,[sp,#0x5c]
-000162  1c40              ADDS     r0,r0,#1
-000164  b280              UXTH     r0,r0
-000166  9016              STR      r0,[sp,#0x58]
-;;;121    				uint16_t ymo = y - 1;
-000168  9817              LDR      r0,[sp,#0x5c]
-00016a  1e40              SUBS     r0,r0,#1
-00016c  b280              UXTH     r0,r0
-00016e  9015              STR      r0,[sp,#0x54]
-;;;122    //				uint16_t ymt = y - 2;
-;;;123    //				uint16_t ypt = y + 2;
-;;;124    				
-;;;125    				for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
+;;;113    			// green LED, lets go!
+;;;114    			led_setRGB(255, 255, 255);
+0000fc  20ff              MOVS     r0,#0xff
+0000fe  f8cd06bc          STR      r0,[sp,#0x6bc]
+000102  f8cd06b8          STR      r0,[sp,#0x6b8]
+000106  f20d62b4          ADD      r2,sp,#0x6b4
+00010a  1d11              ADDS     r1,r2,#4
+00010c  f8cd06b4          STR      r0,[sp,#0x6b4]
+000110  1d08              ADDS     r0,r1,#4
+000112  f7fffffe          BL       _Z10led_setRGBRKhS0_S0_ ; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
+;;;115    			
+;;;116    		// grab frame
+;;;117    					led_setRGB(0, 0, 0);
+000116  2000              MOVS     r0,#0
+000118  f8cd06b4          STR      r0,[sp,#0x6b4]
+00011c  f8cd06b8          STR      r0,[sp,#0x6b8]
+000120  f20d62bc          ADD      r2,sp,#0x6bc
+000124  1f11              SUBS     r1,r2,#4
+000126  f8cd06bc          STR      r0,[sp,#0x6bc]
+00012a  1f08              SUBS     r0,r1,#4
+00012c  f7fffffe          BL       _Z10led_setRGBRKhS0_S0_ ; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
+;;;118    			cam_getFrame(frameloc, SRAM1_SIZE, CAM_GRAB_M1R2, 0, 0, RES_WIDTH, RES_HEIGHT);
+000130  20c8              MOVS     r0,#0xc8
+000132  f44f71a0          MOV      r1,#0x140
+000136  2200              MOVS     r2,#0
+000138  4613              MOV      r3,r2
+00013a  e9cd2100          STRD     r2,r1,[sp,#0]
+00013e  9002              STR      r0,[sp,#8]
+000140  2221              MOVS     r2,#0x21
+000142  f44f3190          MOV      r1,#0x12000
+000146  f8dd0810          LDR      r0,[sp,#0x810]
+00014a  f7fffffe          BL       _Z12cam_getFramePhjhtttt ; cam_getFrame(unsigned char*, unsigned, unsigned char, unsigned short, unsigned short, unsigned short, unsigned short)
+;;;119    				led_setRGB(255, 255, 255);
+00014e  20ff              MOVS     r0,#0xff
+000150  f8cd06b4          STR      r0,[sp,#0x6b4]
+000154  f8cd06b8          STR      r0,[sp,#0x6b8]
+000158  f20d62bc          ADD      r2,sp,#0x6bc
+00015c  1f11              SUBS     r1,r2,#4
+00015e  f8cd06bc          STR      r0,[sp,#0x6bc]
+000162  1f08              SUBS     r0,r1,#4
+000164  f7fffffe          BL       _Z10led_setRGBRKhS0_S0_ ; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
+;;;120    			frameloc = frame;			
+000168  f8dd0814          LDR      r0,[sp,#0x814]
+00016c  f8cd0810          STR      r0,[sp,#0x810]
+;;;121    		
+;;;122    		// double for loop for calculating edges
+;;;123    			for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
 000170  2005              MOVS     r0,#5
-000172  9014              STR      r0,[sp,#0x50]
-000174  e1da              B        |L1.1324|
+000172  9017              STR      r0,[sp,#0x5c]
+000174  e24c              B        |L1.1552|
                   |L1.374|
-;;;126    					uint16_t xpo = x + 1;
-000176  9814              LDR      r0,[sp,#0x50]
+;;;124    				uint16_t ypo = y + 1;
+000176  9817              LDR      r0,[sp,#0x5c]
 000178  1c40              ADDS     r0,r0,#1
 00017a  b280              UXTH     r0,r0
-00017c  9013              STR      r0,[sp,#0x4c]
-;;;127    					uint16_t xmo = x - 1;
-00017e  9814              LDR      r0,[sp,#0x50]
+00017c  9016              STR      r0,[sp,#0x58]
+;;;125    				uint16_t ymo = y - 1;
+00017e  9817              LDR      r0,[sp,#0x5c]
 000180  1e40              SUBS     r0,r0,#1
 000182  b280              UXTH     r0,r0
-000184  9012              STR      r0,[sp,#0x48]
-;;;128    //					uint16_t xpt = x + 2; 
-;;;129    //					uint16_t xmt = x - 2;
-;;;130    					
-;;;131    				// Gradient/intensity calculation
-;;;132    					
-;;;133    					// intensity calculation for the pixel groups. each "pixel" we use is actually the intensity
-;;;134    					// calculated based off of a group of four pixels. This is for speed, accuracy, and clean
-;;;135    					// edges.
-;;;136    
-;;;137    					uint16_t intense_XPO_Y = frameloc[y*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpo+1] + 
-000186  9817              LDR      r0,[sp,#0x5c]
-000188  eb000180          ADD      r1,r0,r0,LSL #2
-00018c  9813              LDR      r0,[sp,#0x4c]
-00018e  eb001181          ADD      r1,r0,r1,LSL #6
-000192  f8dd0494          LDR      r0,[sp,#0x494]
-000196  5c42              LDRB     r2,[r0,r1]
-000198  9816              LDR      r0,[sp,#0x58]
-00019a  eb000180          ADD      r1,r0,r0,LSL #2
-00019e  9813              LDR      r0,[sp,#0x4c]
-0001a0  eb001081          ADD      r0,r0,r1,LSL #6
-0001a4  1c40              ADDS     r0,r0,#1
-0001a6  f8dd1494          LDR      r1,[sp,#0x494]
-0001aa  5c08              LDRB     r0,[r1,r0]
-0001ac  4402              ADD      r2,r2,r0
+000184  9015              STR      r0,[sp,#0x54]
+;;;126    //				uint16_t ymt = y - 2;
+;;;127    //				uint16_t ypt = y + 2;
+;;;128    				
+;;;129    				for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
+000186  2005              MOVS     r0,#5
+000188  9014              STR      r0,[sp,#0x50]
+00018a  e232              B        |L1.1522|
+                  |L1.396|
+;;;130    					uint16_t xpo = x + 1;
+00018c  9814              LDR      r0,[sp,#0x50]
+00018e  1c40              ADDS     r0,r0,#1
+000190  b280              UXTH     r0,r0
+000192  9013              STR      r0,[sp,#0x4c]
+;;;131    					uint16_t xmo = x - 1;
+000194  9814              LDR      r0,[sp,#0x50]
+000196  1e40              SUBS     r0,r0,#1
+000198  b280              UXTH     r0,r0
+00019a  9012              STR      r0,[sp,#0x48]
+;;;132    //					uint16_t xpt = x + 2; 
+;;;133    //					uint16_t xmt = x - 2;
+;;;134    					
+;;;135    				// Gradient/intensity calculation
+;;;136    					
+;;;137    					// intensity calculation for the pixel groups. each "pixel" we use is actually the intensity
+;;;138    					// calculated based off of a group of four pixels. This is for speed, accuracy, and clean
+;;;139    					// edges.
+;;;140    
+;;;141    					uint16_t intense_XPO_Y = frameloc[y*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpo+1] + 
+00019c  9817              LDR      r0,[sp,#0x5c]
+00019e  eb000180          ADD      r1,r0,r0,LSL #2
+0001a2  9813              LDR      r0,[sp,#0x4c]
+0001a4  eb001181          ADD      r1,r0,r1,LSL #6
+0001a8  f8dd0810          LDR      r0,[sp,#0x810]
+0001ac  5c42              LDRB     r2,[r0,r1]
 0001ae  9816              LDR      r0,[sp,#0x58]
 0001b0  eb000180          ADD      r1,r0,r0,LSL #2
 0001b4  9813              LDR      r0,[sp,#0x4c]
-0001b6  eb001181          ADD      r1,r0,r1,LSL #6
-0001ba  f8dd0494          LDR      r0,[sp,#0x494]
-0001be  5c43              LDRB     r3,[r0,r1]
-0001c0  9817              LDR      r0,[sp,#0x5c]
-0001c2  eb000180          ADD      r1,r0,r0,LSL #2
-0001c6  9813              LDR      r0,[sp,#0x4c]
-0001c8  eb001081          ADD      r0,r0,r1,LSL #6
-0001cc  1c40              ADDS     r0,r0,#1
-0001ce  f8dd1494          LDR      r1,[sp,#0x494]
-0001d2  5c08              LDRB     r0,[r1,r0]
-0001d4  4418              ADD      r0,r0,r3
-0001d6  9006              STR      r0,[sp,#0x18]
-0001d8  eb0070d0          ADD      r0,r0,r0,LSR #31
-0001dc  eb020060          ADD      r0,r2,r0,ASR #1
-0001e0  9011              STR      r0,[sp,#0x44]
-;;;138    							(frameloc[ypo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpo+1])/2;
-;;;139    					
-;;;140    					uint16_t intense_XMO_Y = frameloc[y*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x] + 
-0001e2  9817              LDR      r0,[sp,#0x5c]
-0001e4  eb000180          ADD      r1,r0,r0,LSL #2
-0001e8  9812              LDR      r0,[sp,#0x48]
-0001ea  eb001181          ADD      r1,r0,r1,LSL #6
-0001ee  f8dd0494          LDR      r0,[sp,#0x494]
-0001f2  5c41              LDRB     r1,[r0,r1]
-0001f4  9816              LDR      r0,[sp,#0x58]
-0001f6  eb000280          ADD      r2,r0,r0,LSL #2
-0001fa  9814              LDR      r0,[sp,#0x50]
-0001fc  e000              B        |L1.512|
-                  |L1.510|
-0001fe  e3b6              B        |L1.2414|
-                  |L1.512|
-000200  eb001282          ADD      r2,r0,r2,LSL #6
-000204  f8dd0494          LDR      r0,[sp,#0x494]
-000208  5c80              LDRB     r0,[r0,r2]
-00020a  4401              ADD      r1,r1,r0
-00020c  9816              LDR      r0,[sp,#0x58]
-00020e  eb000280          ADD      r2,r0,r0,LSL #2
-000212  9812              LDR      r0,[sp,#0x48]
-000214  eb001282          ADD      r2,r0,r2,LSL #6
-000218  f8dd0494          LDR      r0,[sp,#0x494]
-00021c  5c82              LDRB     r2,[r0,r2]
-00021e  9817              LDR      r0,[sp,#0x5c]
-000220  eb000380          ADD      r3,r0,r0,LSL #2
-000224  9814              LDR      r0,[sp,#0x50]
-000226  eb001383          ADD      r3,r0,r3,LSL #6
-00022a  f8dd0494          LDR      r0,[sp,#0x494]
-00022e  5cc0              LDRB     r0,[r0,r3]
-000230  4410              ADD      r0,r0,r2
-000232  9006              STR      r0,[sp,#0x18]
-000234  eb0070d0          ADD      r0,r0,r0,LSR #31
-000238  eb010060          ADD      r0,r1,r0,ASR #1
-00023c  9010              STR      r0,[sp,#0x40]
-;;;141    							(frameloc[ypo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x])/2;
-;;;142    					
-;;;143    					uint16_t intense_X_YPO = frameloc[ypo*RES_WIDTH + x] + frameloc[(ypo+1)*RES_WIDTH + xpo] + 
-00023e  9816              LDR      r0,[sp,#0x58]
-000240  eb000180          ADD      r1,r0,r0,LSL #2
-000244  9814              LDR      r0,[sp,#0x50]
-000246  eb001181          ADD      r1,r0,r1,LSL #6
-00024a  f8dd0494          LDR      r0,[sp,#0x494]
-00024e  5c41              LDRB     r1,[r0,r1]
-000250  9816              LDR      r0,[sp,#0x58]
-000252  1c40              ADDS     r0,r0,#1
-000254  eb000280          ADD      r2,r0,r0,LSL #2
-000258  9813              LDR      r0,[sp,#0x4c]
-00025a  eb001282          ADD      r2,r0,r2,LSL #6
-00025e  f8dd0494          LDR      r0,[sp,#0x494]
-000262  5c80              LDRB     r0,[r0,r2]
-000264  4401              ADD      r1,r1,r0
+0001b6  eb001081          ADD      r0,r0,r1,LSL #6
+0001ba  1c40              ADDS     r0,r0,#1
+0001bc  f8dd1810          LDR      r1,[sp,#0x810]
+0001c0  5c08              LDRB     r0,[r1,r0]
+0001c2  4402              ADD      r2,r2,r0
+0001c4  9816              LDR      r0,[sp,#0x58]
+0001c6  e000              B        |L1.458|
+                  |L1.456|
+0001c8  e3fd              B        |L1.2502|
+                  |L1.458|
+0001ca  eb000180          ADD      r1,r0,r0,LSL #2
+0001ce  9813              LDR      r0,[sp,#0x4c]
+0001d0  eb001181          ADD      r1,r0,r1,LSL #6
+0001d4  f8dd0810          LDR      r0,[sp,#0x810]
+0001d8  5c43              LDRB     r3,[r0,r1]
+0001da  9817              LDR      r0,[sp,#0x5c]
+0001dc  eb000180          ADD      r1,r0,r0,LSL #2
+0001e0  9813              LDR      r0,[sp,#0x4c]
+0001e2  eb001181          ADD      r1,r0,r1,LSL #6
+0001e6  1c49              ADDS     r1,r1,#1
+0001e8  f8dd0810          LDR      r0,[sp,#0x810]
+0001ec  5c40              LDRB     r0,[r0,r1]
+0001ee  4418              ADD      r0,r0,r3
+0001f0  9006              STR      r0,[sp,#0x18]
+0001f2  eb0070d0          ADD      r0,r0,r0,LSR #31
+0001f6  eb020060          ADD      r0,r2,r0,ASR #1
+0001fa  9011              STR      r0,[sp,#0x44]
+;;;142    							(frameloc[ypo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpo+1])/2;
+;;;143    					
+;;;144    					uint16_t intense_XMO_Y = frameloc[y*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x] + 
+0001fc  9817              LDR      r0,[sp,#0x5c]
+0001fe  eb000180          ADD      r1,r0,r0,LSL #2
+000202  9812              LDR      r0,[sp,#0x48]
+000204  eb001181          ADD      r1,r0,r1,LSL #6
+000208  f8dd0810          LDR      r0,[sp,#0x810]
+00020c  5c41              LDRB     r1,[r0,r1]
+00020e  9816              LDR      r0,[sp,#0x58]
+000210  eb000280          ADD      r2,r0,r0,LSL #2
+000214  9814              LDR      r0,[sp,#0x50]
+000216  eb001282          ADD      r2,r0,r2,LSL #6
+00021a  f8dd0810          LDR      r0,[sp,#0x810]
+00021e  5c80              LDRB     r0,[r0,r2]
+000220  4401              ADD      r1,r1,r0
+000222  9816              LDR      r0,[sp,#0x58]
+000224  eb000280          ADD      r2,r0,r0,LSL #2
+000228  9812              LDR      r0,[sp,#0x48]
+00022a  eb001282          ADD      r2,r0,r2,LSL #6
+00022e  f8dd0810          LDR      r0,[sp,#0x810]
+000232  5c82              LDRB     r2,[r0,r2]
+000234  9817              LDR      r0,[sp,#0x5c]
+000236  eb000380          ADD      r3,r0,r0,LSL #2
+00023a  9814              LDR      r0,[sp,#0x50]
+00023c  eb001383          ADD      r3,r0,r3,LSL #6
+000240  f8dd0810          LDR      r0,[sp,#0x810]
+000244  5cc0              LDRB     r0,[r0,r3]
+000246  4410              ADD      r0,r0,r2
+000248  9006              STR      r0,[sp,#0x18]
+00024a  eb0070d0          ADD      r0,r0,r0,LSR #31
+00024e  eb010060          ADD      r0,r1,r0,ASR #1
+000252  9010              STR      r0,[sp,#0x40]
+;;;145    							(frameloc[ypo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x])/2;
+;;;146    					
+;;;147    					uint16_t intense_X_YPO = frameloc[ypo*RES_WIDTH + x] + frameloc[(ypo+1)*RES_WIDTH + xpo] + 
+000254  9816              LDR      r0,[sp,#0x58]
+000256  eb000180          ADD      r1,r0,r0,LSL #2
+00025a  9814              LDR      r0,[sp,#0x50]
+00025c  eb001181          ADD      r1,r0,r1,LSL #6
+000260  f8dd0810          LDR      r0,[sp,#0x810]
+000264  5c41              LDRB     r1,[r0,r1]
 000266  9816              LDR      r0,[sp,#0x58]
 000268  1c40              ADDS     r0,r0,#1
 00026a  eb000280          ADD      r2,r0,r0,LSL #2
-00026e  9814              LDR      r0,[sp,#0x50]
+00026e  9813              LDR      r0,[sp,#0x4c]
 000270  eb001282          ADD      r2,r0,r2,LSL #6
-000274  f8dd0494          LDR      r0,[sp,#0x494]
-000278  5c82              LDRB     r2,[r0,r2]
-00027a  9816              LDR      r0,[sp,#0x58]
-00027c  eb000380          ADD      r3,r0,r0,LSL #2
-000280  9813              LDR      r0,[sp,#0x4c]
-000282  eb001383          ADD      r3,r0,r3,LSL #6
-000286  f8dd0494          LDR      r0,[sp,#0x494]
-00028a  5cc0              LDRB     r0,[r0,r3]
-00028c  4410              ADD      r0,r0,r2
-00028e  9006              STR      r0,[sp,#0x18]
-000290  eb0070d0          ADD      r0,r0,r0,LSR #31
-000294  eb010060          ADD      r0,r1,r0,ASR #1
-000298  900f              STR      r0,[sp,#0x3c]
-;;;144    							(frameloc[(ypo+1)*RES_WIDTH + x] + frameloc[ypo*RES_WIDTH + xpo])/2;
-;;;145    					
-;;;146    					uint16_t intense_XPO_YPO = frameloc[ypo*RES_WIDTH + xpo] + frameloc[(ypo+1)*RES_WIDTH + xpo+1] + 
-00029a  9816              LDR      r0,[sp,#0x58]
-00029c  eb000180          ADD      r1,r0,r0,LSL #2
-0002a0  9813              LDR      r0,[sp,#0x4c]
-0002a2  eb001181          ADD      r1,r0,r1,LSL #6
-0002a6  f8dd0494          LDR      r0,[sp,#0x494]
-0002aa  5c42              LDRB     r2,[r0,r1]
-0002ac  9816              LDR      r0,[sp,#0x58]
-0002ae  1c40              ADDS     r0,r0,#1
-0002b0  eb000180          ADD      r1,r0,r0,LSL #2
-0002b4  9813              LDR      r0,[sp,#0x4c]
-0002b6  eb001081          ADD      r0,r0,r1,LSL #6
-0002ba  1c40              ADDS     r0,r0,#1
-0002bc  f8dd1494          LDR      r1,[sp,#0x494]
-0002c0  5c08              LDRB     r0,[r1,r0]
-0002c2  4402              ADD      r2,r2,r0
-0002c4  9816              LDR      r0,[sp,#0x58]
-0002c6  1c40              ADDS     r0,r0,#1
-0002c8  eb000180          ADD      r1,r0,r0,LSL #2
-0002cc  9813              LDR      r0,[sp,#0x4c]
-0002ce  eb001181          ADD      r1,r0,r1,LSL #6
-0002d2  f8dd0494          LDR      r0,[sp,#0x494]
-0002d6  5c43              LDRB     r3,[r0,r1]
-0002d8  9816              LDR      r0,[sp,#0x58]
-0002da  eb000180          ADD      r1,r0,r0,LSL #2
-0002de  9813              LDR      r0,[sp,#0x4c]
-0002e0  eb001081          ADD      r0,r0,r1,LSL #6
-0002e4  1c40              ADDS     r0,r0,#1
-0002e6  f8dd1494          LDR      r1,[sp,#0x494]
-0002ea  5c08              LDRB     r0,[r1,r0]
-0002ec  4418              ADD      r0,r0,r3
-0002ee  9006              STR      r0,[sp,#0x18]
-0002f0  eb0070d0          ADD      r0,r0,r0,LSR #31
-0002f4  eb020060          ADD      r0,r2,r0,ASR #1
-0002f8  900e              STR      r0,[sp,#0x38]
-;;;147    							(frameloc[(ypo+1)*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpo+1])/2;
-;;;148    					
-;;;149    					uint16_t intense_XMO_YPO = frameloc[(ypo)*RES_WIDTH + xmo] + frameloc[(ypo+1)*RES_WIDTH + x] + 
-0002fa  9816              LDR      r0,[sp,#0x58]
-0002fc  eb000180          ADD      r1,r0,r0,LSL #2
-000300  9812              LDR      r0,[sp,#0x48]
-000302  eb001181          ADD      r1,r0,r1,LSL #6
-000306  f8dd0494          LDR      r0,[sp,#0x494]
-00030a  5c41              LDRB     r1,[r0,r1]
-00030c  9816              LDR      r0,[sp,#0x58]
-00030e  1c40              ADDS     r0,r0,#1
-000310  eb000280          ADD      r2,r0,r0,LSL #2
-000314  9814              LDR      r0,[sp,#0x50]
-000316  eb001282          ADD      r2,r0,r2,LSL #6
-00031a  f8dd0494          LDR      r0,[sp,#0x494]
-00031e  5c80              LDRB     r0,[r0,r2]
-000320  4401              ADD      r1,r1,r0
+000274  f8dd0810          LDR      r0,[sp,#0x810]
+000278  5c80              LDRB     r0,[r0,r2]
+00027a  4401              ADD      r1,r1,r0
+00027c  9816              LDR      r0,[sp,#0x58]
+00027e  1c40              ADDS     r0,r0,#1
+000280  eb000280          ADD      r2,r0,r0,LSL #2
+000284  9814              LDR      r0,[sp,#0x50]
+000286  eb001282          ADD      r2,r0,r2,LSL #6
+00028a  f8dd0810          LDR      r0,[sp,#0x810]
+00028e  5c82              LDRB     r2,[r0,r2]
+000290  9816              LDR      r0,[sp,#0x58]
+000292  eb000380          ADD      r3,r0,r0,LSL #2
+000296  9813              LDR      r0,[sp,#0x4c]
+000298  eb001383          ADD      r3,r0,r3,LSL #6
+00029c  f8dd0810          LDR      r0,[sp,#0x810]
+0002a0  5cc0              LDRB     r0,[r0,r3]
+0002a2  4410              ADD      r0,r0,r2
+0002a4  9006              STR      r0,[sp,#0x18]
+0002a6  eb0070d0          ADD      r0,r0,r0,LSR #31
+0002aa  eb010060          ADD      r0,r1,r0,ASR #1
+0002ae  900f              STR      r0,[sp,#0x3c]
+;;;148    							(frameloc[(ypo+1)*RES_WIDTH + x] + frameloc[ypo*RES_WIDTH + xpo])/2;
+;;;149    					
+;;;150    					uint16_t intense_XPO_YPO = frameloc[ypo*RES_WIDTH + xpo] + frameloc[(ypo+1)*RES_WIDTH + xpo+1] + 
+0002b0  9816              LDR      r0,[sp,#0x58]
+0002b2  eb000180          ADD      r1,r0,r0,LSL #2
+0002b6  9813              LDR      r0,[sp,#0x4c]
+0002b8  eb001181          ADD      r1,r0,r1,LSL #6
+0002bc  f8dd0810          LDR      r0,[sp,#0x810]
+0002c0  5c42              LDRB     r2,[r0,r1]
+0002c2  9816              LDR      r0,[sp,#0x58]
+0002c4  1c40              ADDS     r0,r0,#1
+0002c6  eb000180          ADD      r1,r0,r0,LSL #2
+0002ca  9813              LDR      r0,[sp,#0x4c]
+0002cc  eb001081          ADD      r0,r0,r1,LSL #6
+0002d0  1c40              ADDS     r0,r0,#1
+0002d2  f8dd1810          LDR      r1,[sp,#0x810]
+0002d6  5c08              LDRB     r0,[r1,r0]
+0002d8  4402              ADD      r2,r2,r0
+0002da  9816              LDR      r0,[sp,#0x58]
+0002dc  1c40              ADDS     r0,r0,#1
+0002de  eb000180          ADD      r1,r0,r0,LSL #2
+0002e2  9813              LDR      r0,[sp,#0x4c]
+0002e4  eb001181          ADD      r1,r0,r1,LSL #6
+0002e8  f8dd0810          LDR      r0,[sp,#0x810]
+0002ec  5c43              LDRB     r3,[r0,r1]
+0002ee  9816              LDR      r0,[sp,#0x58]
+0002f0  eb000180          ADD      r1,r0,r0,LSL #2
+0002f4  9813              LDR      r0,[sp,#0x4c]
+0002f6  eb001081          ADD      r0,r0,r1,LSL #6
+0002fa  1c40              ADDS     r0,r0,#1
+0002fc  f8dd1810          LDR      r1,[sp,#0x810]
+000300  5c08              LDRB     r0,[r1,r0]
+000302  4418              ADD      r0,r0,r3
+000304  9006              STR      r0,[sp,#0x18]
+000306  eb0070d0          ADD      r0,r0,r0,LSR #31
+00030a  eb020060          ADD      r0,r2,r0,ASR #1
+00030e  900e              STR      r0,[sp,#0x38]
+;;;151    							(frameloc[(ypo+1)*RES_WIDTH + xpo] + frameloc[ypo*RES_WIDTH + xpo+1])/2;
+;;;152    					
+;;;153    					uint16_t intense_XMO_YPO = frameloc[(ypo)*RES_WIDTH + xmo] + frameloc[(ypo+1)*RES_WIDTH + x] + 
+000310  9816              LDR      r0,[sp,#0x58]
+000312  eb000180          ADD      r1,r0,r0,LSL #2
+000316  9812              LDR      r0,[sp,#0x48]
+000318  eb001181          ADD      r1,r0,r1,LSL #6
+00031c  f8dd0810          LDR      r0,[sp,#0x810]
+000320  5c41              LDRB     r1,[r0,r1]
 000322  9816              LDR      r0,[sp,#0x58]
 000324  1c40              ADDS     r0,r0,#1
 000326  eb000280          ADD      r2,r0,r0,LSL #2
-00032a  9812              LDR      r0,[sp,#0x48]
+00032a  9814              LDR      r0,[sp,#0x50]
 00032c  eb001282          ADD      r2,r0,r2,LSL #6
-000330  f8dd0494          LDR      r0,[sp,#0x494]
-000334  5c82              LDRB     r2,[r0,r2]
-000336  9816              LDR      r0,[sp,#0x58]
-000338  eb000380          ADD      r3,r0,r0,LSL #2
-00033c  9814              LDR      r0,[sp,#0x50]
-00033e  eb001383          ADD      r3,r0,r3,LSL #6
-000342  f8dd0494          LDR      r0,[sp,#0x494]
-000346  5cc0              LDRB     r0,[r0,r3]
-000348  4410              ADD      r0,r0,r2
-00034a  9006              STR      r0,[sp,#0x18]
-00034c  eb0070d0          ADD      r0,r0,r0,LSR #31
-000350  eb010060          ADD      r0,r1,r0,ASR #1
-000354  900d              STR      r0,[sp,#0x34]
-;;;150    							(frameloc[(ypo+1)*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x])/2;
-;;;151    					
-;;;152    					uint16_t intense_X_YMO = frameloc[ymo*RES_WIDTH + x] + frameloc[y*RES_WIDTH + xpo] + 
-000356  9815              LDR      r0,[sp,#0x54]
-000358  eb000180          ADD      r1,r0,r0,LSL #2
-00035c  9814              LDR      r0,[sp,#0x50]
-00035e  eb001181          ADD      r1,r0,r1,LSL #6
-000362  f8dd0494          LDR      r0,[sp,#0x494]
-000366  5c41              LDRB     r1,[r0,r1]
-000368  9817              LDR      r0,[sp,#0x5c]
-00036a  eb000280          ADD      r2,r0,r0,LSL #2
-00036e  9813              LDR      r0,[sp,#0x4c]
-000370  eb001282          ADD      r2,r0,r2,LSL #6
-000374  f8dd0494          LDR      r0,[sp,#0x494]
-000378  5c80              LDRB     r0,[r0,r2]
-00037a  4401              ADD      r1,r1,r0
-00037c  9817              LDR      r0,[sp,#0x5c]
-00037e  eb000280          ADD      r2,r0,r0,LSL #2
-000382  9814              LDR      r0,[sp,#0x50]
-000384  eb001282          ADD      r2,r0,r2,LSL #6
-000388  f8dd0494          LDR      r0,[sp,#0x494]
-00038c  5c82              LDRB     r2,[r0,r2]
-00038e  9815              LDR      r0,[sp,#0x54]
-000390  eb000380          ADD      r3,r0,r0,LSL #2
-000394  9813              LDR      r0,[sp,#0x4c]
-000396  eb001383          ADD      r3,r0,r3,LSL #6
-00039a  f8dd0494          LDR      r0,[sp,#0x494]
-00039e  5cc0              LDRB     r0,[r0,r3]
-0003a0  4410              ADD      r0,r0,r2
-0003a2  9006              STR      r0,[sp,#0x18]
-0003a4  eb0070d0          ADD      r0,r0,r0,LSR #31
-0003a8  eb010060          ADD      r0,r1,r0,ASR #1
-0003ac  900c              STR      r0,[sp,#0x30]
-;;;153    							(frameloc[y*RES_WIDTH + x] + frameloc[ymo*RES_WIDTH + xpo])/2;
-;;;154    							
-;;;155    					uint16_t intense_XPO_YMO = frameloc[ymo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpo+1] + 
-0003ae  9815              LDR      r0,[sp,#0x54]
-0003b0  eb000180          ADD      r1,r0,r0,LSL #2
-0003b4  9813              LDR      r0,[sp,#0x4c]
-0003b6  eb001181          ADD      r1,r0,r1,LSL #6
-0003ba  f8dd0494          LDR      r0,[sp,#0x494]
-0003be  5c42              LDRB     r2,[r0,r1]
-0003c0  9817              LDR      r0,[sp,#0x5c]
-0003c2  eb000180          ADD      r1,r0,r0,LSL #2
-0003c6  9813              LDR      r0,[sp,#0x4c]
-0003c8  eb001081          ADD      r0,r0,r1,LSL #6
-0003cc  1c40              ADDS     r0,r0,#1
-0003ce  f8dd1494          LDR      r1,[sp,#0x494]
-0003d2  5c08              LDRB     r0,[r1,r0]
-0003d4  4402              ADD      r2,r2,r0
+000330  f8dd0810          LDR      r0,[sp,#0x810]
+000334  5c80              LDRB     r0,[r0,r2]
+000336  4401              ADD      r1,r1,r0
+000338  9816              LDR      r0,[sp,#0x58]
+00033a  1c40              ADDS     r0,r0,#1
+00033c  eb000280          ADD      r2,r0,r0,LSL #2
+000340  9812              LDR      r0,[sp,#0x48]
+000342  eb001282          ADD      r2,r0,r2,LSL #6
+000346  f8dd0810          LDR      r0,[sp,#0x810]
+00034a  5c82              LDRB     r2,[r0,r2]
+00034c  9816              LDR      r0,[sp,#0x58]
+00034e  eb000380          ADD      r3,r0,r0,LSL #2
+000352  9814              LDR      r0,[sp,#0x50]
+000354  eb001383          ADD      r3,r0,r3,LSL #6
+000358  f8dd0810          LDR      r0,[sp,#0x810]
+00035c  5cc0              LDRB     r0,[r0,r3]
+00035e  4410              ADD      r0,r0,r2
+000360  9006              STR      r0,[sp,#0x18]
+000362  eb0070d0          ADD      r0,r0,r0,LSR #31
+000366  eb010060          ADD      r0,r1,r0,ASR #1
+00036a  900d              STR      r0,[sp,#0x34]
+;;;154    							(frameloc[(ypo+1)*RES_WIDTH + xmo] + frameloc[ypo*RES_WIDTH + x])/2;
+;;;155    					
+;;;156    					uint16_t intense_X_YMO = frameloc[ymo*RES_WIDTH + x] + frameloc[y*RES_WIDTH + xpo] + 
+00036c  9815              LDR      r0,[sp,#0x54]
+00036e  eb000180          ADD      r1,r0,r0,LSL #2
+000372  9814              LDR      r0,[sp,#0x50]
+000374  eb001181          ADD      r1,r0,r1,LSL #6
+000378  f8dd0810          LDR      r0,[sp,#0x810]
+00037c  5c41              LDRB     r1,[r0,r1]
+00037e  9817              LDR      r0,[sp,#0x5c]
+000380  eb000280          ADD      r2,r0,r0,LSL #2
+000384  9813              LDR      r0,[sp,#0x4c]
+000386  eb001282          ADD      r2,r0,r2,LSL #6
+00038a  f8dd0810          LDR      r0,[sp,#0x810]
+00038e  5c80              LDRB     r0,[r0,r2]
+000390  4401              ADD      r1,r1,r0
+000392  9817              LDR      r0,[sp,#0x5c]
+000394  eb000280          ADD      r2,r0,r0,LSL #2
+000398  9814              LDR      r0,[sp,#0x50]
+00039a  eb001282          ADD      r2,r0,r2,LSL #6
+00039e  f8dd0810          LDR      r0,[sp,#0x810]
+0003a2  5c82              LDRB     r2,[r0,r2]
+0003a4  9815              LDR      r0,[sp,#0x54]
+0003a6  eb000380          ADD      r3,r0,r0,LSL #2
+0003aa  9813              LDR      r0,[sp,#0x4c]
+0003ac  eb001383          ADD      r3,r0,r3,LSL #6
+0003b0  f8dd0810          LDR      r0,[sp,#0x810]
+0003b4  5cc0              LDRB     r0,[r0,r3]
+0003b6  4410              ADD      r0,r0,r2
+0003b8  9006              STR      r0,[sp,#0x18]
+0003ba  eb0070d0          ADD      r0,r0,r0,LSR #31
+0003be  eb010060          ADD      r0,r1,r0,ASR #1
+0003c2  900c              STR      r0,[sp,#0x30]
+;;;157    							(frameloc[y*RES_WIDTH + x] + frameloc[ymo*RES_WIDTH + xpo])/2;
+;;;158    							
+;;;159    					uint16_t intense_XPO_YMO = frameloc[ymo*RES_WIDTH + xpo] + frameloc[y*RES_WIDTH + xpo+1] + 
+0003c4  9815              LDR      r0,[sp,#0x54]
+0003c6  eb000180          ADD      r1,r0,r0,LSL #2
+0003ca  9813              LDR      r0,[sp,#0x4c]
+0003cc  eb001181          ADD      r1,r0,r1,LSL #6
+0003d0  f8dd0810          LDR      r0,[sp,#0x810]
+0003d4  5c42              LDRB     r2,[r0,r1]
 0003d6  9817              LDR      r0,[sp,#0x5c]
 0003d8  eb000180          ADD      r1,r0,r0,LSL #2
 0003dc  9813              LDR      r0,[sp,#0x4c]
-0003de  eb001181          ADD      r1,r0,r1,LSL #6
-0003e2  f8dd0494          LDR      r0,[sp,#0x494]
-0003e6  5c43              LDRB     r3,[r0,r1]
-0003e8  9815              LDR      r0,[sp,#0x54]
-0003ea  eb000180          ADD      r1,r0,r0,LSL #2
-0003ee  9813              LDR      r0,[sp,#0x4c]
-0003f0  eb001081          ADD      r0,r0,r1,LSL #6
-0003f4  1c40              ADDS     r0,r0,#1
-0003f6  f8dd1494          LDR      r1,[sp,#0x494]
-0003fa  5c08              LDRB     r0,[r1,r0]
-0003fc  4418              ADD      r0,r0,r3
-0003fe  9006              STR      r0,[sp,#0x18]
-000400  eb0070d0          ADD      r0,r0,r0,LSR #31
-000404  eb020060          ADD      r0,r2,r0,ASR #1
-000408  900b              STR      r0,[sp,#0x2c]
-;;;156    							(frameloc[y*RES_WIDTH + xpo] + frameloc[ymo*RES_WIDTH + xpo+1])/2;
-;;;157    							
-;;;158    					uint16_t intense_XMO_YMO = frameloc[ymo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x] + 
-00040a  9815              LDR      r0,[sp,#0x54]
-00040c  eb000180          ADD      r1,r0,r0,LSL #2
-000410  9812              LDR      r0,[sp,#0x48]
-000412  eb001181          ADD      r1,r0,r1,LSL #6
-000416  f8dd0494          LDR      r0,[sp,#0x494]
-00041a  5c41              LDRB     r1,[r0,r1]
-00041c  9817              LDR      r0,[sp,#0x5c]
-00041e  eb000280          ADD      r2,r0,r0,LSL #2
-000422  9814              LDR      r0,[sp,#0x50]
-000424  eb001282          ADD      r2,r0,r2,LSL #6
-000428  f8dd0494          LDR      r0,[sp,#0x494]
-00042c  5c80              LDRB     r0,[r0,r2]
-00042e  4401              ADD      r1,r1,r0
-000430  9817              LDR      r0,[sp,#0x5c]
-000432  e015              B        |L1.1120|
-                  |L1.1076|
-000434  4572726f          DCB      "Error: Servo init",0
-000438  723a2053
-00043c  6572766f
-000440  20696e69
-000444  7400    
-000446  00                DCB      0
-000447  00                DCB      0
-                  |L1.1096|
-                          DCD      0x40081000
-                  |L1.1100|
-                          DCD      0x10080000
-                  |L1.1104|
-                          DCD      UART_DATA_AVAILABLE
-                  |L1.1108|
-                          DCD      0x42280000
-                  |L1.1112|
-                          DCD      0xa50de270
-                  |L1.1116|
-                          DCD      0x3f91df45
-                  |L1.1120|
-000460  eb000280          ADD      r2,r0,r0,LSL #2
-000464  9812              LDR      r0,[sp,#0x48]
-000466  eb001282          ADD      r2,r0,r2,LSL #6
-00046a  f8dd0494          LDR      r0,[sp,#0x494]
-00046e  5c82              LDRB     r2,[r0,r2]
-000470  9815              LDR      r0,[sp,#0x54]
-000472  eb000380          ADD      r3,r0,r0,LSL #2
-000476  9814              LDR      r0,[sp,#0x50]
-000478  eb001383          ADD      r3,r0,r3,LSL #6
-00047c  f8dd0494          LDR      r0,[sp,#0x494]
-000480  5cc0              LDRB     r0,[r0,r3]
-000482  4410              ADD      r0,r0,r2
-000484  9006              STR      r0,[sp,#0x18]
-000486  eb0070d0          ADD      r0,r0,r0,LSR #31
-00048a  eb010060          ADD      r0,r1,r0,ASR #1
-00048e  900a              STR      r0,[sp,#0x28]
-;;;159    							(frameloc[y*RES_WIDTH + xmo] + frameloc[ymo*RES_WIDTH + x])/2;
-;;;160    
+0003de  eb001081          ADD      r0,r0,r1,LSL #6
+0003e2  1c40              ADDS     r0,r0,#1
+0003e4  f8dd1810          LDR      r1,[sp,#0x810]
+0003e8  5c08              LDRB     r0,[r1,r0]
+0003ea  4402              ADD      r2,r2,r0
+0003ec  9817              LDR      r0,[sp,#0x5c]
+0003ee  eb000180          ADD      r1,r0,r0,LSL #2
+0003f2  9813              LDR      r0,[sp,#0x4c]
+0003f4  eb001181          ADD      r1,r0,r1,LSL #6
+0003f8  f8dd0810          LDR      r0,[sp,#0x810]
+0003fc  5c43              LDRB     r3,[r0,r1]
+0003fe  9815              LDR      r0,[sp,#0x54]
+000400  eb000180          ADD      r1,r0,r0,LSL #2
+000404  9813              LDR      r0,[sp,#0x4c]
+000406  eb001081          ADD      r0,r0,r1,LSL #6
+00040a  1c40              ADDS     r0,r0,#1
+00040c  f8dd1810          LDR      r1,[sp,#0x810]
+000410  5c08              LDRB     r0,[r1,r0]
+000412  4418              ADD      r0,r0,r3
+000414  9006              STR      r0,[sp,#0x18]
+000416  eb0070d0          ADD      r0,r0,r0,LSR #31
+00041a  eb020060          ADD      r0,r2,r0,ASR #1
+00041e  900b              STR      r0,[sp,#0x2c]
+;;;160    							(frameloc[y*RES_WIDTH + xpo] + frameloc[ymo*RES_WIDTH + xpo+1])/2;
 ;;;161    							
-;;;162    					/*   ORIGINAL
-;;;163    					float gradx = abs(intense_XPO_Y - intense_XMO_Y
-;;;164    						+ intense_XPO_YPO - intense_XMO_YPO
-;;;165    						+ intense_XPO_YMO - intense_XMO_YMO);
-;;;166    						
-;;;167    					float grady = abs(intense_X_YPO -	intense_X_YMO
-;;;168    						+ intense_XPO_YPO -	intense_XPO_YMO
-;;;169    						+ intense_XMO_YPO - intense_XMO_YMO);
-;;;170    				*/
-;;;171    #ifdef THREASHOLD_NORMAL
-;;;172    
-;;;173    				float grady = (1*(intense_XPO_YPO + GRAD_CO*intense_XPO_Y 
-000490  2202              MOVS     r2,#2
-000492  9911              LDR      r1,[sp,#0x44]
-000494  980e              LDR      r0,[sp,#0x38]
-000496  fb120101          SMLABB   r1,r2,r1,r0
-00049a  980b              LDR      r0,[sp,#0x2c]
-00049c  4401              ADD      r1,r1,r0
-00049e  980d              LDR      r0,[sp,#0x34]
-0004a0  1a09              SUBS     r1,r1,r0
-0004a2  9810              LDR      r0,[sp,#0x40]
-0004a4  fb021110          MLS      r1,r2,r0,r1
-0004a8  980a              LDR      r0,[sp,#0x28]
-0004aa  1a08              SUBS     r0,r1,r0
-0004ac  9006              STR      r0,[sp,#0x18]
-0004ae  f7fffffe          BL       __aeabi_i2f
-0004b2  9009              STR      r0,[sp,#0x24]
-;;;174    					+ intense_XPO_YMO - intense_XMO_YPO 
-;;;175    					- GRAD_CO*intense_XMO_Y - intense_XMO_YMO));
-;;;176    						
-;;;177    				float gradx = (3*(intense_XMO_YMO + GRAD_CO*intense_X_YMO
-0004b4  2202              MOVS     r2,#2
-0004b6  990c              LDR      r1,[sp,#0x30]
-0004b8  980a              LDR      r0,[sp,#0x28]
-0004ba  fb120101          SMLABB   r1,r2,r1,r0
-0004be  980b              LDR      r0,[sp,#0x2c]
-0004c0  4401              ADD      r1,r1,r0
-0004c2  980d              LDR      r0,[sp,#0x34]
-0004c4  1a09              SUBS     r1,r1,r0
-0004c6  980f              LDR      r0,[sp,#0x3c]
-0004c8  fb021110          MLS      r1,r2,r0,r1
-0004cc  980e              LDR      r0,[sp,#0x38]
-0004ce  1a08              SUBS     r0,r1,r0
-0004d0  eb000040          ADD      r0,r0,r0,LSL #1
-0004d4  9006              STR      r0,[sp,#0x18]
-0004d6  f7fffffe          BL       __aeabi_i2f
-0004da  9008              STR      r0,[sp,#0x20]
-;;;178    					+ intense_XPO_YMO - intense_XMO_YPO 
-;;;179    					- GRAD_CO*intense_X_YPO - intense_XPO_YPO));
-;;;180    				
-;;;181    #else
-;;;182    				
-;;;183    				float grady = (3*(-intense_XPO_YPO - GRAD_CO*intense_XPO_Y 
-;;;184    					- intense_XPO_YMO + intense_XMO_YPO 
-;;;185    					+ GRAD_CO*intense_XMO_Y + intense_XMO_YMO))/GRAD_THREASHOLD;
-;;;186    						
-;;;187    				float gradx = (3*(intense_XMO_YMO + GRAD_CO*intense_X_YMO
-;;;188    					+ intense_XPO_YMO - intense_XMO_YPO 
-;;;189    					- GRAD_CO*intense_X_YPO - intense_XPO_YPO))/GRAD_THREASHOLD;
-;;;190    #endif
-;;;191    					
-;;;192    								// Threashold detection
-;;;193    				float grad = gradx+grady;
-0004dc  e9dd0108          LDRD     r0,r1,[sp,#0x20]
-0004e0  f7fffffe          BL       __aeabi_fadd
-0004e4  9007              STR      r0,[sp,#0x1c]
-;;;194    								// Threashold detection
-;;;195    					
-;;;196    #ifdef THREASHOLD_NORMAL
-;;;197    					if( (grad > THREASHOLD_LOW) && (grad < THREASHOLD_HIGH) ) {
-0004e6  49fe              LDR      r1,|L1.2272|
-0004e8  9807              LDR      r0,[sp,#0x1c]
-0004ea  f7fffffe          BL       __aeabi_cfrcmple
-0004ee  d20f              BCS      |L1.1296|
-0004f0  49fc              LDR      r1,|L1.2276|
-0004f2  9807              LDR      r0,[sp,#0x1c]
-0004f4  f7fffffe          BL       __aeabi_cfcmple
-0004f8  d20a              BCS      |L1.1296|
-;;;198    #else
-;;;199    					if(gradx*gradx + grady*grady > 1) {
-;;;200    #endif
-;;;201    						// EDGE
-;;;202    						// frameloc[ymo*RES_WIDTH + xmo] = 255;
-;;;203    						// frameloc[y*RES_WIDTH + xmo] = 255;
-;;;204    						// frameloc[ymo*RES_WIDTH + x] = 255;
-;;;205    						
-;;;206    						frameloc[y*RES_WIDTH + x] = 255;
-0004fa  21ff              MOVS     r1,#0xff
-0004fc  9817              LDR      r0,[sp,#0x5c]
-0004fe  eb000280          ADD      r2,r0,r0,LSL #2
-000502  9814              LDR      r0,[sp,#0x50]
-000504  eb001282          ADD      r2,r0,r2,LSL #6
-000508  f8dd0494          LDR      r0,[sp,#0x494]
-00050c  5481              STRB     r1,[r0,r2]
-00050e  e009              B        |L1.1316|
-                  |L1.1296|
-;;;207    					}
-;;;208    					else {
-;;;209    						// NO EDGE
-;;;210    						// frameloc[ymo*RES_WIDTH + xmo] = 0;
-;;;211    						// frameloc[y*RES_WIDTH + xmo] = 0;
-;;;212    						// frameloc[ymo*RES_WIDTH + x] = 0;
-;;;213    						
-;;;214    						frameloc[y*RES_WIDTH + x] = 0;
-000510  2100              MOVS     r1,#0
-000512  9817              LDR      r0,[sp,#0x5c]
-000514  eb000280          ADD      r2,r0,r0,LSL #2
-000518  9814              LDR      r0,[sp,#0x50]
-00051a  eb001282          ADD      r2,r0,r2,LSL #6
-00051e  f8dd0494          LDR      r0,[sp,#0x494]
-000522  5481              STRB     r1,[r0,r2]
-                  |L1.1316|
-000524  9814              LDR      r0,[sp,#0x50]         ;125
-000526  1c80              ADDS     r0,r0,#2              ;125
-000528  b280              UXTH     r0,r0                 ;125
-00052a  9014              STR      r0,[sp,#0x50]         ;125
-                  |L1.1324|
-00052c  9814              LDR      r0,[sp,#0x50]         ;125
-00052e  f7fffffe          BL       __aeabi_ui2d
-000532  2200              MOVS     r2,#0                 ;125
-000534  4bec              LDR      r3,|L1.2280|
-000536  e9cd0112          STRD     r0,r1,[sp,#0x48]      ;125
-00053a  f7fffffe          BL       __aeabi_cdcmple
-00053e  f4ffae1a          BCC      |L1.374|
-000542  9817              LDR      r0,[sp,#0x5c]         ;119
-000544  1c80              ADDS     r0,r0,#2              ;119
-000546  b280              UXTH     r0,r0                 ;119
-000548  9017              STR      r0,[sp,#0x5c]         ;119
+;;;162    					uint16_t intense_XMO_YMO = frameloc[ymo*RES_WIDTH + xmo] + frameloc[y*RES_WIDTH + x] + 
+000420  9815              LDR      r0,[sp,#0x54]
+000422  eb000180          ADD      r1,r0,r0,LSL #2
+000426  9812              LDR      r0,[sp,#0x48]
+000428  e016              B        |L1.1112|
+00042a  0000              DCW      0x0000
+                  |L1.1068|
+00042c  4572726f          DCB      "Error: Servo init",0
+000430  723a2053
+000434  6572766f
+000438  20696e69
+00043c  7400    
+00043e  00                DCB      0
+00043f  00                DCB      0
+                  |L1.1088|
+                          DCD      0x40081000
+                  |L1.1092|
+                          DCD      0x10080000
+                  |L1.1096|
+                          DCD      UART_DATA_AVAILABLE
+                  |L1.1100|
+                          DCD      0x42280000
+                  |L1.1104|
+                          DCD      0xa50de270
+                  |L1.1108|
+                          DCD      0x3f91df45
+                  |L1.1112|
+000458  eb001181          ADD      r1,r0,r1,LSL #6
+00045c  f8dd0810          LDR      r0,[sp,#0x810]
+000460  5c41              LDRB     r1,[r0,r1]
+000462  9817              LDR      r0,[sp,#0x5c]
+000464  eb000280          ADD      r2,r0,r0,LSL #2
+000468  9814              LDR      r0,[sp,#0x50]
+00046a  eb001282          ADD      r2,r0,r2,LSL #6
+00046e  f8dd0810          LDR      r0,[sp,#0x810]
+000472  5c80              LDRB     r0,[r0,r2]
+000474  4401              ADD      r1,r1,r0
+000476  9817              LDR      r0,[sp,#0x5c]
+000478  eb000280          ADD      r2,r0,r0,LSL #2
+00047c  9812              LDR      r0,[sp,#0x48]
+00047e  eb001282          ADD      r2,r0,r2,LSL #6
+000482  f8dd0810          LDR      r0,[sp,#0x810]
+000486  5c82              LDRB     r2,[r0,r2]
+000488  9815              LDR      r0,[sp,#0x54]
+00048a  eb000380          ADD      r3,r0,r0,LSL #2
+00048e  9814              LDR      r0,[sp,#0x50]
+000490  eb001383          ADD      r3,r0,r3,LSL #6
+000494  f8dd0810          LDR      r0,[sp,#0x810]
+000498  5cc0              LDRB     r0,[r0,r3]
+00049a  4410              ADD      r0,r0,r2
+00049c  9006              STR      r0,[sp,#0x18]
+00049e  eb0070d0          ADD      r0,r0,r0,LSR #31
+0004a2  eb010060          ADD      r0,r1,r0,ASR #1
+0004a6  900a              STR      r0,[sp,#0x28]
+;;;163    							(frameloc[y*RES_WIDTH + xmo] + frameloc[ymo*RES_WIDTH + x])/2;
+;;;164    
+;;;165    										float gradx = (3*(intense_XPO_YPO + GRAD_CO*intense_XPO_Y 
+0004a8  2202              MOVS     r2,#2
+0004aa  9911              LDR      r1,[sp,#0x44]
+0004ac  980e              LDR      r0,[sp,#0x38]
+0004ae  fb120101          SMLABB   r1,r2,r1,r0
+0004b2  980b              LDR      r0,[sp,#0x2c]
+0004b4  4401              ADD      r1,r1,r0
+0004b6  980d              LDR      r0,[sp,#0x34]
+0004b8  1a09              SUBS     r1,r1,r0
+0004ba  9810              LDR      r0,[sp,#0x40]
+0004bc  fb021110          MLS      r1,r2,r0,r1
+0004c0  980a              LDR      r0,[sp,#0x28]
+0004c2  1a08              SUBS     r0,r1,r0
+0004c4  eb000040          ADD      r0,r0,r0,LSL #1
+0004c8  9006              STR      r0,[sp,#0x18]
+0004ca  f7fffffe          BL       __aeabi_i2f
+0004ce  9009              STR      r0,[sp,#0x24]
+;;;166    					+ intense_XPO_YMO - intense_XMO_YPO 
+;;;167    					- GRAD_CO*intense_XMO_Y - intense_XMO_YMO));
+;;;168    						
+;;;169    				float grady = (3*(intense_XMO_YMO + GRAD_CO*intense_X_YMO
+0004d0  2202              MOVS     r2,#2
+0004d2  990c              LDR      r1,[sp,#0x30]
+0004d4  980a              LDR      r0,[sp,#0x28]
+0004d6  fb120101          SMLABB   r1,r2,r1,r0
+0004da  980b              LDR      r0,[sp,#0x2c]
+0004dc  4401              ADD      r1,r1,r0
+0004de  980d              LDR      r0,[sp,#0x34]
+0004e0  1a09              SUBS     r1,r1,r0
+0004e2  980f              LDR      r0,[sp,#0x3c]
+0004e4  fb021110          MLS      r1,r2,r0,r1
+0004e8  980e              LDR      r0,[sp,#0x38]
+0004ea  1a08              SUBS     r0,r1,r0
+0004ec  eb000040          ADD      r0,r0,r0,LSL #1
+0004f0  9006              STR      r0,[sp,#0x18]
+0004f2  f7fffffe          BL       __aeabi_i2f
+0004f6  9008              STR      r0,[sp,#0x20]
+;;;170    					+ intense_XPO_YMO - intense_XMO_YPO 
+;;;171    					- GRAD_CO*intense_X_YPO - intense_XPO_YPO));
+;;;172    					
+;;;173    								// Threashold detection
+;;;174    				float grad = abs(gradx) + grady;
+0004f8  9809              LDR      r0,[sp,#0x24]
+0004fa  9005              STR      r0,[sp,#0x14]
+0004fc  9805              LDR      r0,[sp,#0x14]
+0004fe  f0204000          BIC      r0,r0,#0x80000000
+000502  9006              STR      r0,[sp,#0x18]
+000504  9908              LDR      r1,[sp,#0x20]
+000506  f7fffffe          BL       __aeabi_fadd
+00050a  9007              STR      r0,[sp,#0x1c]
+;;;175    								// Threashold detection
+;;;176    				
+;;;177    				
+;;;178    			
+;;;179    				if( (grad > THREASHOLD_LOW) && (gradx < THREASHOLD_HIGH) ) {
+00050c  49fe              LDR      r1,|L1.2312|
+00050e  9807              LDR      r0,[sp,#0x1c]
+000510  f7fffffe          BL       __aeabi_cfrcmple
+000514  d20f              BCS      |L1.1334|
+000516  49fd              LDR      r1,|L1.2316|
+000518  9809              LDR      r0,[sp,#0x24]
+00051a  f7fffffe          BL       __aeabi_cfcmple
+00051e  d20a              BCS      |L1.1334|
+;;;180    					// EDGE
+;;;181    					frameloc[y*RES_WIDTH + x] = 255;		// sets the red pixel to max
+000520  21ff              MOVS     r1,#0xff
+000522  9817              LDR      r0,[sp,#0x5c]
+000524  eb000280          ADD      r2,r0,r0,LSL #2
+000528  9814              LDR      r0,[sp,#0x50]
+00052a  eb001282          ADD      r2,r0,r2,LSL #6
+00052e  f8dd0810          LDR      r0,[sp,#0x810]
+000532  5481              STRB     r1,[r0,r2]
+000534  e009              B        |L1.1354|
+                  |L1.1334|
+;;;182    				}
+;;;183    				//else if(-grady > THREASHOLD_LOW && -gradx < THREASHOLD_HIGH) {
+;;;184    				//	frameloc[(y+1)*RES_WIDTH + x] = 255;
+;;;185    				//}
+;;;186    				else {
+;;;187    					// NO EDGE
+;;;188    					frameloc[y*RES_WIDTH + x] = 0;			// turns off the red 
+000536  2100              MOVS     r1,#0
+000538  9817              LDR      r0,[sp,#0x5c]
+00053a  eb000280          ADD      r2,r0,r0,LSL #2
+00053e  9814              LDR      r0,[sp,#0x50]
+000540  eb001282          ADD      r2,r0,r2,LSL #6
+000544  f8dd0810          LDR      r0,[sp,#0x810]
+000548  5481              STRB     r1,[r0,r2]
                   |L1.1354|
-00054a  9817              LDR      r0,[sp,#0x5c]         ;119
-00054c  f7fffffe          BL       __aeabi_ui2d
-000550  2200              MOVS     r2,#0                 ;119
-000552  4be6              LDR      r3,|L1.2284|
-000554  e9cd0114          STRD     r0,r1,[sp,#0x50]      ;119
-000558  f7fffffe          BL       __aeabi_cdcmple
-00055c  f4ffae00          BCC      |L1.352|
-;;;215    					}
-;;;216    				}
-;;;217    			} // end nested for loop
-;;;218    			
-;;;219    			
-;;;220    			// begin filtering. Looks at each pixel, looks around that pixel (if it is on), and if it is 
-;;;221    			// surounded by mostly off pixels, it also turns that pixel off. Filters out non-lines from our
-;;;222    			// detection.
-;;;223    
-;;;224    			for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
-000560  2005              MOVS     r0,#5
-000562  9017              STR      r0,[sp,#0x5c]
-000564  e078              B        |L1.1624|
-                  |L1.1382|
-;;;225    				uint16_t ypt = y + 2;
-000566  9817              LDR      r0,[sp,#0x5c]
-000568  1c80              ADDS     r0,r0,#2
-00056a  b280              UXTH     r0,r0
-00056c  9016              STR      r0,[sp,#0x58]
-;;;226    				uint16_t ymt = y - 2;
-00056e  9817              LDR      r0,[sp,#0x5c]
-000570  1e80              SUBS     r0,r0,#2
-000572  b280              UXTH     r0,r0
-000574  9015              STR      r0,[sp,#0x54]
-;;;227    			
-;;;228    				for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
-000576  2005              MOVS     r0,#5
-000578  9014              STR      r0,[sp,#0x50]
-00057a  e05f              B        |L1.1596|
-                  |L1.1404|
-;;;229    					
-;;;230    					if(frameloc[y*RES_WIDTH + x] != 0) {		// if current pix. == on, check if it should be off
-00057c  9817              LDR      r0,[sp,#0x5c]
-00057e  eb000180          ADD      r1,r0,r0,LSL #2
-000582  9814              LDR      r0,[sp,#0x50]
-000584  eb001181          ADD      r1,r0,r1,LSL #6
-000588  f8dd0494          LDR      r0,[sp,#0x494]
-00058c  5c40              LDRB     r0,[r0,r1]
-00058e  b3e8              CBZ      r0,|L1.1548|
-;;;231    						uint16_t xpt = x + 2;
-000590  9814              LDR      r0,[sp,#0x50]
-000592  1c80              ADDS     r0,r0,#2
-000594  b280              UXTH     r0,r0
-000596  9013              STR      r0,[sp,#0x4c]
-;;;232    						uint16_t xmt = x - 2;
-000598  9814              LDR      r0,[sp,#0x50]
-00059a  1e80              SUBS     r0,r0,#2
-00059c  b280              UXTH     r0,r0
-00059e  9012              STR      r0,[sp,#0x48]
-;;;233    						
-;;;234    						uint8_t numOfPxOff = 0;
-0005a0  2000              MOVS     r0,#0
-0005a2  9011              STR      r0,[sp,#0x44]
-;;;235    						
-;;;236    						if(frameloc[y*RES_WIDTH + xpt] == 0) 
-0005a4  9817              LDR      r0,[sp,#0x5c]
-0005a6  eb000180          ADD      r1,r0,r0,LSL #2
-0005aa  9813              LDR      r0,[sp,#0x4c]
-0005ac  eb001181          ADD      r1,r0,r1,LSL #6
-0005b0  f8dd0494          LDR      r0,[sp,#0x494]
-0005b4  5c40              LDRB     r0,[r0,r1]
-0005b6  b918              CBNZ     r0,|L1.1472|
-;;;237    							numOfPxOff++;
-0005b8  9811              LDR      r0,[sp,#0x44]
-0005ba  1c40              ADDS     r0,r0,#1
-0005bc  b2c0              UXTB     r0,r0
-0005be  9011              STR      r0,[sp,#0x44]
-                  |L1.1472|
-;;;238    						
-;;;239    						if(frameloc[y*RES_WIDTH + xmt] == 0) 
-0005c0  9817              LDR      r0,[sp,#0x5c]
-0005c2  eb000180          ADD      r1,r0,r0,LSL #2
-0005c6  9812              LDR      r0,[sp,#0x48]
-0005c8  eb001181          ADD      r1,r0,r1,LSL #6
-0005cc  f8dd0494          LDR      r0,[sp,#0x494]
-0005d0  5c40              LDRB     r0,[r0,r1]
-0005d2  b918              CBNZ     r0,|L1.1500|
-;;;240    							numOfPxOff++;
-0005d4  9811              LDR      r0,[sp,#0x44]
-0005d6  1c40              ADDS     r0,r0,#1
-0005d8  b2c0              UXTB     r0,r0
-0005da  9011              STR      r0,[sp,#0x44]
-                  |L1.1500|
+;;;189    				} 
+;;;190    				
+;;;191    				// BLOB DETECTION
+;;;192    				if(gradx > THREASHOLD_LOW) {			// if we've entered a blob (black to white transistion, going left 2 right)
+00054a  49ef              LDR      r1,|L1.2312|
+00054c  9809              LDR      r0,[sp,#0x24]
+00054e  f7fffffe          BL       __aeabi_cfrcmple
+000552  d20b              BCS      |L1.1388|
+;;;193    					inBlob = 1;
+000554  2001              MOVS     r0,#1
+000556  f8cd06ac          STR      r0,[sp,#0x6ac]
+;;;194    					blobLen++;
+00055a  f8dd06b0          LDR      r0,[sp,#0x6b0]
+00055e  1c40              ADDS     r0,r0,#1
+000560  b280              UXTH     r0,r0
+000562  f8cd06b0          STR      r0,[sp,#0x6b0]
+;;;195    					blobXPos = x;
+000566  9814              LDR      r0,[sp,#0x50]
+000568  f8cd06a8          STR      r0,[sp,#0x6a8]
+                  |L1.1388|
+;;;196    				}
+;;;197    				if(inBlob && (-gradx < THREASHOLD_LOW)) {	// if we're in a blob and haven't reached the outer edge
+00056c  f8dd06ac          LDR      r0,[sp,#0x6ac]
+000570  b168              CBZ      r0,|L1.1422|
+000572  9809              LDR      r0,[sp,#0x24]
+000574  f0804000          EOR      r0,r0,#0x80000000
+000578  49e3              LDR      r1,|L1.2312|
+00057a  9006              STR      r0,[sp,#0x18]
+00057c  f7fffffe          BL       __aeabi_cfcmple
+000580  d205              BCS      |L1.1422|
+;;;198    					blobLen++;
+000582  f8dd06b0          LDR      r0,[sp,#0x6b0]
+000586  1c40              ADDS     r0,r0,#1
+000588  b280              UXTH     r0,r0
+00058a  f8cd06b0          STR      r0,[sp,#0x6b0]
+                  |L1.1422|
+;;;199    				}
+;;;200    				if(inBlob && (-gradx > THREASHOLD_LOW)) {	// in a blob, but exiting
+00058e  f8dd06ac          LDR      r0,[sp,#0x6ac]
+000592  b320              CBZ      r0,|L1.1502|
+000594  9809              LDR      r0,[sp,#0x24]
+000596  f0804000          EOR      r0,r0,#0x80000000
+00059a  49db              LDR      r1,|L1.2312|
+00059c  9006              STR      r0,[sp,#0x18]
+00059e  f7fffffe          BL       __aeabi_cfrcmple
+0005a2  d222              BCS      |L1.1514|
+;;;201    					
+;;;202    					if(blobLen < MAX_BLOB_LEN) {
+0005a4  f8dd06b0          LDR      r0,[sp,#0x6b0]
+0005a8  2809              CMP      r0,#9
+0005aa  da19              BGE      |L1.1504|
+;;;203    						// we've found a blob! DELETEEEEE
+;;;204    						//for(uint16_t blobX = blobXPos; blobX >= x; blobX += 2) {
+;;;205    					//		frameloc[y*RES_WIDTH + blobX] = 0;
+;;;206    					//	}
+;;;207    						frameloc[y*RES_WIDTH + blobXPos] = 0;
+0005ac  2100              MOVS     r1,#0
+0005ae  9817              LDR      r0,[sp,#0x5c]
+0005b0  eb000280          ADD      r2,r0,r0,LSL #2
+0005b4  f8dd06a8          LDR      r0,[sp,#0x6a8]
+0005b8  eb001282          ADD      r2,r0,r2,LSL #6
+0005bc  f8dd0810          LDR      r0,[sp,#0x810]
+0005c0  5481              STRB     r1,[r0,r2]
+;;;208    						frameloc[y*RES_WIDTH + x] = 0;
+0005c2  9817              LDR      r0,[sp,#0x5c]
+0005c4  eb000280          ADD      r2,r0,r0,LSL #2
+0005c8  9814              LDR      r0,[sp,#0x50]
+0005ca  eb001282          ADD      r2,r0,r2,LSL #6
+0005ce  f8dd0810          LDR      r0,[sp,#0x810]
+0005d2  5481              STRB     r1,[r0,r2]
+;;;209    //						if( x < RES_WIDTH -OFFSET) {
+;;;210    //							frameloc[y*RES_WIDTH + x + 2] = 0;
+;;;211    //						}
+;;;212    //						if( x > OFFSET) {
+;;;213    //							frameloc[y*RES_WIDTH + blobXPos - 2] = 0;
+;;;214    //						}
+;;;215    						blobLen = inBlob = 0;
+0005d4  2000              MOVS     r0,#0
+0005d6  f8cd06ac          STR      r0,[sp,#0x6ac]
+0005da  f8cd06b0          STR      r0,[sp,#0x6b0]
+                  |L1.1502|
+0005de  e004              B        |L1.1514|
+                  |L1.1504|
+;;;216    					}
+;;;217    					else {
+;;;218    						// clear vals, no blob here
+;;;219    						blobLen = inBlob = 0;
+0005e0  2000              MOVS     r0,#0
+0005e2  f8cd06ac          STR      r0,[sp,#0x6ac]
+0005e6  f8cd06b0          STR      r0,[sp,#0x6b0]
+                  |L1.1514|
+0005ea  9814              LDR      r0,[sp,#0x50]         ;129
+0005ec  1c80              ADDS     r0,r0,#2              ;129
+0005ee  b280              UXTH     r0,r0                 ;129
+0005f0  9014              STR      r0,[sp,#0x50]         ;129
+                  |L1.1522|
+0005f2  9814              LDR      r0,[sp,#0x50]         ;129
+0005f4  f7fffffe          BL       __aeabi_ui2d
+0005f8  2200              MOVS     r2,#0                 ;129
+0005fa  4bc5              LDR      r3,|L1.2320|
+0005fc  e9cd0112          STRD     r0,r1,[sp,#0x48]      ;129
+000600  f7fffffe          BL       __aeabi_cdcmple
+000604  f4ffadc2          BCC      |L1.396|
+000608  9817              LDR      r0,[sp,#0x5c]         ;123
+00060a  1c80              ADDS     r0,r0,#2              ;123
+00060c  b280              UXTH     r0,r0                 ;123
+00060e  9017              STR      r0,[sp,#0x5c]         ;123
+                  |L1.1552|
+000610  9817              LDR      r0,[sp,#0x5c]         ;123
+000612  f7fffffe          BL       __aeabi_ui2d
+000616  2200              MOVS     r2,#0                 ;123
+000618  4bbe              LDR      r3,|L1.2324|
+00061a  e9cd0114          STRD     r0,r1,[sp,#0x50]      ;123
+00061e  f7fffffe          BL       __aeabi_cdcmple
+000622  f4ffada8          BCC      |L1.374|
+;;;220    					}
+;;;221    				}
+;;;222    				
+;;;223    			}
+;;;224    		} // end nested for loop
+;;;225    		
+;;;226    			
+;;;227    	// noise pixel filtering
+;;;228    			
+;;;229    
+;;;230    			for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
+000626  2005              MOVS     r0,#5
+000628  9017              STR      r0,[sp,#0x5c]
+00062a  e0b2              B        |L1.1938|
+                  |L1.1580|
+;;;231    				uint16_t ypt = y + 2;
+00062c  9817              LDR      r0,[sp,#0x5c]
+00062e  1c80              ADDS     r0,r0,#2
+000630  b280              UXTH     r0,r0
+000632  9016              STR      r0,[sp,#0x58]
+;;;232    				uint16_t ymt = y - 2;
+000634  9817              LDR      r0,[sp,#0x5c]
+000636  1e80              SUBS     r0,r0,#2
+000638  b280              UXTH     r0,r0
+00063a  9015              STR      r0,[sp,#0x54]
+;;;233    			
+;;;234    				for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
+00063c  2005              MOVS     r0,#5
+00063e  9014              STR      r0,[sp,#0x50]
+000640  e098              B        |L1.1908|
+                  |L1.1602|
+;;;235    					
+;;;236    					if(frameloc[y*RES_WIDTH + x] == 255) {		// if current pix. == on, check if it should be off
+000642  9817              LDR      r0,[sp,#0x5c]
+000644  eb000180          ADD      r1,r0,r0,LSL #2
+000648  9814              LDR      r0,[sp,#0x50]
+00064a  eb001181          ADD      r1,r0,r1,LSL #6
+00064e  f8dd0810          LDR      r0,[sp,#0x810]
+000652  5c40              LDRB     r0,[r0,r1]
+000654  28ff              CMP      r0,#0xff
+000656  d17d              BNE      |L1.1876|
+;;;237    						uint16_t xpt = x + 2;
+000658  9814              LDR      r0,[sp,#0x50]
+00065a  1c80              ADDS     r0,r0,#2
+00065c  b280              UXTH     r0,r0
+00065e  9013              STR      r0,[sp,#0x4c]
+;;;238    						uint16_t xmt = x - 2;
+000660  9814              LDR      r0,[sp,#0x50]
+000662  1e80              SUBS     r0,r0,#2
+000664  b280              UXTH     r0,r0
+000666  9012              STR      r0,[sp,#0x48]
+;;;239    						
+;;;240    						uint8_t numOfPxOff = 0;
+000668  2000              MOVS     r0,#0
+00066a  9011              STR      r0,[sp,#0x44]
 ;;;241    						
-;;;242    						if(frameloc[(ypt)*RES_WIDTH + x] == 0) 
-0005dc  9816              LDR      r0,[sp,#0x58]
-0005de  eb000180          ADD      r1,r0,r0,LSL #2
-0005e2  9814              LDR      r0,[sp,#0x50]
-0005e4  eb001181          ADD      r1,r0,r1,LSL #6
-0005e8  f8dd0494          LDR      r0,[sp,#0x494]
-0005ec  5c40              LDRB     r0,[r0,r1]
-0005ee  b918              CBNZ     r0,|L1.1528|
+;;;242    						if(frameloc[y*RES_WIDTH + xpt] == 0) 
+00066c  9817              LDR      r0,[sp,#0x5c]
+00066e  eb000180          ADD      r1,r0,r0,LSL #2
+000672  9813              LDR      r0,[sp,#0x4c]
+000674  eb001181          ADD      r1,r0,r1,LSL #6
+000678  f8dd0810          LDR      r0,[sp,#0x810]
+00067c  5c40              LDRB     r0,[r0,r1]
+00067e  b918              CBNZ     r0,|L1.1672|
 ;;;243    							numOfPxOff++;
-0005f0  9811              LDR      r0,[sp,#0x44]
-0005f2  1c40              ADDS     r0,r0,#1
-0005f4  b2c0              UXTB     r0,r0
-0005f6  9011              STR      r0,[sp,#0x44]
-                  |L1.1528|
+000680  9811              LDR      r0,[sp,#0x44]
+000682  1c40              ADDS     r0,r0,#1
+000684  b2c0              UXTB     r0,r0
+000686  9011              STR      r0,[sp,#0x44]
+                  |L1.1672|
 ;;;244    						
-;;;245    						if(frameloc[(ymt)*RES_WIDTH + x] == 0) 
-0005f8  9815              LDR      r0,[sp,#0x54]
-0005fa  eb000180          ADD      r1,r0,r0,LSL #2
-0005fe  9814              LDR      r0,[sp,#0x50]
-000600  eb001181          ADD      r1,r0,r1,LSL #6
-000604  f8dd0494          LDR      r0,[sp,#0x494]
-000608  5c40              LDRB     r0,[r0,r1]
-00060a  e000              B        |L1.1550|
-                  |L1.1548|
-00060c  e012              B        |L1.1588|
-                  |L1.1550|
-00060e  b918              CBNZ     r0,|L1.1560|
-;;;246    							numOfPxOff++;
-000610  9811              LDR      r0,[sp,#0x44]
-000612  1c40              ADDS     r0,r0,#1
-000614  b2c0              UXTB     r0,r0
-000616  9011              STR      r0,[sp,#0x44]
-                  |L1.1560|
-;;;247    						
-;;;248    						if(numOfPxOff > 2) {
-000618  9811              LDR      r0,[sp,#0x44]
-00061a  2802              CMP      r0,#2
-00061c  dd09              BLE      |L1.1586|
-;;;249    							// frameloc[(y-1)*RES_WIDTH + x-1] = 0;
-;;;250    							// frameloc[y*RES_WIDTH + x-1] = 0;
-;;;251    							// frameloc[(y-1)*RES_WIDTH + x] = 0;
-;;;252    							frameloc[y*RES_WIDTH + x] = 0; 				// we only ever look at this pixel
-00061e  2100              MOVS     r1,#0
-000620  9817              LDR      r0,[sp,#0x5c]
-000622  eb000280          ADD      r2,r0,r0,LSL #2
-000626  9814              LDR      r0,[sp,#0x50]
-000628  eb001282          ADD      r2,r0,r2,LSL #6
-00062c  f8dd0494          LDR      r0,[sp,#0x494]
-000630  5481              STRB     r1,[r0,r2]
-                  |L1.1586|
-;;;253    						}
-;;;254    						
-;;;255    					} //end if(edge detected)
-000632  bf00              NOP      
-                  |L1.1588|
-000634  9814              LDR      r0,[sp,#0x50]         ;228
-000636  1c80              ADDS     r0,r0,#2              ;228
-000638  b280              UXTH     r0,r0                 ;228
-00063a  9014              STR      r0,[sp,#0x50]         ;228
-                  |L1.1596|
-00063c  9814              LDR      r0,[sp,#0x50]         ;228
-00063e  f7fffffe          BL       __aeabi_ui2d
-000642  2200              MOVS     r2,#0                 ;228
-000644  4ba8              LDR      r3,|L1.2280|
-000646  e9cd0112          STRD     r0,r1,[sp,#0x48]      ;228
-00064a  f7fffffe          BL       __aeabi_cdcmple
-00064e  d395              BCC      |L1.1404|
-000650  9817              LDR      r0,[sp,#0x5c]         ;224
-000652  1c80              ADDS     r0,r0,#2              ;224
-000654  b280              UXTH     r0,r0                 ;224
-000656  9017              STR      r0,[sp,#0x5c]         ;224
-                  |L1.1624|
-000658  9817              LDR      r0,[sp,#0x5c]         ;224
-00065a  f7fffffe          BL       __aeabi_ui2d
-00065e  2200              MOVS     r2,#0                 ;224
-000660  4ba2              LDR      r3,|L1.2284|
-000662  e9cd0114          STRD     r0,r1,[sp,#0x50]      ;224
-000666  f7fffffe          BL       __aeabi_cdcmple
-00066a  f4ffaf7c          BCC      |L1.1382|
-;;;256    				} // end x for
-;;;257    			} // end y for
-;;;258    			
-;;;259    			
-;;;260    			// floor detection & distance extrapolation.
-;;;261    			
-;;;262    			for(float x = (POS_OFFSET); x < (RES_WIDTH - POS_OFFSET); x += 2.0) {	// start on the left
-00066e  f04f4080          MOV      r0,#0x40000000
-000672  9017              STR      r0,[sp,#0x5c]
-000674  e12e              B        |L1.2260|
-                  |L1.1654|
-;;;263    				
-;;;264    				float xPos;
-;;;265    				
-;;;266    				for(float y = (RES_HEIGHT - POS_OFFSET); y > POS_OFFSET; y -= 2.0) {	// start from the bottom
-000676  489e              LDR      r0,|L1.2288|
-000678  9015              STR      r0,[sp,#0x54]
-00067a  e110              B        |L1.2206|
-                  |L1.1660|
-;;;267    					
-;;;268    					if(frameloc[((uint8_t)y)*RES_WIDTH + (uint16_t)x] != 0) {
-00067c  9817              LDR      r0,[sp,#0x5c]
-00067e  f7fffffe          BL       __aeabi_f2uiz
-000682  b284              UXTH     r4,r0
-000684  9815              LDR      r0,[sp,#0x54]
-000686  f7fffffe          BL       __aeabi_f2uiz
-00068a  b2c0              UXTB     r0,r0
-00068c  eb000080          ADD      r0,r0,r0,LSL #2
-000690  eb041180          ADD      r1,r4,r0,LSL #6
-000694  f8dd0494          LDR      r0,[sp,#0x494]
+;;;245    						if(frameloc[y*RES_WIDTH + xmt] == 0) 
+000688  9817              LDR      r0,[sp,#0x5c]
+00068a  eb000180          ADD      r1,r0,r0,LSL #2
+00068e  9812              LDR      r0,[sp,#0x48]
+000690  eb001181          ADD      r1,r0,r1,LSL #6
+000694  f8dd0810          LDR      r0,[sp,#0x810]
 000698  5c40              LDRB     r0,[r0,r1]
-00069a  2800              CMP      r0,#0
-00069c  d07d              BEQ      |L1.1946|
-;;;269    						float yPos;
+00069a  b918              CBNZ     r0,|L1.1700|
+;;;246    							numOfPxOff++;
+00069c  9811              LDR      r0,[sp,#0x44]
+00069e  1c40              ADDS     r0,r0,#1
+0006a0  b2c0              UXTB     r0,r0
+0006a2  9011              STR      r0,[sp,#0x44]
+                  |L1.1700|
+;;;247    						
+;;;248    						if(frameloc[(ypt)*RES_WIDTH + x] == 0) 
+0006a4  9816              LDR      r0,[sp,#0x58]
+0006a6  eb000180          ADD      r1,r0,r0,LSL #2
+0006aa  9814              LDR      r0,[sp,#0x50]
+0006ac  eb001181          ADD      r1,r0,r1,LSL #6
+0006b0  f8dd0810          LDR      r0,[sp,#0x810]
+0006b4  5c40              LDRB     r0,[r0,r1]
+0006b6  b918              CBNZ     r0,|L1.1728|
+;;;249    							numOfPxOff++;
+0006b8  9811              LDR      r0,[sp,#0x44]
+0006ba  1c40              ADDS     r0,r0,#1
+0006bc  b2c0              UXTB     r0,r0
+0006be  9011              STR      r0,[sp,#0x44]
+                  |L1.1728|
+;;;250    						
+;;;251    						if(frameloc[(ymt)*RES_WIDTH + x] == 0) 
+0006c0  9815              LDR      r0,[sp,#0x54]
+0006c2  eb000180          ADD      r1,r0,r0,LSL #2
+0006c6  9814              LDR      r0,[sp,#0x50]
+0006c8  eb001181          ADD      r1,r0,r1,LSL #6
+0006cc  f8dd0810          LDR      r0,[sp,#0x810]
+0006d0  5c40              LDRB     r0,[r0,r1]
+0006d2  b918              CBNZ     r0,|L1.1756|
+;;;252    							numOfPxOff++;
+0006d4  9811              LDR      r0,[sp,#0x44]
+0006d6  1c40              ADDS     r0,r0,#1
+0006d8  b2c0              UXTB     r0,r0
+0006da  9011              STR      r0,[sp,#0x44]
+                  |L1.1756|
+;;;253    						
+;;;254    						if(frameloc[ymt*RES_WIDTH + xpt] == 0) 
+0006dc  9815              LDR      r0,[sp,#0x54]
+0006de  eb000180          ADD      r1,r0,r0,LSL #2
+0006e2  9813              LDR      r0,[sp,#0x4c]
+0006e4  eb001181          ADD      r1,r0,r1,LSL #6
+0006e8  f8dd0810          LDR      r0,[sp,#0x810]
+0006ec  5c40              LDRB     r0,[r0,r1]
+0006ee  b918              CBNZ     r0,|L1.1784|
+;;;255    							numOfPxOff++;
+0006f0  9811              LDR      r0,[sp,#0x44]
+0006f2  1c40              ADDS     r0,r0,#1
+0006f4  b2c0              UXTB     r0,r0
+0006f6  9011              STR      r0,[sp,#0x44]
+                  |L1.1784|
+;;;256    						
+;;;257    						if(frameloc[ymt*RES_WIDTH + xmt] == 0) 
+0006f8  9815              LDR      r0,[sp,#0x54]
+0006fa  eb000180          ADD      r1,r0,r0,LSL #2
+0006fe  9812              LDR      r0,[sp,#0x48]
+000700  eb001181          ADD      r1,r0,r1,LSL #6
+000704  f8dd0810          LDR      r0,[sp,#0x810]
+000708  5c40              LDRB     r0,[r0,r1]
+00070a  b918              CBNZ     r0,|L1.1812|
+;;;258    							numOfPxOff++;
+00070c  9811              LDR      r0,[sp,#0x44]
+00070e  1c40              ADDS     r0,r0,#1
+000710  b2c0              UXTB     r0,r0
+000712  9011              STR      r0,[sp,#0x44]
+                  |L1.1812|
+;;;259    						
+;;;260    						if(frameloc[(ypt)*RES_WIDTH + xpt] == 0) 
+000714  9816              LDR      r0,[sp,#0x58]
+000716  eb000180          ADD      r1,r0,r0,LSL #2
+00071a  9813              LDR      r0,[sp,#0x4c]
+00071c  eb001181          ADD      r1,r0,r1,LSL #6
+000720  f8dd0810          LDR      r0,[sp,#0x810]
+000724  5c40              LDRB     r0,[r0,r1]
+000726  b918              CBNZ     r0,|L1.1840|
+;;;261    							numOfPxOff++;
+000728  9811              LDR      r0,[sp,#0x44]
+00072a  1c40              ADDS     r0,r0,#1
+00072c  b2c0              UXTB     r0,r0
+00072e  9011              STR      r0,[sp,#0x44]
+                  |L1.1840|
+;;;262    						
+;;;263    						if(frameloc[(ypt)*RES_WIDTH + xmt] == 0) 
+000730  9816              LDR      r0,[sp,#0x58]
+000732  eb000180          ADD      r1,r0,r0,LSL #2
+000736  9812              LDR      r0,[sp,#0x48]
+000738  eb001181          ADD      r1,r0,r1,LSL #6
+00073c  f8dd0810          LDR      r0,[sp,#0x810]
+000740  5c40              LDRB     r0,[r0,r1]
+000742  b918              CBNZ     r0,|L1.1868|
+;;;264    							numOfPxOff++;
+000744  9811              LDR      r0,[sp,#0x44]
+000746  1c40              ADDS     r0,r0,#1
+000748  b2c0              UXTB     r0,r0
+00074a  9011              STR      r0,[sp,#0x44]
+                  |L1.1868|
+;;;265    						
+;;;266    						if(numOfPxOff > 4) {
+00074c  9811              LDR      r0,[sp,#0x44]
+00074e  2804              CMP      r0,#4
+000750  dd0b              BLE      |L1.1898|
+;;;267    							
+;;;268    							frameloc[y*RES_WIDTH + x] = 0; 				// we only ever look at this pixel
+000752  e000              B        |L1.1878|
+                  |L1.1876|
+000754  e00a              B        |L1.1900|
+                  |L1.1878|
+000756  2100              MOVS     r1,#0
+000758  9817              LDR      r0,[sp,#0x5c]
+00075a  eb000280          ADD      r2,r0,r0,LSL #2
+00075e  9814              LDR      r0,[sp,#0x50]
+000760  eb001282          ADD      r2,r0,r2,LSL #6
+000764  f8dd0810          LDR      r0,[sp,#0x810]
+000768  5481              STRB     r1,[r0,r2]
+                  |L1.1898|
+;;;269    						}
 ;;;270    						
-;;;271    						double theta_ph = atan(((2.0*y-200.0)/200.0)*TAN_FOVH_DIV_2);		// angle of the pixel
-00069e  9815              LDR      r0,[sp,#0x54]
-0006a0  f7fffffe          BL       __aeabi_f2d
-0006a4  2200              MOVS     r2,#0
-0006a6  f04f4380          MOV      r3,#0x40000000
-0006aa  e9cd0104          STRD     r0,r1,[sp,#0x10]
-0006ae  f7fffffe          BL       __aeabi_dmul
-0006b2  2200              MOVS     r2,#0
-0006b4  4b8f              LDR      r3,|L1.2292|
-0006b6  e9cd0106          STRD     r0,r1,[sp,#0x18]
-0006ba  f7fffffe          BL       __aeabi_dsub
-0006be  2200              MOVS     r2,#0
-0006c0  4b8c              LDR      r3,|L1.2292|
-0006c2  e9cd0108          STRD     r0,r1,[sp,#0x20]
-0006c6  f7fffffe          BL       __aeabi_ddiv
-0006ca  4a8b              LDR      r2,|L1.2296|
-0006cc  4b8b              LDR      r3,|L1.2300|
-0006ce  e9cd010a          STRD     r0,r1,[sp,#0x28]
-0006d2  f7fffffe          BL       __aeabi_dmul
-0006d6  e9cd010c          STRD     r0,r1,[sp,#0x30]
-0006da  f7fffffe          BL       atan
-0006de  e9cd0112          STRD     r0,r1,[sp,#0x48]
-;;;272    						double cos_theta_ph = cos(theta_ph);											// used in the computations
-0006e2  e9dd0112          LDRD     r0,r1,[sp,#0x48]
-0006e6  f7fffffe          BL       ||cos||
-0006ea  e9cd0110          STRD     r0,r1,[sp,#0x40]
-;;;273    						double cos_theta_minus_ph = cos(theta - theta_ph);				// used in the computations
-0006ee  981f              LDR      r0,[sp,#0x7c]
-0006f0  f7fffffe          BL       __aeabi_f2d
-0006f4  e9cd010a          STRD     r0,r1,[sp,#0x28]
-0006f8  e9dd2312          LDRD     r2,r3,[sp,#0x48]
-0006fc  f7fffffe          BL       __aeabi_dsub
-000700  e9cd010c          STRD     r0,r1,[sp,#0x30]
-000704  f7fffffe          BL       ||cos||
-000708  e9cd010e          STRD     r0,r1,[sp,#0x38]
-;;;274    						
-;;;275    						yPos = ((double)((3.9)*((cos_theta_ph))))/(cos_theta_minus_ph) + 
-00070c  981f              LDR      r0,[sp,#0x7c]
-00070e  f7fffffe          BL       __aeabi_f2d
-000712  e9cd0102          STRD     r0,r1,[sp,#8]
-000716  e9dd2312          LDRD     r2,r3,[sp,#0x48]
-00071a  f7fffffe          BL       __aeabi_dsub
-00071e  e9cd0104          STRD     r0,r1,[sp,#0x10]
-000722  f7fffffe          BL       tan
-000726  4a76              LDR      r2,|L1.2304|
-000728  4b76              LDR      r3,|L1.2308|
-00072a  e9cd0106          STRD     r0,r1,[sp,#0x18]
-00072e  f7fffffe          BL       __aeabi_dmul
-000732  e9cd010a          STRD     r0,r1,[sp,#0x28]
-000736  f04f3033          MOV      r0,#0x33333333
-00073a  4973              LDR      r1,|L1.2312|
-00073c  e9dd2310          LDRD     r2,r3,[sp,#0x40]
-000740  f7fffffe          BL       __aeabi_dmul
-000744  e9cd0106          STRD     r0,r1,[sp,#0x18]
-000748  e9dd230e          LDRD     r2,r3,[sp,#0x38]
-00074c  f7fffffe          BL       __aeabi_ddiv
-000750  e9cd0108          STRD     r0,r1,[sp,#0x20]
-000754  e9dd230a          LDRD     r2,r3,[sp,#0x28]
-000758  f7fffffe          BL       __aeabi_dadd
-00075c  e9cd010c          STRD     r0,r1,[sp,#0x30]
-000760  f7fffffe          BL       __aeabi_d2f
-000764  9014              STR      r0,[sp,#0x50]
-;;;276    											(2.1)*tan(theta - theta_ph);		// y distance from the bot
-;;;277    						xPos = ((yPos*(2.0*x - 320.0))/320.0)*TAN_FOVW_DIV_2;			// x distance from the bot
-000766  9817              LDR      r0,[sp,#0x5c]
-000768  f7fffffe          BL       __aeabi_f2d
-00076c  2200              MOVS     r2,#0
-00076e  f04f4380          MOV      r3,#0x40000000
-000772  e9cd0100          STRD     r0,r1,[sp,#0]
-000776  f7fffffe          BL       __aeabi_dmul
-00077a  2200              MOVS     r2,#0
-00077c  4b63              LDR      r3,|L1.2316|
-00077e  e9cd0102          STRD     r0,r1,[sp,#8]
-000782  f7fffffe          BL       __aeabi_dsub
-000786  e9cd0106          STRD     r0,r1,[sp,#0x18]
-00078a  9814              LDR      r0,[sp,#0x50]
-00078c  f7fffffe          BL       __aeabi_f2d
-000790  e9cd0104          STRD     r0,r1,[sp,#0x10]
-000794  e9dd2306          LDRD     r2,r3,[sp,#0x18]
-000798  e000              B        |L1.1948|
-                  |L1.1946|
-00079a  e071              B        |L1.2176|
-                  |L1.1948|
-00079c  f7fffffe          BL       __aeabi_dmul
-0007a0  2200              MOVS     r2,#0
-0007a2  4b5a              LDR      r3,|L1.2316|
-0007a4  e9cd0108          STRD     r0,r1,[sp,#0x20]
-0007a8  f7fffffe          BL       __aeabi_ddiv
-0007ac  4a58              LDR      r2,|L1.2320|
-0007ae  4b59              LDR      r3,|L1.2324|
-0007b0  e9cd010a          STRD     r0,r1,[sp,#0x28]
-0007b4  f7fffffe          BL       __aeabi_dmul
-0007b8  e9cd010c          STRD     r0,r1,[sp,#0x30]
-0007bc  f7fffffe          BL       __aeabi_d2f
-0007c0  9016              STR      r0,[sp,#0x58]
-;;;278    						
-;;;279    						sendPositions[2*count] = (uint8_t)(xPos + 128);						// these two lines put x,y pairs
-0007c2  f04f4186          MOV      r1,#0x43000000
-0007c6  9816              LDR      r0,[sp,#0x58]
-0007c8  f7fffffe          BL       __aeabi_fadd
-0007cc  900d              STR      r0,[sp,#0x34]
-0007ce  f7fffffe          BL       __aeabi_f2uiz
-0007d2  b2c1              UXTB     r1,r0
-0007d4  981e              LDR      r0,[sp,#0x78]
-0007d6  0042              LSLS     r2,r0,#1
-0007d8  f8dd0490          LDR      r0,[sp,#0x490]
-0007dc  5481              STRB     r1,[r0,r2]
-;;;280    						sendPositions[2*count + 1] = (uint8_t)yPos;								// into the send array
-0007de  9814              LDR      r0,[sp,#0x50]
-0007e0  f7fffffe          BL       __aeabi_f2uiz
-0007e4  b2c2              UXTB     r2,r0
-0007e6  981e              LDR      r0,[sp,#0x78]
-0007e8  0040              LSLS     r0,r0,#1
-0007ea  1c40              ADDS     r0,r0,#1
-0007ec  f8dd1490          LDR      r1,[sp,#0x490]
-0007f0  540a              STRB     r2,[r1,r0]
-;;;281    						
-;;;282    						
-;;;283    						// floor array is a 76 cm wide by 104 cm long grid of where the robot can and cannot drive. 
-;;;284    						// It is byte packed in the y direction
-;;;285    						floorArray[(int8_t)(xPos + 36)] [((int8_t)yPos)/8] |= 1 << (((int8_t)yPos) % 8);
-0007f2  4949              LDR      r1,|L1.2328|
-0007f4  9816              LDR      r0,[sp,#0x58]
-0007f6  f7fffffe          BL       __aeabi_fadd
-0007fa  900b              STR      r0,[sp,#0x2c]
-0007fc  f7fffffe          BL       __aeabi_f2iz
-000800  b240              SXTB     r0,r0
-000802  eb000180          ADD      r1,r0,r0,LSL #2
-000806  eb0100c0          ADD      r0,r1,r0,LSL #3
-00080a  a920              ADD      r1,sp,#0x80
-00080c  1844              ADDS     r4,r0,r1
-00080e  9814              LDR      r0,[sp,#0x50]
-000810  f7fffffe          BL       __aeabi_f2iz
-000814  b240              SXTB     r0,r0
-000816  17c1              ASRS     r1,r0,#31
-000818  900c              STR      r0,[sp,#0x30]
-00081a  eb007051          ADD      r0,r0,r1,LSR #29
-00081e  10c0              ASRS     r0,r0,#3
-000820  5c24              LDRB     r4,[r4,r0]
-000822  9814              LDR      r0,[sp,#0x50]
-000824  f7fffffe          BL       __aeabi_f2iz
-000828  b240              SXTB     r0,r0
-00082a  17c1              ASRS     r1,r0,#31
-00082c  900d              STR      r0,[sp,#0x34]
-00082e  eb007051          ADD      r0,r0,r1,LSR #29
-000832  10c1              ASRS     r1,r0,#3
-000834  980d              LDR      r0,[sp,#0x34]
-000836  eba001c1          SUB      r1,r0,r1,LSL #3
-00083a  2001              MOVS     r0,#1
-00083c  4088              LSLS     r0,r0,r1
-00083e  4304              ORRS     r4,r4,r0
-000840  b2e4              UXTB     r4,r4
-000842  4935              LDR      r1,|L1.2328|
-000844  9816              LDR      r0,[sp,#0x58]
-000846  f7fffffe          BL       __aeabi_fadd
-00084a  900b              STR      r0,[sp,#0x2c]
-00084c  f7fffffe          BL       __aeabi_f2iz
-000850  b240              SXTB     r0,r0
-000852  eb000180          ADD      r1,r0,r0,LSL #2
-000856  eb0100c0          ADD      r0,r1,r0,LSL #3
-00085a  a920              ADD      r1,sp,#0x80
-00085c  1845              ADDS     r5,r0,r1
-00085e  9814              LDR      r0,[sp,#0x50]
-000860  f7fffffe          BL       __aeabi_f2iz
-000864  b240              SXTB     r0,r0
-000866  e000              B        |L1.2154|
-                  |L1.2152|
-000868  e0a9              B        |L1.2494|
-                  |L1.2154|
-00086a  17c1              ASRS     r1,r0,#31
-00086c  900c              STR      r0,[sp,#0x30]
-00086e  eb007051          ADD      r0,r0,r1,LSR #29
-000872  10c0              ASRS     r0,r0,#3
-000874  542c              STRB     r4,[r5,r0]
-;;;286    						
-;;;287    						count += 1;		// count of the number of edges of obsticles detected
-000876  981e              LDR      r0,[sp,#0x78]
-000878  1c40              ADDS     r0,r0,#1
-00087a  b280              UXTH     r0,r0
-00087c  901e              STR      r0,[sp,#0x78]
-;;;288    						break;			// stop looking for the edge, break to the next x co-ordinate
-00087e  e01a              B        |L1.2230|
-                  |L1.2176|
-000880  9815              LDR      r0,[sp,#0x54]         ;266
-000882  f7fffffe          BL       __aeabi_f2d
-000886  2200              MOVS     r2,#0                 ;266
-000888  f04f4380          MOV      r3,#0x40000000        ;266
-00088c  e9cd0110          STRD     r0,r1,[sp,#0x40]      ;266
-000890  f7fffffe          BL       __aeabi_dsub
-000894  e9cd0112          STRD     r0,r1,[sp,#0x48]      ;266
-000898  f7fffffe          BL       __aeabi_d2f
-00089c  9015              STR      r0,[sp,#0x54]         ;266
-                  |L1.2206|
-00089e  9815              LDR      r0,[sp,#0x54]         ;266
-0008a0  f7fffffe          BL       __aeabi_f2d
-0008a4  2200              MOVS     r2,#0                 ;266
-0008a6  f04f4380          MOV      r3,#0x40000000        ;266
-0008aa  e9cd0112          STRD     r0,r1,[sp,#0x48]      ;266
-0008ae  f7fffffe          BL       __aeabi_cdrcmple
-0008b2  f4ffaee3          BCC      |L1.1660|
-                  |L1.2230|
-0008b6  9817              LDR      r0,[sp,#0x5c]         ;262
-0008b8  f7fffffe          BL       __aeabi_f2d
-0008bc  2200              MOVS     r2,#0                 ;262
-0008be  f04f4380          MOV      r3,#0x40000000        ;262
-0008c2  e9cd0112          STRD     r0,r1,[sp,#0x48]      ;262
-0008c6  f7fffffe          BL       __aeabi_dadd
-0008ca  e9cd0114          STRD     r0,r1,[sp,#0x50]      ;262
-0008ce  f7fffffe          BL       __aeabi_d2f
-0008d2  9017              STR      r0,[sp,#0x5c]         ;262
+;;;271    					} //end if(edge detected)
+00076a  bf00              NOP      
+                  |L1.1900|
+00076c  9814              LDR      r0,[sp,#0x50]         ;234
+00076e  1c80              ADDS     r0,r0,#2              ;234
+000770  b280              UXTH     r0,r0                 ;234
+000772  9014              STR      r0,[sp,#0x50]         ;234
+                  |L1.1908|
+000774  9814              LDR      r0,[sp,#0x50]         ;234
+000776  f7fffffe          BL       __aeabi_ui2d
+00077a  2200              MOVS     r2,#0                 ;234
+00077c  4b64              LDR      r3,|L1.2320|
+00077e  e9cd0112          STRD     r0,r1,[sp,#0x48]      ;234
+000782  f7fffffe          BL       __aeabi_cdcmple
+000786  f4ffaf5c          BCC      |L1.1602|
+00078a  9817              LDR      r0,[sp,#0x5c]         ;230
+00078c  1c80              ADDS     r0,r0,#2              ;230
+00078e  b280              UXTH     r0,r0                 ;230
+000790  9017              STR      r0,[sp,#0x5c]         ;230
+                  |L1.1938|
+000792  9817              LDR      r0,[sp,#0x5c]         ;230
+000794  f7fffffe          BL       __aeabi_ui2d
+000798  2200              MOVS     r2,#0                 ;230
+00079a  4b5e              LDR      r3,|L1.2324|
+00079c  e9cd0114          STRD     r0,r1,[sp,#0x50]      ;230
+0007a0  f7fffffe          BL       __aeabi_cdcmple
+0007a4  f4ffaf42          BCC      |L1.1580|
+;;;272    				} // end x for
+;;;273    			} // end y for
+;;;274    		
+;;;275    		// END NOISE FILTERING
+;;;276    			
+;;;277    	  // front edge detection
+;;;278    			
+;;;279    			for( float x = 1 + GND_OFFSET_X; x < (RES_WIDTH - GND_OFFSET_X); x += 2.0) 
+0007a8  485b              LDR      r0,|L1.2328|
+0007aa  9017              STR      r0,[sp,#0x5c]
+0007ac  e10f              B        |L1.2510|
+                  |L1.1966|
+;;;280    			{																												// start on the left
+;;;281    				float xPos;
+;;;282    				
+;;;283    				for( float y = (RES_HEIGHT - GND_OFFSET_Y - 1); y > GND_OFFSET_Y; y -= 2.0) 
+0007ae  485b              LDR      r0,|L1.2332|
+0007b0  9015              STR      r0,[sp,#0x54]
+0007b2  e0f5              B        |L1.2464|
+                  |L1.1972|
+;;;284    				{																											// start from the bottom
+;;;285    					
+;;;286    						float yPos;
+;;;287    					
+;;;288    					if(frameloc[((uint16_t)y)*RES_WIDTH + (uint16_t)x] != 0) {			// if the pixel is on
+0007b4  9817              LDR      r0,[sp,#0x5c]
+0007b6  f7fffffe          BL       __aeabi_f2uiz
+0007ba  b284              UXTH     r4,r0
+0007bc  9815              LDR      r0,[sp,#0x54]
+0007be  f7fffffe          BL       __aeabi_f2uiz
+0007c2  b280              UXTH     r0,r0
+0007c4  eb000080          ADD      r0,r0,r0,LSL #2
+0007c8  eb041180          ADD      r1,r4,r0,LSL #6
+0007cc  f8dd0810          LDR      r0,[sp,#0x810]
+0007d0  5c40              LDRB     r0,[r0,r1]
+0007d2  2800              CMP      r0,#0
+0007d4  d07d              BEQ      |L1.2258|
+;;;289    
+;;;290    										// ACTUAL LOCATION CALCULATION
+;;;291    						double theta_ph = atan(((2.0*y-200.0)/200.0)*TAN_FOVH_DIV_2);		// angle of the pixel
+0007d6  9815              LDR      r0,[sp,#0x54]
+0007d8  f7fffffe          BL       __aeabi_f2d
+0007dc  2200              MOVS     r2,#0
+0007de  f04f4380          MOV      r3,#0x40000000
+0007e2  e9cd0104          STRD     r0,r1,[sp,#0x10]
+0007e6  f7fffffe          BL       __aeabi_dmul
+0007ea  2200              MOVS     r2,#0
+0007ec  4b4c              LDR      r3,|L1.2336|
+0007ee  e9cd0106          STRD     r0,r1,[sp,#0x18]
+0007f2  f7fffffe          BL       __aeabi_dsub
+0007f6  2200              MOVS     r2,#0
+0007f8  4b49              LDR      r3,|L1.2336|
+0007fa  e9cd0108          STRD     r0,r1,[sp,#0x20]
+0007fe  f7fffffe          BL       __aeabi_ddiv
+000802  4a48              LDR      r2,|L1.2340|
+000804  4b48              LDR      r3,|L1.2344|
+000806  e9cd010a          STRD     r0,r1,[sp,#0x28]
+00080a  f7fffffe          BL       __aeabi_dmul
+00080e  e9cd010c          STRD     r0,r1,[sp,#0x30]
+000812  f7fffffe          BL       atan
+000816  e9cd0112          STRD     r0,r1,[sp,#0x48]
+;;;292    						double cos_theta_ph = cos(theta_ph);											// used in the computations
+00081a  e9dd0112          LDRD     r0,r1,[sp,#0x48]
+00081e  f7fffffe          BL       ||cos||
+000822  e9cd0110          STRD     r0,r1,[sp,#0x40]
+;;;293    						double cos_theta_minus_ph = cos(theta - theta_ph);				// used in the computations
+000826  f8dd06cc          LDR      r0,[sp,#0x6cc]
+00082a  f7fffffe          BL       __aeabi_f2d
+00082e  e9cd010a          STRD     r0,r1,[sp,#0x28]
+000832  e9dd2312          LDRD     r2,r3,[sp,#0x48]
+000836  f7fffffe          BL       __aeabi_dsub
+00083a  e9cd010c          STRD     r0,r1,[sp,#0x30]
+00083e  f7fffffe          BL       ||cos||
+000842  e9cd010e          STRD     r0,r1,[sp,#0x38]
+;;;294    						
+;;;295    						yPos = ((double)((3.9)*((cos_theta_ph))))/(cos_theta_minus_ph) + 
+000846  f8dd06cc          LDR      r0,[sp,#0x6cc]
+00084a  f7fffffe          BL       __aeabi_f2d
+00084e  e9cd0102          STRD     r0,r1,[sp,#8]
+000852  e000              B        |L1.2134|
+                  |L1.2132|
+000854  e1f9              B        |L1.3146|
+                  |L1.2134|
+000856  e9dd2312          LDRD     r2,r3,[sp,#0x48]
+00085a  f7fffffe          BL       __aeabi_dsub
+00085e  e9cd0104          STRD     r0,r1,[sp,#0x10]
+000862  f7fffffe          BL       tan
+000866  4a31              LDR      r2,|L1.2348|
+000868  4b31              LDR      r3,|L1.2352|
+00086a  e9cd0106          STRD     r0,r1,[sp,#0x18]
+00086e  f7fffffe          BL       __aeabi_dmul
+000872  e9cd010a          STRD     r0,r1,[sp,#0x28]
+000876  f04f3033          MOV      r0,#0x33333333
+00087a  492e              LDR      r1,|L1.2356|
+00087c  e9dd2310          LDRD     r2,r3,[sp,#0x40]
+000880  f7fffffe          BL       __aeabi_dmul
+000884  e9cd0106          STRD     r0,r1,[sp,#0x18]
+000888  e9dd230e          LDRD     r2,r3,[sp,#0x38]
+00088c  f7fffffe          BL       __aeabi_ddiv
+000890  e9cd0108          STRD     r0,r1,[sp,#0x20]
+000894  e9dd230a          LDRD     r2,r3,[sp,#0x28]
+000898  f7fffffe          BL       __aeabi_dadd
+00089c  e9cd010c          STRD     r0,r1,[sp,#0x30]
+0008a0  f7fffffe          BL       __aeabi_d2f
+0008a4  9014              STR      r0,[sp,#0x50]
+;;;296    											(2.1)*tan(theta - theta_ph);		// y distance from the bot
+;;;297    						xPos = ((yPos*(2.0*x - 320.0))/320.0)*TAN_FOVW_DIV_2;			// x distance from the bot
+0008a6  9817              LDR      r0,[sp,#0x5c]
+0008a8  f7fffffe          BL       __aeabi_f2d
+0008ac  2200              MOVS     r2,#0
+0008ae  f04f4380          MOV      r3,#0x40000000
+0008b2  e9cd0100          STRD     r0,r1,[sp,#0]
+0008b6  f7fffffe          BL       __aeabi_dmul
+0008ba  2200              MOVS     r2,#0
+0008bc  4b1e              LDR      r3,|L1.2360|
+0008be  e9cd0102          STRD     r0,r1,[sp,#8]
+0008c2  f7fffffe          BL       __aeabi_dsub
+0008c6  e9cd0106          STRD     r0,r1,[sp,#0x18]
+0008ca  9814              LDR      r0,[sp,#0x50]
+0008cc  f7fffffe          BL       __aeabi_f2d
+0008d0  e000              B        |L1.2260|
+                  |L1.2258|
+0008d2  e056              B        |L1.2434|
                   |L1.2260|
-0008d4  9817              LDR      r0,[sp,#0x5c]         ;262
-0008d6  f7fffffe          BL       __aeabi_f2d
-0008da  2200              MOVS     r2,#0                 ;262
-0008dc  4b0f              LDR      r3,|L1.2332|
-0008de  e01f              B        |L1.2336|
-                  |L1.2272|
-                          DCD      0x41f00000
-                  |L1.2276|
-                          DCD      0x47afc800
-                  |L1.2280|
-                          DCD      0x4073c000
-                  |L1.2284|
-                          DCD      0x40688000
-                  |L1.2288|
-                          DCD      0x43460000
-                  |L1.2292|
-                          DCD      0x40690000
-                  |L1.2296|
-                          DCD      0x3d70a3d7
-                  |L1.2300|
-                          DCD      0x3fdbd70a
-                  |L1.2304|
-                          DCD      0xcccccccd
-                  |L1.2308|
-                          DCD      0x4000cccc
+0008d4  e9cd0104          STRD     r0,r1,[sp,#0x10]
+0008d8  e9dd2306          LDRD     r2,r3,[sp,#0x18]
+0008dc  f7fffffe          BL       __aeabi_dmul
+0008e0  2200              MOVS     r2,#0
+0008e2  4b15              LDR      r3,|L1.2360|
+0008e4  e9cd0108          STRD     r0,r1,[sp,#0x20]
+0008e8  f7fffffe          BL       __aeabi_ddiv
+0008ec  4a13              LDR      r2,|L1.2364|
+0008ee  4b14              LDR      r3,|L1.2368|
+0008f0  e9cd010a          STRD     r0,r1,[sp,#0x28]
+0008f4  f7fffffe          BL       __aeabi_dmul
+0008f8  e9cd010c          STRD     r0,r1,[sp,#0x30]
+0008fc  f7fffffe          BL       __aeabi_d2f
+000900  9016              STR      r0,[sp,#0x58]
+;;;298    						
+;;;299    						sendPositions[2*count] = (int8_t)(xPos+128);
+000902  f04f4186          MOV      r1,#0x43000000
+000906  e01d              B        |L1.2372|
                   |L1.2312|
-                          DCD      0x400f3333
+                          DCD      0x41980000
                   |L1.2316|
-                          DCD      0x40740000
+                          DCD      0x47afc800
                   |L1.2320|
-                          DCD      0x95810625
+                          DCD      0x4073c000
                   |L1.2324|
-                          DCD      0x3fe88b43
+                          DCD      0x40688000
                   |L1.2328|
-                          DCD      0x42100000
+                          DCD      0x40e00000
                   |L1.2332|
-                          DCD      0x4073e000
+                          DCD      0x433d0000
                   |L1.2336|
-000920  e9cd0114          STRD     r0,r1,[sp,#0x50]      ;262
-000924  f7fffffe          BL       __aeabi_cdcmple
-000928  f4ffaea5          BCC      |L1.1654|
-;;;289    					} // end if
-;;;290    					
-;;;291    				} //end yfor 
-;;;292    			} // end xfor
-;;;293    			
-;;;294    			if(count == 0) {					// we have not detected any edges. Oh no!
-00092c  981e              LDR      r0,[sp,#0x78]
-00092e  b940              CBNZ     r0,|L1.2370|
-;;;295    				uint8_t noEdges = 42;
-000930  202a              MOVS     r0,#0x2a
-000932  9017              STR      r0,[sp,#0x5c]
-;;;296    				UART_Send(LPC_USART0, &noEdges, 1, BLOCKING); 
-000934  2301              MOVS     r3,#1
-000936  461a              MOV      r2,r3
-000938  a917              ADD      r1,sp,#0x5c
-00093a  4831              LDR      r0,|L1.2560|
-00093c  f7fffffe          BL       UART_Send
-;;;297    			}
-000940  bf00              NOP      
-                  |L1.2370|
-;;;298    			
-;;;299    			UART_Send(LPC_USART0, sendPositions, 2*count, BLOCKING);	// sends x,y pairs!!!!
-000942  981e              LDR      r0,[sp,#0x78]
-000944  0040              LSLS     r0,r0,#1
-000946  2301              MOVS     r3,#1
-000948  4602              MOV      r2,r0
-00094a  9017              STR      r0,[sp,#0x5c]
-00094c  482c              LDR      r0,|L1.2560|
-00094e  f8dd1490          LDR      r1,[sp,#0x490]
-000952  f7fffffe          BL       UART_Send
-;;;300    			
-;;;301    			led_setRGB(255, 0, 255);	// Purple LED
-000956  20ff              MOVS     r0,#0xff
-000958  9018              STR      r0,[sp,#0x60]
-00095a  2000              MOVS     r0,#0
-00095c  9019              STR      r0,[sp,#0x64]
-00095e  20ff              MOVS     r0,#0xff
-000960  aa1a              ADD      r2,sp,#0x68
-000962  a919              ADD      r1,sp,#0x64
-000964  901a              STR      r0,[sp,#0x68]
-000966  a818              ADD      r0,sp,#0x60
-000968  f7fffffe          BL       _Z10led_setRGBRKhS0_S0_ ; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
-;;;302    			
-;;;303    			// Byte packing for processing script
-;;;304    /*
-;;;305    			for(uint16_t y = 0; y < RES_HEIGHT/2; y += 1) {
-;;;306    				for (uint16_t x = 0; x < RES_WIDTH/2; x += 8) {
-;;;307    
-;;;308    						frameloc[y*(RES_WIDTH/16) + x/8] = (frameloc[(y*2+1)*RES_WIDTH + (2*(x+0)+1)] & 0x80) | 
-;;;309    																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+1)+1)] & 0x40) |
-;;;310    																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+2)+1)] & 0x20) |
-;;;311    																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+3)+1)] & 0x10) |
-;;;312    																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+4)+1)] & 0x08) |
-;;;313    																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+5)+1)] & 0x04) |
-;;;314    																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+6)+1)] & 0x02) |
-;;;315    																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+7)+1)] & 0x01); 
-;;;316    
-;;;317    				}
-;;;318    			}
-;;;319    			// frame[0] = 'A';																		 // key byte
-;;;320    			// UART_Send(LPC_USART0, frameloc, 2001, BLOCKING);		 // Send the frame byte packed to see it in processing
-;;;321    */
+                          DCD      0x40690000
+                  |L1.2340|
+                          DCD      0x3d70a3d7
+                  |L1.2344|
+                          DCD      0x3fdbd70a
+                  |L1.2348|
+                          DCD      0xcccccccd
+                  |L1.2352|
+                          DCD      0x4000cccc
+                  |L1.2356|
+                          DCD      0x400f3333
+                  |L1.2360|
+                          DCD      0x40740000
+                  |L1.2364|
+                          DCD      0x95810625
+                  |L1.2368|
+                          DCD      0x3fe88b43
+                  |L1.2372|
+000944  9816              LDR      r0,[sp,#0x58]
+000946  f7fffffe          BL       __aeabi_fadd
+00094a  900d              STR      r0,[sp,#0x34]
+00094c  f7fffffe          BL       __aeabi_f2iz
+000950  b2c1              UXTB     r1,r0
+000952  f50d62da          ADD      r2,sp,#0x6d0
+000956  f8dd06a4          LDR      r0,[sp,#0x6a4]
+00095a  f8021010          STRB     r1,[r2,r0,LSL #1]
+;;;300    						sendPositions[2*count + 1] = (int8_t)yPos;
+00095e  9814              LDR      r0,[sp,#0x50]
+000960  f7fffffe          BL       __aeabi_f2iz
+000964  b2c1              UXTB     r1,r0
+000966  f8dd06a4          LDR      r0,[sp,#0x6a4]
+00096a  0040              LSLS     r0,r0,#1
+00096c  1c40              ADDS     r0,r0,#1
+00096e  f50d62da          ADD      r2,sp,#0x6d0
+000972  5411              STRB     r1,[r2,r0]
+;;;301    						
+;;;302    						count++;
+000974  f8dd06a4          LDR      r0,[sp,#0x6a4]
+000978  1c40              ADDS     r0,r0,#1
+00097a  b2c0              UXTB     r0,r0
+00097c  f8cd06a4          STR      r0,[sp,#0x6a4]
+;;;303    						
+;;;304    					//if(frameloc[((int16_t)y)*RES_WIDTH + (int16_t)x] != 0) {
+;;;305    						
+;;;306    						//frameloc[((int16_t)y-2)*RES_WIDTH + (int16_t)x - 1] = 0xFF;
+;;;307    										
+;;;308    						break;			// stop looking for the edge, break to the next x co-ordinate
+000980  e014              B        |L1.2476|
+                  |L1.2434|
+000982  9815              LDR      r0,[sp,#0x54]         ;283
+000984  f7fffffe          BL       __aeabi_f2d
+000988  2200              MOVS     r2,#0                 ;283
+00098a  f04f4380          MOV      r3,#0x40000000        ;283
+00098e  e9cd0110          STRD     r0,r1,[sp,#0x40]      ;283
+000992  f7fffffe          BL       __aeabi_dsub
+000996  e9cd0112          STRD     r0,r1,[sp,#0x48]      ;283
+00099a  f7fffffe          BL       __aeabi_d2f
+00099e  9015              STR      r0,[sp,#0x54]         ;283
+                  |L1.2464|
+0009a0  49ba              LDR      r1,|L1.3212|
+0009a2  9815              LDR      r0,[sp,#0x54]         ;283
+0009a4  f7fffffe          BL       __aeabi_cfrcmple
+0009a8  f4ffaf04          BCC      |L1.1972|
+                  |L1.2476|
+0009ac  9817              LDR      r0,[sp,#0x5c]         ;279
+0009ae  f7fffffe          BL       __aeabi_f2d
+0009b2  2200              MOVS     r2,#0                 ;279
+0009b4  f04f4380          MOV      r3,#0x40000000        ;279
+0009b8  e9cd0112          STRD     r0,r1,[sp,#0x48]      ;279
+0009bc  f7fffffe          BL       __aeabi_dadd
+0009c0  e9cd0114          STRD     r0,r1,[sp,#0x50]      ;279
+0009c4  e000              B        |L1.2504|
+                  |L1.2502|
+0009c6  e101              B        |L1.3020|
+                  |L1.2504|
+0009c8  f7fffffe          BL       __aeabi_d2f
+0009cc  9017              STR      r0,[sp,#0x5c]         ;279
+                  |L1.2510|
+0009ce  49b0              LDR      r1,|L1.3216|
+0009d0  9817              LDR      r0,[sp,#0x5c]         ;279
+0009d2  f7fffffe          BL       __aeabi_cfcmple
+0009d6  f4ffaeea          BCC      |L1.1966|
+;;;309    					} // end if
+;;;310    					
+;;;311    				} // end yfor 
+;;;312    			} 	// end xfor
+;;;313    			
+;;;314    		// end front edge detection
+;;;315    			
+;;;316    			if(count == 0) {					// we have not detected any edges. Oh no!
+0009da  f8dd06a4          LDR      r0,[sp,#0x6a4]
+0009de  b940              CBNZ     r0,|L1.2546|
+;;;317    				uint8_t noEdges = 42;
+0009e0  202a              MOVS     r0,#0x2a
+0009e2  9017              STR      r0,[sp,#0x5c]
+;;;318    				UART_Send(LPC_USART0, &noEdges, 1, BLOCKING); 
+0009e4  2301              MOVS     r3,#1
+0009e6  461a              MOV      r2,r3
+0009e8  a917              ADD      r1,sp,#0x5c
+0009ea  48aa              LDR      r0,|L1.3220|
+0009ec  f7fffffe          BL       UART_Send
+;;;319    			}
+0009f0  bf00              NOP      
+                  |L1.2546|
+;;;320    			
+;;;321    	//		UART_Send(LPC_USART0, sendPositions, 2*count, BLOCKING);	// sends x,y pairs!!!!
 ;;;322    			
-;;;323    		} // end edge detecting
-00096c  e026              B        |L1.2492|
-                  |L1.2414|
-;;;324    		
-;;;325    		
-;;;326    		
-;;;327    		else if(theta > 1 ) {	// Servo move routine
-00096e  f04f517e          MOV      r1,#0x3f800000
-000972  981f              LDR      r0,[sp,#0x7c]
-000974  f7fffffe          BL       __aeabi_cfrcmple
-000978  d214              BCS      |L1.2468|
-;;;328    			uint16_t position;
-;;;329    			// Move the servo based on the input from the PIC
-;;;330    			// theta == 2 corrisponds to a 45 degree angle,
-;;;331    			// theta == 42 corrisponds to a 135 degree angle.
-;;;332    			position = theta;
-00097a  981f              LDR      r0,[sp,#0x7c]
-00097c  f7fffffe          BL       __aeabi_f2uiz
-000980  b280              UXTH     r0,r0
-000982  9019              STR      r0,[sp,#0x64]
-;;;333    			position = (position - 2)*(25);
-000984  f8bd0064          LDRH     r0,[sp,#0x64]
-000988  1e80              SUBS     r0,r0,#2
-00098a  eb0001c0          ADD      r1,r0,r0,LSL #3
-00098e  eb011000          ADD      r0,r1,r0,LSL #4
-000992  b280              UXTH     r0,r0
-000994  9019              STR      r0,[sp,#0x64]
-;;;334    			rcs_setPos(1, position);
-000996  2001              MOVS     r0,#1
-000998  a919              ADD      r1,sp,#0x64
-00099a  901a              STR      r0,[sp,#0x68]
-00099c  a81a              ADD      r0,sp,#0x68
-00099e  f7fffffe          BL       _Z10rcs_setPosRKhRKt ; rcs_setPos(const unsigned char&, const unsigned short&)
-;;;335    		}
-0009a2  e00b              B        |L1.2492|
-                  |L1.2468|
-;;;336    		
-;;;337    		else {		// theta == 1, they are asking for my ID
-;;;338    			
-;;;339    			// tell the processing script/pic/whatever that I am the pixy
-;;;340    			uint8_t ID[] = "I am the Pixy!\n\r";
-0009a4  2214              MOVS     r2,#0x14
-0009a6  a117              ADR      r1,|L1.2564|
-0009a8  a816              ADD      r0,sp,#0x58
-0009aa  f7fffffe          BL       __aeabi_memcpy4
-;;;341    			UART_Send(LPC_USART0, ID, 17, BLOCKING);
-0009ae  2301              MOVS     r3,#1
-0009b0  2211              MOVS     r2,#0x11
-0009b2  a916              ADD      r1,sp,#0x58
-0009b4  4812              LDR      r0,|L1.2560|
-0009b6  f7fffffe          BL       UART_Send
-;;;342    		}
-0009ba  bf00              NOP      
-                  |L1.2492|
-;;;343    	}
-0009bc  bf00              NOP      
-                  |L1.2494|
-0009be  f7ffbb54          B        |L1.106|
-;;;344    }
-;;;345    
+;;;323    			
+;;;324    			/////// BEGIN FLOOR PACKING//////////////////
+;;;325    			
+;;;326    			// we want to send out a byte packed (in the y direction) map of where we can and cannot drive.
+;;;327    			// this array will have each cell (bit) represent a 2x2 cm square on the floor. We will loop through
+;;;328    			// the front edge (sendPositions) array and place it in the map accordingly. First pass, we'll just
+;;;329    			// add up how many fall into each block, then we will threashold that (weighted by how close the 
+;;;330    			// block is to the robot) and byte pack it and send it out!
+;;;331    			//
+;;;332    			// the floor will be 80cm (in the y direction) by 80 cm (x direction), giving us an array of 40x40 
+;;;333    			// when uncompressed and 5 by 40 when compressed (byte packed in the y direction).
+;;;334    			uint8_t uncompressedFloorArray[1600];
+;;;335    			
+;;;336    			for(uint32_t i = 0; i < 1600; i++) {
+0009f2  2000              MOVS     r0,#0
+0009f4  9017              STR      r0,[sp,#0x5c]
+0009f6  e006              B        |L1.2566|
+                  |L1.2552|
+;;;337    				uncompressedFloorArray[i] = 0;
+0009f8  2100              MOVS     r1,#0
+0009fa  aa19              ADD      r2,sp,#0x64
+0009fc  9817              LDR      r0,[sp,#0x5c]
+0009fe  5411              STRB     r1,[r2,r0]
+000a00  9817              LDR      r0,[sp,#0x5c]         ;336
+000a02  1c40              ADDS     r0,r0,#1              ;336
+000a04  9017              STR      r0,[sp,#0x5c]         ;336
+                  |L1.2566|
+000a06  9817              LDR      r0,[sp,#0x5c]         ;336
+000a08  f5b06fc8          CMP      r0,#0x640             ;336
+000a0c  d3f4              BCC      |L1.2552|
+;;;338    			}
+;;;339    			
+;;;340    			// first, put the front edge in the floor array
+;;;341    			for(uint16_t i = 0; i < 2*count; i += 2) {
+000a0e  2000              MOVS     r0,#0
+000a10  9017              STR      r0,[sp,#0x5c]
+000a12  e017              B        |L1.2628|
+                  |L1.2580|
+;;;342    				//if( (sendPositions[i] - 128) + 40) < 40 && (sendPositions[i+1] < 80)) {
+;;;343    					
+;;;344    					uncompressedFloorArray[(((sendPositions[i] - 128) + 40) >> 1) + 40*(sendPositions[i+1] >> 1)] = 1;		// increment that floor location
+000a14  2101              MOVS     r1,#1
+000a16  f50d62da          ADD      r2,sp,#0x6d0
+000a1a  9817              LDR      r0,[sp,#0x5c]
+000a1c  1c40              ADDS     r0,r0,#1
+000a1e  5c10              LDRB     r0,[r2,r0]
+000a20  1040              ASRS     r0,r0,#1
+000a22  eb000080          ADD      r0,r0,r0,LSL #2
+000a26  00c2              LSLS     r2,r0,#3
+000a28  f50d63da          ADD      r3,sp,#0x6d0
+000a2c  9817              LDR      r0,[sp,#0x5c]
+000a2e  5c18              LDRB     r0,[r3,r0]
+000a30  3858              SUBS     r0,r0,#0x58
+000a32  eb020060          ADD      r0,r2,r0,ASR #1
+000a36  aa19              ADD      r2,sp,#0x64
+000a38  5411              STRB     r1,[r2,r0]
+;;;345    					//uint8_t rxbuf = (sendPositions[i] - 128 + 40) >> 1;
+;;;346    					uint8_t rxbuf = sendPositions[i+1] >> 1;
+000a3a  bf00              NOP      
+000a3c  9817              LDR      r0,[sp,#0x5c]         ;341
+000a3e  1c80              ADDS     r0,r0,#2              ;341
+000a40  b280              UXTH     r0,r0                 ;341
+000a42  9017              STR      r0,[sp,#0x5c]         ;341
+                  |L1.2628|
+000a44  f8dd06a4          LDR      r0,[sp,#0x6a4]        ;341
+000a48  0041              LSLS     r1,r0,#1              ;341
+000a4a  9817              LDR      r0,[sp,#0x5c]         ;341
+000a4c  4281              CMP      r1,r0                 ;341
+000a4e  dce1              BGT      |L1.2580|
+;;;347    					//UART_Send(LPC_USART0, &rxbuf, 1, BLOCKING);
+;;;348    			//	}
+;;;349    			}
+;;;350    			uint8_t aboveFrontEdge = 0;
+000a50  2000              MOVS     r0,#0
+000a52  9018              STR      r0,[sp,#0x60]
+;;;351    			
+;;;352    			// a possible interum step: threasholding?
+;;;353    			
+;;;354    			// next, fill in above the front edge
+;;;355    			for(uint16_t x = 0; x < 40; x++) {
+000a54  9017              STR      r0,[sp,#0x5c]
+000a56  e029              B        |L1.2732|
+                  |L1.2648|
+;;;356    				for(uint16_t y = 0; y < 40; y++) {
+000a58  2000              MOVS     r0,#0
+000a5a  9016              STR      r0,[sp,#0x58]
+000a5c  e01d              B        |L1.2714|
+                  |L1.2654|
+;;;357    					
+;;;358    					if(uncompressedFloorArray[x + y*40] >= 1 && !aboveFrontEdge) {
+000a5e  9816              LDR      r0,[sp,#0x58]
+000a60  eb000180          ADD      r1,r0,r0,LSL #2
+000a64  9817              LDR      r0,[sp,#0x5c]
+000a66  eb0000c1          ADD      r0,r0,r1,LSL #3
+000a6a  a919              ADD      r1,sp,#0x64
+000a6c  5c08              LDRB     r0,[r1,r0]
+000a6e  2801              CMP      r0,#1
+000a70  db04              BLT      |L1.2684|
+000a72  9818              LDR      r0,[sp,#0x60]
+000a74  b910              CBNZ     r0,|L1.2684|
+;;;359    						aboveFrontEdge = 1;
+000a76  2001              MOVS     r0,#1
+000a78  9018              STR      r0,[sp,#0x60]
+000a7a  e00a              B        |L1.2706|
+                  |L1.2684|
+;;;360    					}
+;;;361    					else if(aboveFrontEdge) {
+000a7c  9818              LDR      r0,[sp,#0x60]
+000a7e  b140              CBZ      r0,|L1.2706|
+;;;362    						uncompressedFloorArray[x + y*40] = 1;
+000a80  2101              MOVS     r1,#1
+000a82  9816              LDR      r0,[sp,#0x58]
+000a84  eb000280          ADD      r2,r0,r0,LSL #2
+000a88  9817              LDR      r0,[sp,#0x5c]
+000a8a  eb0000c2          ADD      r0,r0,r2,LSL #3
+000a8e  aa19              ADD      r2,sp,#0x64
+000a90  5411              STRB     r1,[r2,r0]
+                  |L1.2706|
+000a92  9816              LDR      r0,[sp,#0x58]         ;356
+000a94  1c40              ADDS     r0,r0,#1              ;356
+000a96  b280              UXTH     r0,r0                 ;356
+000a98  9016              STR      r0,[sp,#0x58]         ;356
+                  |L1.2714|
+000a9a  9816              LDR      r0,[sp,#0x58]         ;356
+000a9c  2828              CMP      r0,#0x28              ;356
+000a9e  dbde              BLT      |L1.2654|
+;;;363    						
+;;;364    					}
+;;;365    					
+;;;366    				} // x for
+;;;367    				
+;;;368    				aboveFrontEdge = 0;
+000aa0  2000              MOVS     r0,#0
+000aa2  9018              STR      r0,[sp,#0x60]
+000aa4  9817              LDR      r0,[sp,#0x5c]         ;355
+000aa6  1c40              ADDS     r0,r0,#1              ;355
+000aa8  b280              UXTH     r0,r0                 ;355
+000aaa  9017              STR      r0,[sp,#0x5c]         ;355
+                  |L1.2732|
+000aac  9817              LDR      r0,[sp,#0x5c]         ;355
+000aae  2828              CMP      r0,#0x28              ;355
+000ab0  dbd2              BLT      |L1.2648|
+;;;369    			}	// y for
+;;;370    			
+;;;371    			// Now, byte pack into SendArray
+;;;372    			
+;;;373    			count = 0;
+000ab2  2000              MOVS     r0,#0
+000ab4  f8cd06a4          STR      r0,[sp,#0x6a4]
+;;;374    			
+;;;375    		for(uint16_t x = 0; x < 320; x++) {
+000ab8  9017              STR      r0,[sp,#0x5c]
+000aba  e008              B        |L1.2766|
+                  |L1.2748|
+;;;376    			sendPositions[x] = 0;
+000abc  2100              MOVS     r1,#0
+000abe  f50d62da          ADD      r2,sp,#0x6d0
+000ac2  9817              LDR      r0,[sp,#0x5c]
+000ac4  5411              STRB     r1,[r2,r0]
+000ac6  9817              LDR      r0,[sp,#0x5c]         ;375
+000ac8  1c40              ADDS     r0,r0,#1              ;375
+000aca  b280              UXTH     r0,r0                 ;375
+000acc  9017              STR      r0,[sp,#0x5c]         ;375
+                  |L1.2766|
+000ace  9817              LDR      r0,[sp,#0x5c]         ;375
+000ad0  f5b07fa0          CMP      r0,#0x140             ;375
+000ad4  dbf2              BLT      |L1.2748|
+;;;377    		}
+;;;378    			
+;;;379    			for(uint16_t y = 0; y < 40; y++) {
+000ad6  2000              MOVS     r0,#0
+000ad8  9017              STR      r0,[sp,#0x5c]
+000ada  e06c              B        |L1.2998|
+                  |L1.2780|
+;;;380    				for(uint16_t x = 0; x < 40; x++) {
+000adc  2000              MOVS     r0,#0
+000ade  9016              STR      r0,[sp,#0x58]
+000ae0  e062              B        |L1.2984|
+                  |L1.2786|
+;;;381    					
+;;;382    					if(uncompressedFloorArray[x + y*40] >= 1) {
+000ae2  9817              LDR      r0,[sp,#0x5c]
+000ae4  eb000180          ADD      r1,r0,r0,LSL #2
+000ae8  9816              LDR      r0,[sp,#0x58]
+000aea  eb0000c1          ADD      r0,r0,r1,LSL #3
+000aee  a919              ADD      r1,sp,#0x64
+000af0  5c08              LDRB     r0,[r1,r0]
+000af2  2801              CMP      r0,#1
+000af4  db2c              BLT      |L1.2896|
+;;;383    						// can't drive here
+;;;384    						sendPositions[x + (y/8)*40] &= (!(1 << (y%8)));
+000af6  9817              LDR      r0,[sp,#0x5c]
+000af8  17c1              ASRS     r1,r0,#31
+000afa  9014              STR      r0,[sp,#0x50]
+000afc  eb007051          ADD      r0,r0,r1,LSR #29
+000b00  10c0              ASRS     r0,r0,#3
+000b02  eb000180          ADD      r1,r0,r0,LSL #2
+000b06  9816              LDR      r0,[sp,#0x58]
+000b08  eb0000c1          ADD      r0,r0,r1,LSL #3
+000b0c  f50d61da          ADD      r1,sp,#0x6d0
+000b10  5c09              LDRB     r1,[r1,r0]
+000b12  9817              LDR      r0,[sp,#0x5c]
+000b14  17c2              ASRS     r2,r0,#31
+000b16  9015              STR      r0,[sp,#0x54]
+000b18  eb007052          ADD      r0,r0,r2,LSR #29
+000b1c  10c2              ASRS     r2,r0,#3
+000b1e  9815              LDR      r0,[sp,#0x54]
+000b20  eba002c2          SUB      r2,r0,r2,LSL #3
+000b24  2001              MOVS     r0,#1
+000b26  4090              LSLS     r0,r0,r2
+000b28  b908              CBNZ     r0,|L1.2862|
+000b2a  2001              MOVS     r0,#1
+000b2c  e000              B        |L1.2864|
+                  |L1.2862|
+000b2e  2000              MOVS     r0,#0
+                  |L1.2864|
+000b30  4001              ANDS     r1,r1,r0
+000b32  9817              LDR      r0,[sp,#0x5c]
+000b34  17c2              ASRS     r2,r0,#31
+000b36  9014              STR      r0,[sp,#0x50]
+000b38  eb007052          ADD      r0,r0,r2,LSR #29
+000b3c  10c0              ASRS     r0,r0,#3
+000b3e  eb000280          ADD      r2,r0,r0,LSL #2
+000b42  9816              LDR      r0,[sp,#0x58]
+000b44  eb0000c2          ADD      r0,r0,r2,LSL #3
+000b48  f50d62da          ADD      r2,sp,#0x6d0
+000b4c  5411              STRB     r1,[r2,r0]
+000b4e  e027              B        |L1.2976|
+                  |L1.2896|
+;;;385    					}
+;;;386    					else {	// can drive here															         --|----- 1 is bit shifted the mod of y
+;;;387    						sendPositions[x + (y/8)*40] |= (1 << (y%8));			//byte | 0b00100000
+000b50  9817              LDR      r0,[sp,#0x5c]
+000b52  17c1              ASRS     r1,r0,#31
+000b54  9014              STR      r0,[sp,#0x50]
+000b56  eb007051          ADD      r0,r0,r1,LSR #29
+000b5a  10c0              ASRS     r0,r0,#3
+000b5c  eb000180          ADD      r1,r0,r0,LSL #2
+000b60  9816              LDR      r0,[sp,#0x58]
+000b62  eb0000c1          ADD      r0,r0,r1,LSL #3
+000b66  f50d61da          ADD      r1,sp,#0x6d0
+000b6a  5c09              LDRB     r1,[r1,r0]
+000b6c  9817              LDR      r0,[sp,#0x5c]
+000b6e  17c2              ASRS     r2,r0,#31
+000b70  9015              STR      r0,[sp,#0x54]
+000b72  eb007052          ADD      r0,r0,r2,LSR #29
+000b76  10c2              ASRS     r2,r0,#3
+000b78  9815              LDR      r0,[sp,#0x54]
+000b7a  eba002c2          SUB      r2,r0,r2,LSL #3
+000b7e  2001              MOVS     r0,#1
+000b80  4090              LSLS     r0,r0,r2
+000b82  4301              ORRS     r1,r1,r0
+000b84  9817              LDR      r0,[sp,#0x5c]
+000b86  17c2              ASRS     r2,r0,#31
+000b88  9014              STR      r0,[sp,#0x50]
+000b8a  eb007052          ADD      r0,r0,r2,LSR #29
+000b8e  10c0              ASRS     r0,r0,#3
+000b90  eb000280          ADD      r2,r0,r0,LSL #2
+000b94  9816              LDR      r0,[sp,#0x58]
+000b96  eb0000c2          ADD      r0,r0,r2,LSL #3
+000b9a  f50d62da          ADD      r2,sp,#0x6d0
+000b9e  5411              STRB     r1,[r2,r0]
+                  |L1.2976|
+000ba0  9816              LDR      r0,[sp,#0x58]         ;380
+000ba2  1c40              ADDS     r0,r0,#1              ;380
+000ba4  b280              UXTH     r0,r0                 ;380
+000ba6  9016              STR      r0,[sp,#0x58]         ;380
+                  |L1.2984|
+000ba8  9816              LDR      r0,[sp,#0x58]         ;380
+000baa  2828              CMP      r0,#0x28              ;380
+000bac  db99              BLT      |L1.2786|
+000bae  9817              LDR      r0,[sp,#0x5c]         ;379
+000bb0  1c40              ADDS     r0,r0,#1              ;379
+000bb2  b280              UXTH     r0,r0                 ;379
+000bb4  9017              STR      r0,[sp,#0x5c]         ;379
+                  |L1.2998|
+000bb6  9817              LDR      r0,[sp,#0x5c]         ;379
+000bb8  2828              CMP      r0,#0x28              ;379
+000bba  db8f              BLT      |L1.2780|
+;;;388    					}
+;;;389    				}
+;;;390    			}
+;;;391    			
+;;;392    			
+;;;393    			UART_Send(LPC_USART0, sendPositions, 200, BLOCKING);
+000bbc  2301              MOVS     r3,#1
+000bbe  22c8              MOVS     r2,#0xc8
+000bc0  f50d61da          ADD      r1,sp,#0x6d0
+000bc4  4833              LDR      r0,|L1.3220|
+000bc6  f7fffffe          BL       UART_Send
+;;;394    			//UART_Send(LPC_USART0, uncompressedFloorArray, 1600, BLOCKING);
+;;;395    			
+;;;396    			// Byte packing for processing script
+;;;397    /*
+;;;398    			for(uint16_t y = 0; y < RES_HEIGHT/2; y += 1) {
+;;;399    				for (uint16_t x = 0; x < RES_WIDTH/2; x += 8) {
+;;;400    
+;;;401    						frameloc[y*(RES_WIDTH/16) + x/8] = (frameloc[(y*2+1)*RES_WIDTH + (2*(x+0)+1)] & 0x80) | 
+;;;402    																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+1)+1)] & 0x40) |
+;;;403    																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+2)+1)] & 0x20) |
+;;;404    																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+3)+1)] & 0x10) |
+;;;405    																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+4)+1)] & 0x08) |
+;;;406    																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+5)+1)] & 0x04) |
+;;;407    																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+6)+1)] & 0x02) |
+;;;408    																						(frameloc[(y*2+1)*RES_WIDTH + (2*(x+7)+1)] & 0x01); 
+;;;409    
+;;;410    				}
+;;;411    			}
+;;;412    			// frame[0] = 'A';																		 // key byte
+;;;413    			// UART_Send(LPC_USART0, frameloc, 2001, BLOCKING);		 // Send the frame byte packed to see it in processing
+;;;414    */
+;;;415    			
+;;;416    		} // end edge detecting
+000bca  e02e              B        |L1.3114|
+                  |L1.3020|
+;;;417    		
+;;;418    		
+;;;419    		
+;;;420    		else if(theta > 1 ) {	// Servo move routine
+000bcc  f04f517e          MOV      r1,#0x3f800000
+000bd0  f8dd06cc          LDR      r0,[sp,#0x6cc]
+000bd4  f7fffffe          BL       __aeabi_cfrcmple
+000bd8  d219              BCS      |L1.3086|
+;;;421    			uint16_t position;
+;;;422    			// Move the servo based on the input from the PIC
+;;;423    			// theta == 2 corrisponds to a 45 degree angle,
+;;;424    			// theta == 42 corrisponds to a 135 degree angle.
+;;;425    			position = theta;
+000bda  f8dd06cc          LDR      r0,[sp,#0x6cc]
+000bde  f7fffffe          BL       __aeabi_f2uiz
+000be2  b280              UXTH     r0,r0
+000be4  f8cd06b8          STR      r0,[sp,#0x6b8]
+;;;426    			position = (position - 2)*(25);
+000be8  f8bd06b8          LDRH     r0,[sp,#0x6b8]
+000bec  1e80              SUBS     r0,r0,#2
+000bee  eb0001c0          ADD      r1,r0,r0,LSL #3
+000bf2  eb011000          ADD      r0,r1,r0,LSL #4
+000bf6  b280              UXTH     r0,r0
+000bf8  f8cd06b8          STR      r0,[sp,#0x6b8]
+;;;427    			rcs_setPos(1, position);
+000bfc  2001              MOVS     r0,#1
+000bfe  f50d61d7          ADD      r1,sp,#0x6b8
+000c02  f8cd06bc          STR      r0,[sp,#0x6bc]
+000c06  1d08              ADDS     r0,r1,#4
+000c08  f7fffffe          BL       _Z10rcs_setPosRKhRKt ; rcs_setPos(const unsigned char&, const unsigned short&)
+;;;428    		}
+000c0c  e00d              B        |L1.3114|
+                  |L1.3086|
+;;;429    		
+;;;430    		else {		// theta == 1, they are asking for my ID
+;;;431    			
+;;;432    			// tell the processing script/pic/whatever that I am the pixy
+;;;433    			uint8_t ID[] = "I am the Pixy!\n\r";
+000c0e  2214              MOVS     r2,#0x14
+000c10  a121              ADR      r1,|L1.3224|
+000c12  f20d60ac          ADD      r0,sp,#0x6ac
+000c16  f7fffffe          BL       __aeabi_memcpy4
+;;;434    			UART_Send(LPC_USART0, ID, 17, BLOCKING);
+000c1a  2301              MOVS     r3,#1
+000c1c  2211              MOVS     r2,#0x11
+000c1e  f20d61ac          ADD      r1,sp,#0x6ac
+000c22  481c              LDR      r0,|L1.3220|
+000c24  f7fffffe          BL       UART_Send
+;;;435    		}
+000c28  bf00              NOP      
+                  |L1.3114|
+;;;436    	
+;;;437    		led_setRGB(255, 0, 255);	// Purple LED
+000c2a  20ff              MOVS     r0,#0xff
+000c2c  f8cd06c0          STR      r0,[sp,#0x6c0]
+000c30  2000              MOVS     r0,#0
+000c32  f8cd06c4          STR      r0,[sp,#0x6c4]
+000c36  20ff              MOVS     r0,#0xff
+000c38  f50d62d9          ADD      r2,sp,#0x6c8
+000c3c  1f11              SUBS     r1,r2,#4
+000c3e  f8cd06c8          STR      r0,[sp,#0x6c8]
+000c42  1f08              SUBS     r0,r1,#4
+000c44  f7fffffe          BL       _Z10led_setRGBRKhS0_S0_ ; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
+;;;438    	}
+000c48  bf00              NOP      
+                  |L1.3146|
+000c4a  f7ffba05          B        |L1.88|
+;;;439    			led_setRGB(0, 0, 0);	// Purple LED
+;;;440    
+;;;441    }
+;;;442    
                           ENDP
 
                   _Z9toggleLEDv PROC ; toggleLED()
-;;;346    
-;;;347    void toggleLED() {
-0009c2  b50e              PUSH     {r1-r3,lr}
-;;;348    	
-;;;349    			// Toggle LED to see when we're sending frames
-;;;350    
-;;;351    	static uint8_t toggle = 0;
-;;;352    	toggle ^= 1;
-0009c4  4814              LDR      r0,|L1.2584|
-0009c6  7800              LDRB     r0,[r0,#0]  ; toggle
-0009c8  f0800001          EOR      r0,r0,#1
-0009cc  4912              LDR      r1,|L1.2584|
-0009ce  7008              STRB     r0,[r1,#0]
-;;;353    	if(toggle) {
-0009d0  4608              MOV      r0,r1
-0009d2  7800              LDRB     r0,[r0,#0]  ; toggle
-0009d4  b148              CBZ      r0,|L1.2538|
-;;;354    		led_setRGB(255, 255, 255);
-0009d6  20ff              MOVS     r0,#0xff
-0009d8  9002              STR      r0,[sp,#8]
-0009da  9001              STR      r0,[sp,#4]
-0009dc  466a              MOV      r2,sp
-0009de  a901              ADD      r1,sp,#4
-0009e0  9000              STR      r0,[sp,#0]
-0009e2  a802              ADD      r0,sp,#8
-0009e4  f7fffffe          BL       _Z10led_setRGBRKhS0_S0_ ; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
-;;;355    	}
-0009e8  e009              B        |L1.2558|
-                  |L1.2538|
-;;;356    	else {
-;;;357    		led_setRGB(0, 0, 0);
-0009ea  2000              MOVS     r0,#0
-0009ec  9002              STR      r0,[sp,#8]
-0009ee  9001              STR      r0,[sp,#4]
-0009f0  466a              MOV      r2,sp
-0009f2  a901              ADD      r1,sp,#4
-0009f4  9000              STR      r0,[sp,#0]
-0009f6  a802              ADD      r0,sp,#8
-0009f8  f7fffffe          BL       _Z10led_setRGBRKhS0_S0_ ; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
-;;;358    	}
-0009fc  bf00              NOP      
-                  |L1.2558|
-;;;359    }
-0009fe  bd0e              POP      {r1-r3,pc}
+;;;443    
+;;;444    void toggleLED() {
+000c4e  b50e              PUSH     {r1-r3,lr}
+;;;445    	
+;;;446    			// Toggle LED to see when we're sending frames
+;;;447    
+;;;448    	static uint8_t toggle = 0;
+;;;449    	toggle ^= 1;
+000c50  4816              LDR      r0,|L1.3244|
+000c52  7800              LDRB     r0,[r0,#0]  ; toggle
+000c54  f0800001          EOR      r0,r0,#1
+000c58  4914              LDR      r1,|L1.3244|
+000c5a  7008              STRB     r0,[r1,#0]
+;;;450    	if(toggle) {
+000c5c  4608              MOV      r0,r1
+000c5e  7800              LDRB     r0,[r0,#0]  ; toggle
+000c60  b148              CBZ      r0,|L1.3190|
+;;;451    		led_setRGB(255, 255, 255);
+000c62  20ff              MOVS     r0,#0xff
+000c64  9002              STR      r0,[sp,#8]
+000c66  9001              STR      r0,[sp,#4]
+000c68  466a              MOV      r2,sp
+000c6a  a901              ADD      r1,sp,#4
+000c6c  9000              STR      r0,[sp,#0]
+000c6e  a802              ADD      r0,sp,#8
+000c70  f7fffffe          BL       _Z10led_setRGBRKhS0_S0_ ; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
+;;;452    	}
+000c74  e009              B        |L1.3210|
+                  |L1.3190|
+;;;453    	else {
+;;;454    		led_setRGB(0, 0, 0);
+000c76  2000              MOVS     r0,#0
+000c78  9002              STR      r0,[sp,#8]
+000c7a  9001              STR      r0,[sp,#4]
+000c7c  466a              MOV      r2,sp
+000c7e  a901              ADD      r1,sp,#4
+000c80  9000              STR      r0,[sp,#0]
+000c82  a802              ADD      r0,sp,#8
+000c84  f7fffffe          BL       _Z10led_setRGBRKhS0_S0_ ; led_setRGB(const unsigned char&, const unsigned char&, const unsigned char&)
+;;;455    	}
+000c88  bf00              NOP      
+                  |L1.3210|
+;;;456    }
+000c8a  bd0e              POP      {r1-r3,pc}
                           ENDP
 
-                  |L1.2560|
+                  |L1.3212|
+                          DCD      0x41200000
+                  |L1.3216|
+                          DCD      0x439d0000
+                  |L1.3220|
                           DCD      0x40081000
-                  |L1.2564|
-000a04  4920616d          DCB      "I am the Pixy!\n\r",0
-000a08  20746865
-000a0c  20506978
-000a10  79210a0d
-000a14  00      
-000a15  00                DCB      0
-000a16  00                DCB      0
-000a17  00                DCB      0
-                  |L1.2584|
+                  |L1.3224|
+000c98  4920616d          DCB      "I am the Pixy!\n\r",0
+000c9c  20746865
+000ca0  20506978
+000ca4  79210a0d
+000ca8  00      
+000ca9  00                DCB      0
+000caa  00                DCB      0
+000cab  00                DCB      0
+                  |L1.3244|
                           DCD      toggle
 
                           AREA ||.ARM.exidx||, LINKORDER=||.text||, DATA, READONLY, SECTYPE={SHT_ARM_EXIDX}, ALIGN=2

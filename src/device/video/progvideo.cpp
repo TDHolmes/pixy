@@ -27,6 +27,7 @@
 #include <math.h>
 #include "rcservo.h"
 #include "pixyvals.h"
+#include "led.h"
 
 
  
@@ -51,6 +52,11 @@ void sendCustom(uint8_t renderFlags=RENDER_FLAG_FLUSH)
 	int32_t len;
 	uint8_t *frame = (uint8_t *)SRAM1_LOC;
 	
+	uint16_t blobLen = 0;
+	uint8_t inBlob = 0;
+	uint16_t blobXPos = 0;
+	
+	
 	if(UART_DATA_AVAILABLE) {		// Data has come!
 			theta = (float)UART_DATA_AVAILABLE;
 			UART_DATA_AVAILABLE = 0;
@@ -69,21 +75,24 @@ void sendCustom(uint8_t renderFlags=RENDER_FLAG_FLUSH)
 		len = Chirp::serialize(g_chirpUsb, frame, SRAM1_SIZE, HTYPE(FOURCC('C','M','V','2')), HINT8(renderFlags), UINT16(CAM_RES2_WIDTH), UINT16(CAM_RES2_HEIGHT), UINTS8_NO_COPY(CAM_RES2_WIDTH*CAM_RES2_HEIGHT), END);
 		// write frame after chirp args
 		cam_getFrame(frame+len, SRAM1_SIZE-len, CAM_GRAB_M1R2, 0, 0, CAM_RES2_WIDTH, CAM_RES2_HEIGHT);
-
+		led_setRGB(0, 0, 0);
 		uint8_t *frameloc = (uint8_t *)(SRAM1_LOC + len);
 		
 		// double for loop for calculating edges
-			for(uint16_t y = 1 + OFFSET; y < (RES_HEIGHT - OFFSET); y += 2) {
-				uint16_t ypo = y + 1;
-				uint16_t ymo = y - 1;
-				uint16_t ymt = y - 2;
-				uint16_t ypt = y + 2;
-				
-				for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
-					uint16_t xpo = x + 1;
-					uint16_t xmo = x - 1;
-					uint16_t xpt = x + 2; 
-					uint16_t xmt = x - 2;
+		for(uint16_t y = OFFSET + 1; y < RES_HEIGHT - OFFSET; y += 2) {
+			uint16_t ypo = y + 1;
+			uint16_t ymo = y - 1;
+			uint16_t ymt = y - 2;
+			uint16_t ypt = y + 2;
+		
+			blobLen = inBlob = blobXPos = 0;
+			
+			for(uint16_t x = 1 + OFFSET; x < (RES_WIDTH - OFFSET); x += 2) {
+				uint16_t xpo = x + 1;
+				uint16_t xmo = x - 1;
+				uint16_t xpt = x + 2; 
+				uint16_t xmt = x - 2;
+					
 					
 				// Gradient calculation
 					
@@ -114,29 +123,66 @@ void sendCustom(uint8_t renderFlags=RENDER_FLAG_FLUSH)
 							(frameloc[y*RES_WIDTH + xmo] + frameloc[ymo*RES_WIDTH + x])/2;
 				
 
-				float grady = (3*(intense_XPO_YPO + GRAD_CO*intense_XPO_Y 
+				float gradx = (3*(intense_XPO_YPO + GRAD_CO*intense_XPO_Y 
 					+ intense_XPO_YMO - intense_XMO_YPO 
 					- GRAD_CO*intense_XMO_Y - intense_XMO_YMO));
 						
-				float gradx = (3*(intense_XMO_YMO + GRAD_CO*intense_X_YMO
+				float grady = (3*(intense_XMO_YMO + GRAD_CO*intense_X_YMO
 					+ intense_XPO_YMO - intense_XMO_YPO 
 					- GRAD_CO*intense_X_YPO - intense_XPO_YPO));
 					
 								// Threashold detection
-				float grad = gradx+grady;
+				float grad = abs(gradx) + grady;
 								// Threashold detection
-					
 				
-					if( (grad > THREASHOLD_LOW) && (grad < THREASHOLD_HIGH) ) {
-						// EDGE
-						frameloc[y*RES_WIDTH + x] = 255;		// sets the red pixel to max
+				
+			
+				if( (grad > THREASHOLD_LOW) && (gradx < THREASHOLD_HIGH) ) {
+					// EDGE
+					frameloc[y*RES_WIDTH + x] = 255;		// sets the red pixel to max
+				}
+				//else if(-grady > THREASHOLD_LOW && -gradx < THREASHOLD_HIGH) {
+				//	frameloc[(y+1)*RES_WIDTH + x] = 255;
+				//}
+				else {
+					// NO EDGE
+					frameloc[y*RES_WIDTH + x] = 0;			// turns off the red 
+				} 
+				
+				// BLOB DETECTION
+				if(gradx > THREASHOLD_LOW) {			// if we've entered a blob (black to white transistion, going left 2 right)
+					inBlob = 1;
+					blobLen++;
+					blobXPos = x;
+				}
+				if(inBlob && (-gradx < THREASHOLD_LOW)) {	// if we're in a blob and haven't reached the outer edge
+					blobLen++;
+				}
+				if(inBlob && (-gradx > THREASHOLD_LOW)) {	// in a blob, but exiting
+					
+					if(blobLen < MAX_BLOB_LEN) {
+						// we've found a blob! DELETEEEEE
+//						for(uint16_t blobX = blobXPos; blobX >= x; blobX += 2) {
+//							frameloc[y*RES_WIDTH + blobX] = 0;
+//						}
+						frameloc[y*RES_WIDTH + blobXPos] = 0;
+						frameloc[y*RES_WIDTH + x] = 0;
+//						if( x < RES_WIDTH -OFFSET) {
+//							frameloc[y*RES_WIDTH + x + 2] = 0;
+//						}
+//						if( x > OFFSET) {
+//							frameloc[y*RES_WIDTH + blobXPos - 2] = 0;
+//						}
+						blobLen = inBlob = 0;
 					}
 					else {
-						// NO EDGE
-						frameloc[y*RES_WIDTH + x] = 0;			// turns off the red 
+						// clear vals, no blob here
+						blobLen = inBlob = 0;
 					}
 				}
-			} // end nested for loop
+				
+			}
+		} // end nested for loop
 		
 			
 	// noise pixel filtering
@@ -178,7 +224,7 @@ void sendCustom(uint8_t renderFlags=RENDER_FLAG_FLUSH)
 						if(frameloc[(ypt)*RES_WIDTH + xmt] == 0) 
 							numOfPxOff++;
 						
-						if(numOfPxOff > 5) {
+						if(numOfPxOff > 4) {
 							
 							frameloc[y*RES_WIDTH + x] = 0; 				// we only ever look at this pixel
 						}
@@ -231,6 +277,7 @@ void sendCustom(uint8_t renderFlags=RENDER_FLAG_FLUSH)
 			
 
 		// tell chirp to use this buffer
+				led_setRGB(0, 255, 255);
 		g_chirpUsb->useBuffer(frame, len+CAM_RES2_WIDTH*CAM_RES2_HEIGHT); 
 
 }

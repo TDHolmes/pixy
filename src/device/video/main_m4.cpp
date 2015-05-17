@@ -96,7 +96,7 @@ int main(void)
 	rcs_setLimits(1, -250, 250);							// extends servo range to maximum//0x__BBRRGG
 	//28 == full back, 12 == full angle down, 22 == parallel
 	
-	uint8_t WBV_sub = 0x06;
+	uint8_t WBV_sub = 0x16;
 	uint32_t WBV = WBV_sub | WBV_sub << 8 | WBV_sub << 16;
 	cam_setWBV(WBV);					// sets the white balance manually
 	cam_setAEC(0);						// turns off auto exposure correction

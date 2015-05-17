@@ -40,14 +40,17 @@ N#define CLKFREQ_MS               (CLKFREQ/1000)
 N#define CLKFREQ_US               (CLKFREQ/1000000)
 N
 N
-N#define THREASHOLD_LOW	160
-N
+N#define THREASHOLD_LOW	19	// was 30
 N#define THREASHOLD_HIGH 90000
 N#define GRAD_CO 2
 N#define GRAD_THREASHOLD 200
 N
-N#define THREASHOLD_NORMAL
+N#define MAX_BLOB_LEN 9
 N
+N#define OFFSET 4.0
+N#define POS_OFFSET 2.0
+N#define GND_OFFSET_X 6
+N#define GND_OFFSET_Y 10
 N
 N#define RES_WIDTH (320)
 N#define RES_HEIGHT (200)
@@ -56,13 +59,9 @@ N// tangent calculations used in triangulation calculations
 N#define TAN_FOVH_DIV_2 0.435
 N#define TAN_FOVW_DIV_2 0.767
 N
-N
 N// units in cm
 N#define H_C 3.6
 N#define H_B 4.1
-N
-N#define OFFSET 4.0
-N#define POS_OFFSET 2.0
 N
 N// SRAM banks
 N#define SRAM0_LOC                0x10000000

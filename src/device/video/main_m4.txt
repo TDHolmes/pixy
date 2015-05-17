@@ -152,69 +152,70 @@
 0000d6  900b              STR      r0,[sp,#0x2c]
 0000d8  a80d              ADD      r0,sp,#0x34
 0000da  f7fffffe          BL       _Z13rcs_setLimitsRKhRKsS2_ ; rcs_setLimits(const unsigned char&, const short&, const short&)
-;;;97     	
-;;;98     	uint8_t WBV_sub = 0x06;
-0000de  2506              MOVS     r5,#6
-;;;99     	uint32_t WBV = WBV_sub | WBV_sub << 8 | WBV_sub << 16;
+;;;97     	//28 == full back, 12 == full angle down, 22 == parallel
+;;;98     	
+;;;99     	uint8_t WBV_sub = 0x16;
+0000de  2516              MOVS     r5,#0x16
+;;;100    	uint32_t WBV = WBV_sub | WBV_sub << 8 | WBV_sub << 16;
 0000e0  ea452005          ORR      r0,r5,r5,LSL #8
 0000e4  ea404005          ORR      r0,r0,r5,LSL #16
 0000e8  9007              STR      r0,[sp,#0x1c]
-;;;100    	cam_setWBV(WBV);					// sets the white balance manually
+;;;101    	cam_setWBV(WBV);					// sets the white balance manually
 0000ea  a807              ADD      r0,sp,#0x1c
 0000ec  f7fffffe          BL       _Z10cam_setWBVRKj ; cam_setWBV(const unsigned&)
-;;;101    	cam_setAEC(0);						// turns off auto exposure correction
+;;;102    	cam_setAEC(0);						// turns off auto exposure correction
 0000f0  2000              MOVS     r0,#0
 0000f2  900d              STR      r0,[sp,#0x34]
 0000f4  a80d              ADD      r0,sp,#0x34
 0000f6  f7fffffe          BL       _Z10cam_setAECRKh ; cam_setAEC(const unsigned char&)
-;;;102    	cam_setBrightness(35);		// sets the brightness
+;;;103    	cam_setBrightness(35);		// sets the brightness
 0000fa  2023              MOVS     r0,#0x23
 0000fc  900d              STR      r0,[sp,#0x34]
 0000fe  a80d              ADD      r0,sp,#0x34
 000100  f7fffffe          BL       _Z17cam_setBrightnessRKh ; cam_setBrightness(const unsigned char&)
-;;;103    	
-;;;104    	while(1) {
+;;;104    	
+;;;105    	while(1) {
 000104  e001              B        |L1.266|
                   |L1.262|
-;;;105    		//edgeDetect_highres_run();
-;;;106    		edgeDetect_run();	// run the main edgeDetect function
+;;;106    		//edgeDetect_highres_run();
+;;;107    		edgeDetect_run();	// run the main edgeDetect function
 000106  f7fffffe          BL       _Z14edgeDetect_runv ; edgeDetect_run()
                   |L1.266|
 00010a  e7fc              B        |L1.262|
-;;;107    		//exec_loop();	// Debug through pixymon
-;;;108    	}
-;;;109    
-;;;110    #if 0
-;;;111    	#define DELAY 1000000
-;;;112    	rcs_setFreq(100);
-;;;113    	rcs_setLimits(0, -200, 200);
-;;;114    	rcs_setLimits(1, -200, 200);
-;;;115    	while(1)
-;;;116    	{
-;;;117    		rcs_setPos(0, 0);
-;;;118    		delayus(DELAY);
-;;;119    		rcs_setPos(0, 500);
-;;;120    		delayus(DELAY);
-;;;121    		rcs_setPos(0, 1000);
-;;;122    		delayus(DELAY);
-;;;123    		rcs_setPos(1, 0);
-;;;124    		delayus(DELAY);
-;;;125    		rcs_setPos(1, 500);
-;;;126    		delayus(DELAY);
-;;;127    		rcs_setPos(1, 1000);
-;;;128    		delayus(DELAY);
-;;;129    	}
-;;;130    
-;;;131    #endif
-;;;132    #if 0
-;;;133    	while(1)
-;;;134    	{
-;;;135    		g_chirpUsb->service();
-;;;136    		handleButton();
-;;;137    	}
-;;;138    #endif
-;;;139    }
-;;;140    
+;;;108    		//exec_loop();	// Debug through pixymon
+;;;109    	}
+;;;110    
+;;;111    #if 0
+;;;112    	#define DELAY 1000000
+;;;113    	rcs_setFreq(100);
+;;;114    	rcs_setLimits(0, -200, 200);
+;;;115    	rcs_setLimits(1, -200, 200);
+;;;116    	while(1)
+;;;117    	{
+;;;118    		rcs_setPos(0, 0);
+;;;119    		delayus(DELAY);
+;;;120    		rcs_setPos(0, 500);
+;;;121    		delayus(DELAY);
+;;;122    		rcs_setPos(0, 1000);
+;;;123    		delayus(DELAY);
+;;;124    		rcs_setPos(1, 0);
+;;;125    		delayus(DELAY);
+;;;126    		rcs_setPos(1, 500);
+;;;127    		delayus(DELAY);
+;;;128    		rcs_setPos(1, 1000);
+;;;129    		delayus(DELAY);
+;;;130    	}
+;;;131    
+;;;132    #endif
+;;;133    #if 0
+;;;134    	while(1)
+;;;135    	{
+;;;136    		g_chirpUsb->service();
+;;;137    		handleButton();
+;;;138    	}
+;;;139    #endif
+;;;140    }
+;;;141    
                           ENDP
 
                   |L1.268|

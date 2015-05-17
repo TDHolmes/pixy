@@ -22,14 +22,17 @@
 #define CLKFREQ_US               (CLKFREQ/1000000)
 
 
-#define THREASHOLD_LOW	30
+#define THREASHOLD_LOW	19	// was 30
 #define THREASHOLD_HIGH 90000
 #define GRAD_CO 2
 #define GRAD_THREASHOLD 200
 
-#define THREASHOLD_NORMAL
-#define RED_BIAS 2
+#define MAX_BLOB_LEN 9
 
+#define OFFSET 4.0
+#define POS_OFFSET 2.0
+#define GND_OFFSET_X 6
+#define GND_OFFSET_Y 10
 
 #define RES_WIDTH (320)
 #define RES_HEIGHT (200)
@@ -38,15 +41,9 @@
 #define TAN_FOVH_DIV_2 0.435
 #define TAN_FOVW_DIV_2 0.767
 
-
 // units in cm
 #define H_C 3.6
 #define H_B 4.1
-
-#define OFFSET 4.0
-#define POS_OFFSET 2.0
-#define GND_OFFSET_X 6
-#define GND_OFFSET_Y 10
 
 // SRAM banks
 #define SRAM0_LOC                0x10000000
